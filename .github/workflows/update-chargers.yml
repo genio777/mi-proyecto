@@ -1,6 +1,11 @@
 name: Actualizar cargadores España
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update-chargers.mjs'
+      - '.github/workflows/update-chargers.yml'
   schedule:
     - cron: '37 3 * * *'
 permissions:

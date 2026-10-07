@@ -2,11 +2,12 @@ import fs from 'node:fs/promises';
 
 const PAGE='https://energia.serviciosmin.gob.es/Ripree/ExportarInstalaciones/Export';
 const html=await (await fetch(PAGE)).text();
-const links=[...html.matchAll(/href=["']([^"']+)["'][^>]*>[^<]*(?:CSV|csv)/g)].map(m=>new URL(m[1],PAGE).href);
-if(!links.length) throw new Error('No se encontró el enlace CSV oficial RIPREE');
-const res=await fetch(links[0]);
-if(!res.ok) throw new Error('RIPREE CSV HTTP '+res.status);
-const raw=await res.text();
+const hrefs=[...html.matchAll(/href=["']([^"']+)["']/gi)].map(m=>new URL(m[1],PAGE).href);
+const candidates=[...new Set(hrefs.filter(x=>/export|csv|descarg|instal/i.test(x)))];
+if(!candidates.length) throw new Error('No se encontró una descarga candidata RIPREE');
+let raw='',used='';
+for(const url of candidates){try{const res=await fetch(url,{headers:{Accept:'text/csv,application/csv,application/octet-stream;q=0.9,*/*;q=0.5'}});if(!res.ok)continue;const body=await res.text();const ct=res.headers.get('content-type')||'';if(!/^\s*<!doctype|^\s*<html/i.test(body)&&(/csv|octet-stream|text\/plain/i.test(ct)||body.includes(';')||body.includes(','))){raw=body;used=url;break}}catch{}}
+if(!raw)throw new Error('El portal RIPREE devolvió HTML en lugar del CSV; no se sobrescribe la base local');
 
 function parseCSV(text){
  const first=text.split(/\r?\n/,1)[0]||'';
@@ -26,5 +27,5 @@ const chargers=[];
 for(let n=1;n<rows.length;n++){const r=rows[n],lat=num(r[ilat]),lng=num(r[ilon]);if(!Number.isFinite(lat)||!Number.isFinite(lng)||lat<27||lat>44.5||lng<-19||lng>5)continue;const p=ipow>=0?num(r[ipow]):0;chargers.push({id:'ripree-'+n,name:(iname>=0?r[iname]:'')||'Punto de recarga público',city:(icity>=0?r[icity]:'')||'',province:(iprov>=0?r[iprov]:'')||'',address:(iaddr>=0?r[iaddr]:'')||'',lat,lng,power:Number.isFinite(p)?p:0,connector:(icon>=0?r[icon]:'')||'Consultar',operator:(iop>=0?r[iop]:'')||'No indicado',price:null,availability:'UNKNOWN',source:'MITECO · RIPREE',verified:new Date().toISOString().slice(0,10)})}
 if(chargers.length<100)throw new Error('Importación sospechosa: solo '+chargers.length+' puntos');
 await fs.mkdir('public/data',{recursive:true});
-await fs.writeFile('public/data/chargers-spain.json',JSON.stringify({updated:new Date().toISOString(),source:PAGE,count:chargers.length,chargers}));
+await fs.writeFile('public/data/chargers-spain.json',JSON.stringify({updated:new Date().toISOString(),source:used||PAGE,count:chargers.length,chargers}));
 console.log('RIPREE:',chargers.length,'puntos');

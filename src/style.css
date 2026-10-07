@@ -3,3 +3,4 @@
 .modeRow{display:flex;gap:8px;margin:14px 0}.modeRow button{flex:1;background:#eef3f0}.tariffInfo{font-size:13px;color:#526158;margin-top:12px;padding:10px;border-top:1px solid #e2e8e4}
 .liveBox{padding:14px;margin:12px 0;background:#eef7f2;border:1px solid #c8dfd2;border-radius:12px;line-height:1.5}
 .securityGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.securityGrid article{background:#fbfcfb}.securityGrid h3{margin-top:0}
+.routeMapWrap{margin-top:18px}.routeMapWrap #map{height:460px}.stopList{display:grid;gap:8px;margin-top:10px}.stopList button{background:#eef7f2;text-align:left;font-weight:650}@media(max-width:600px){.routeMapWrap #map{height:420px}}

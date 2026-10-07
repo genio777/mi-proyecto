@@ -18,7 +18,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node scripts/update-chargers.mjs
+      - name: Actualizar RIPREE
+        id: ripree
+        continue-on-error: true
+        run: node scripts/update-chargers.mjs
+      - name: Estado de la fuente
+        run: |
+          if [ "${{ steps.ripree.outcome }}" != "success" ]; then
+            echo "::warning::RIPREE no ofrece en este momento una descarga CSV directa automatizable. Se conserva la última base válida; nunca se sustituye por datos HTML o incompletos."
+          fi
       - name: Guardar cambios
         run: |
           git config user.name "cargagratis-bot"

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07",
+  "updated": "2026-10-08T11:26:24.677Z",
   "currency": "EUR",
   "unit": "kWh",
   "note": "Tarifas de referencia. El precio del conector/estación prevalece siempre.",
@@ -34,7 +34,9 @@
         }
       ],
       "source": "https://www.repsol.es/particulares/vehiculos/movilidad-electrica/recarga-fuera-de-casa/",
-      "status": "official"
+      "status": "official",
+      "lastCheck": "2026-10-08T11:26:24.677Z",
+      "sourceReachable": true
     },
     {
       "id": "iberdrola-bp",
@@ -62,7 +64,9 @@
         }
       ],
       "source": "https://iberdrola-bppulse.es/cargar-coche-electrico/tarifas/",
-      "status": "official"
+      "status": "official",
+      "lastCheck": "2026-10-08T11:26:24.677Z",
+      "sourceReachable": true
     },
     {
       "id": "zunder",
@@ -79,7 +83,9 @@
       ],
       "source": "https://www.zunder.com/usuario-ve/",
       "status": "official",
-      "note": "Puede variar por ubicación; convenios y suscripciones tienen otros precios."
+      "note": "Puede variar por ubicación; convenios y suscripciones tienen otros precios.",
+      "lastCheck": "2026-10-08T11:26:24.677Z",
+      "sourceReachable": true
     },
     {
       "id": "endesa",
@@ -87,7 +93,9 @@
       "tiers": [],
       "source": "https://www.endesaxway.com/es/es/productos-y-servicios/app-endesaxway-servicio-recarga/tarifas",
       "status": "station_price_required",
-      "note": "Usar precio del conector mostrado por Endesa On Your Way."
+      "note": "Usar precio del conector mostrado por Endesa On Your Way.",
+      "lastCheck": "2026-10-08T11:26:24.677Z",
+      "sourceReachable": true
     },
     {
       "id": "tesla",
@@ -95,7 +103,10 @@
       "tiers": [],
       "source": "https://www.tesla.com/es_es/support/charging/supercharger/fees",
       "status": "station_price_required",
-      "note": "Precio variable por estación/horario; usar precio específico cuando esté disponible."
+      "note": "Precio variable por estación/horario; usar precio específico cuando esté disponible.",
+      "lastCheck": "2026-10-08T11:26:24.677Z",
+      "sourceReachable": false,
+      "lastError": "HTTP 403"
     },
     {
       "id": "ionity",
@@ -103,7 +114,9 @@
       "tiers": [],
       "source": "https://www.ionity.eu/es/red/acceso-pagos",
       "status": "station_price_required",
-      "note": "Precio depende de ubicación/tarifa/suscripción."
+      "note": "Precio depende de ubicación/tarifa/suscripción.",
+      "lastCheck": "2026-10-08T11:26:24.677Z",
+      "sourceReachable": true
     },
     {
       "id": "powerdot",
@@ -111,7 +124,9 @@
       "tiers": [],
       "source": "https://www.powerdot.eu/mobility-apps",
       "status": "ocpi_available",
-      "note": "Powerdot ofrece integración OCPI para precio y disponibilidad en tiempo real."
+      "note": "Powerdot ofrece integración OCPI para precio y disponibilidad en tiempo real.",
+      "lastCheck": "2026-10-08T11:26:24.677Z",
+      "sourceReachable": true
     }
   ]
 }

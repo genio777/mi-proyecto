@@ -26,9 +26,9 @@
    b.onclick=function(){location.replace(location.pathname+'?recarga='+Date.now())};box.appendChild(b);
    root.appendChild(box);
  }
- window.addEventListener('error',function(e){showError(e.message||'Error de carga de recurso');},true);
+ window.addEventListener('error',function(e){if(e.target && e.target!==window){var url=e.target.src||e.target.href||e.target.tagName||'recurso desconocido';errors.push('No se ha cargado: '+url);return;}showError((e.message||'Error JavaScript')+' · '+(e.filename||'')+':'+(e.lineno||''));},true);
  window.addEventListener('unhandledrejection',function(e){showError(String(e.reason));});
- setTimeout(function(){var r=document.getElementById('root');if(r&&r.textContent.includes('Cargando CargaGratis'))showError('El módulo de la aplicación no ha iniciado en 12 segundos. Revisa que GitHub Pages esté publicando la carpeta dist y que se descarguen los archivos /assets/.');},12000);
+ setTimeout(function(){var r=document.getElementById('root');if(r&&r.textContent.includes('Cargando CargaGratis'))showError('La aplicación no ha iniciado en 12 segundos. '+(errors.length?'Recursos fallidos: '+errors.join(' | '):'No se ha detectado un recurso fallido; comprueba que el JavaScript principal se ejecute.'));},12000);
 })();
 </script>
 <script type="module" src="./src/main.tsx"></script>

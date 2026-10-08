@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '20 4 * * *'
 permissions:
   contents: read
   pages: write
@@ -21,6 +23,8 @@ jobs:
           node-version: 22
       - name: Instalar dependencias
         run: npm install
+      - name: Importar cargadores oficiales DGT
+        run: node scripts/import-national.mjs
       - name: Compilar CargaGratis
         run: npm run build
       - name: Configurar GitHub Pages

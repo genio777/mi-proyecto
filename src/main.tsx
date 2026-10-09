@@ -8,7 +8,20 @@ function MapView({position,onlyFree,routeCoords=[],stops=[],chargers=[]}:{positi
  const ref=useRef<HTMLDivElement>(null),mapRef=useRef<L.Map|null>(null);
  useEffect(()=>{if(!ref.current||mapRef.current)return;const m=L.map(ref.current).setView([40.2,-3.7],6);mapRef.current=m;
  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(m);
- chargers.filter(c=>!onlyFree||c.price===0).slice(0,5000).forEach(c=>L.circleMarker([c.lat,c.lng],{radius:9,weight:3,fillOpacity:.9}).addTo(m).bindPopup('<b>'+c.name+'</b><br>'+c.city+' · '+c.power+' kW · '+c.connector+'<br><b>'+(c.price===0?'Gratuito según fuente':c.price==null?'Precio no verificado':c.price+' €/kWh')+'</b>'));
+ const markerLayer=L.layerGroup().addTo(m);
+ const escapeHtml=(value:unknown)=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]||ch));
+ const renderVisible=()=>{
+   markerLayer.clearLayers();
+   const bounds=m.getBounds().pad(.15),zoom=m.getZoom();
+   const eligible=chargers.filter(c=>(!onlyFree||c.price===0)&&Number.isFinite(c.lat)&&Number.isFinite(c.lng)&&bounds.contains([c.lat,c.lng]));
+   const maxMarkers=zoom<7?180:zoom<10?300:600;
+   const step=Math.max(1,Math.ceil(eligible.length/maxMarkers));
+   for(let i=0;i<eligible.length;i+=step){
+     const c=eligible[i];
+     L.circleMarker([c.lat,c.lng],{radius:zoom<8?4:6,weight:1,fillOpacity:.75,color:'#075d38',fillColor:'#16a34a'}).addTo(markerLayer).bindPopup('<b>'+escapeHtml(c.name)+'</b><br>'+escapeHtml(c.city)+' · '+escapeHtml(c.power)+' kW · '+escapeHtml(c.connector)+'<br><b>'+(c.price===0?'Gratuito según fuente':c.price==null?'Precio no verificado':escapeHtml(c.price)+' €/kWh')+'</b>');
+   }
+ };
+ m.on('moveend zoomend',renderVisible);renderVisible();
  if(routeCoords.length>1){L.polyline(routeCoords,{weight:5,opacity:.8}).addTo(m);const bounds=L.latLngBounds(routeCoords);m.fitBounds(bounds,{padding:[28,28]})}stops.forEach((c,i)=>L.circleMarker([c.lat,c.lng],{radius:11,weight:4,fillOpacity:1}).addTo(m).bindPopup('<b>Parada '+(i+1)+'</b><br>'+c.name+'<br>'+c.power+' kW · '+(c.price===0?'GRATIS':c.price==null?'Precio desconocido':c.price+' €/kWh')));setTimeout(()=>m.invalidateSize(),50);return()=>{m.remove();mapRef.current=null}},[onlyFree,chargers,JSON.stringify(routeCoords),JSON.stringify(stops)]);
  useEffect(()=>{const m=mapRef.current;if(!m||!position)return;L.circleMarker(position,{radius:8,weight:3,fillOpacity:1}).addTo(m).bindPopup('Tu ubicación').openPopup();m.setView(position,13)},[position]);
  return <div id="map" ref={ref}/>;

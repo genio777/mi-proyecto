@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#0b7a3e"/>
+<link rel="manifest" href="./manifest.webmanifest"/>
+<title>CargaGratis España</title>
+</head>
+<body>
+<div id="root"><p style="font-family:system-ui;padding:24px">Cargando CargaGratis España…</p></div>
+<script>
+(function(){
+ var errors=[];
+ function showError(message){
+   errors.push(message);
+   var root=document.getElementById('root');
+   if(!root || !root.textContent.includes('Cargando CargaGratis')) return;
+   root.innerHTML='';
+   var box=document.createElement('div');
+   box.style.cssText='padding:24px;font:15px/1.5 system-ui;color:#17221b;max-width:760px;margin:auto';
+   var h=document.createElement('h2');h.textContent='CargaGratis no ha podido iniciarse';box.appendChild(h);
+   var p=document.createElement('p');p.textContent='Diagnóstico: '+errors.join(' | ');box.appendChild(p);
+   var q=document.createElement('p');q.textContent='Dirección: '+location.href;box.appendChild(q);
+   var b=document.createElement('button');b.textContent='Reintentar sin caché';b.style.cssText='padding:12px;border:0;border-radius:8px;background:#08783d;color:white';
+   b.onclick=function(){location.replace(location.pathname+'?recarga='+Date.now())};box.appendChild(b);
+   root.appendChild(box);
+ }
+ window.addEventListener('error',function(e){if(e.target && e.target!==window){var url=e.target.src||e.target.href||e.target.tagName||'recurso desconocido';errors.push('No se ha cargado: '+url);return;}showError((e.message||'Error JavaScript')+' · '+(e.filename||'')+':'+(e.lineno||''));},true);
+ window.addEventListener('unhandledrejection',function(e){showError(String(e.reason));});
+ setTimeout(function(){var r=document.getElementById('root');if(r&&r.textContent.includes('Cargando CargaGratis'))showError('La aplicación no ha iniciado en 12 segundos. '+(errors.length?'Recursos fallidos: '+errors.join(' | '):'No se ha detectado un recurso fallido; comprueba que el JavaScript principal se ejecute.'));},12000);
+})();
+</script>
+<script type="module" src="./src/main.tsx"></script>
+</body>
+</html>

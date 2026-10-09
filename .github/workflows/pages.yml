@@ -1,4 +1,4 @@
-name: Deploy CargaGratis España to GitHub Pages
+name: Compilar y publicar CargaGratis España
 on:
   push:
     branches: [main]
@@ -7,11 +7,9 @@ on:
     - cron: '20 4 * * *'
 permissions:
   contents: write
-  pages: write
-  id-token: write
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: cargagratis-branch-publish
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -48,48 +46,16 @@ jobs:
           cp -a dist/. ./
           git config user.name 'cargagratis-deploy-bot'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html assets data manifest.webmanifest sw.js 2>/dev/null || true
+          git add -A -- index.html assets data manifest.webmanifest sw.js 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m 'Publish compiled CargaGratis site [skip ci]'
+            git pull --rebase origin main
             git push origin HEAD:main
           fi
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v5
-      - name: Subir aplicación compilada
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Publicar
-        id: deployment
-        uses: actions/deploy-pages@v4
-      - name: Comprobar web publicada y JavaScript
-        shell: bash
-        env:
-          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+      - name: Verificar HTML publicado en la rama
         run: |
-          set -euo pipefail
-          echo "URL publicada: $PAGE_URL"
-          for attempt in 1 2 3 4 5 6; do
-            curl -fsSL --max-time 25 -H 'Cache-Control: no-cache' "${PAGE_URL}?v=${GITHUB_SHA}" -o /tmp/cargagratis-page.html && break
-            echo "Esperando propagación GitHub Pages... $attempt"
-            sleep 15
-          done
-          test -s /tmp/cargagratis-page.html
-          if grep -q 'src/main.tsx' /tmp/cargagratis-page.html; then
-            echo 'ERROR: GitHub Pages está sirviendo el HTML fuente, NO dist/index.html.'
-            echo 'Solución: Settings > Pages > Source > GitHub Actions.'
-            exit 1
-          fi
-          JS_PATH=$(grep -oE 'src="[^"]+\.js"' /tmp/cargagratis-page.html | head -1 | cut -d '"' -f 2)
-          if [ -z "$JS_PATH" ]; then echo 'ERROR: no hay bundle JavaScript en la página publicada'; exit 1; fi
-          JS_URL=$(PAGE_ASSET="$JS_PATH" python3 -c 'from urllib.parse import urljoin;import os;print(urljoin(os.environ["PAGE_URL"],os.environ["PAGE_ASSET"]))')
-          curl -fsSL --max-time 25 "$JS_URL" -o /tmp/cargagratis-app.js
-          test -s /tmp/cargagratis-app.js
-          echo "OK: HTML compilado y JavaScript publicados en $PAGE_URL"
+          test -s index.html
+          test -d assets
+          if grep -q 'src/main.tsx' index.html; then echo 'ERROR: se está publicando código fuente sin compilar'; exit 1; fi
+          echo 'OK: aplicación compilada y preparada para GitHub Pages desde main'
+

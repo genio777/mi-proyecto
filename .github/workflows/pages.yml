@@ -70,7 +70,7 @@ jobs:
           fi
           JS_PATH=$(grep -oE 'src="[^"]+\.js"' /tmp/cargagratis-page.html | head -1 | cut -d '"' -f 2)
           if [ -z "$JS_PATH" ]; then echo 'ERROR: no hay bundle JavaScript en la página publicada'; exit 1; fi
-          JS_URL=$(python3 -c 'from urllib.parse import urljoin;import os;print(urljoin(os.environ["PAGE_URL"],os.environ["JS_PATH"]))' )
+          JS_URL=$(PAGE_ASSET="$JS_PATH" python3 -c 'from urllib.parse import urljoin;import os;print(urljoin(os.environ["PAGE_URL"],os.environ["PAGE_ASSET"]))')
           curl -fsSL --max-time 25 "$JS_URL" -o /tmp/cargagratis-app.js
           test -s /tmp/cargagratis-app.js
           echo "OK: HTML compilado y JavaScript publicados en $PAGE_URL"

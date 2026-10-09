@@ -1,36 +1,18 @@
-name: Actualizar cargadores España
+name: Comprobar catálogo oficial DGT REVE
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/update-chargers.mjs'
-      - '.github/workflows/update-chargers.yml'
-  schedule:
-    - cron: '37 3 * * *'
 permissions:
-  contents: write
+  contents: read
 jobs:
-  update:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - name: Actualizar RIPREE
-        id: ripree
-        continue-on-error: true
-        run: node scripts/update-chargers.mjs
-      - name: Estado de la fuente
+          node-version: '22'
+      - name: Importar datos oficiales y validar integridad
+        run: node scripts/import-national.mjs
+      - name: Comprobar cantidad y origen
         run: |
-          if [ "${{ steps.ripree.outcome }}" != "success" ]; then
-            echo "::warning::RIPREE no ofrece en este momento una descarga CSV directa automatizable. Se conserva la última base válida; nunca se sustituye por datos HTML o incompletos."
-          fi
-      - name: Guardar cambios
-        run: |
-          git config user.name "cargagratis-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add public/data/chargers-spain.json
-          git diff --cached --quiet || git commit -m "Actualiza cargadores oficiales RIPREE"
-          git push
+          node --input-type=module -e "import fs from 'node:fs';const d=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));if(d.chargers.length<5000||!d.source.includes('DGT'))process.exit(1);console.log('Estaciones verificadas en archivo:',d.chargers.length)"

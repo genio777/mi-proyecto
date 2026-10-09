@@ -1,0 +1,12 @@
+{
+  "name":"CargaGratis España",
+  "short_name":"CargaGratis",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#f6f8f7",
+  "theme_color":"#0b7a3e",
+  "lang":"es",
+  "description":"Planificador gratuito de recarga de vehículos eléctricos con privacidad local.",
+  "categories":["navigation","travel","utilities"]
+}

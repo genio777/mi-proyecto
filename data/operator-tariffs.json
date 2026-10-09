@@ -1,0 +1,132 @@
+{
+  "updated": "2026-10-09T11:22:59.078Z",
+  "currency": "EUR",
+  "unit": "kWh",
+  "note": "Tarifas de referencia. El precio del conector/estación prevalece siempre.",
+  "operators": [
+    {
+      "id": "free",
+      "name": "Gratis verificado",
+      "tiers": [
+        {
+          "label": "Gratis",
+          "price": 0
+        }
+      ],
+      "source": "verificado_por_punto",
+      "status": "verified"
+    },
+    {
+      "id": "repsol",
+      "name": "Repsol",
+      "tiers": [
+        {
+          "label": "Normal",
+          "price": 0.36
+        },
+        {
+          "label": "Rápida",
+          "price": 0.48
+        },
+        {
+          "label": "Ultrarrápida",
+          "price": 0.56
+        }
+      ],
+      "source": "https://www.repsol.es/particulares/vehiculos/movilidad-electrica/recarga-fuera-de-casa/",
+      "status": "official",
+      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "sourceReachable": true
+    },
+    {
+      "id": "iberdrola-bp",
+      "name": "Iberdrola | bp pulse",
+      "tiers": [
+        {
+          "label": "7,4 kW",
+          "price": 0.35
+        },
+        {
+          "label": "7,4–22 kW",
+          "price": 0.39
+        },
+        {
+          "label": "50 kW",
+          "price": 0.45
+        },
+        {
+          "label": "50–200 kW",
+          "price": 0.6
+        },
+        {
+          "label": ">200 kW",
+          "price": 0.67
+        }
+      ],
+      "source": "https://iberdrola-bppulse.es/cargar-coche-electrico/tarifas/",
+      "status": "official",
+      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "sourceReachable": true
+    },
+    {
+      "id": "zunder",
+      "name": "Zunder",
+      "tiers": [
+        {
+          "label": "AC hasta 50 kW",
+          "price": 0.42
+        },
+        {
+          "label": "Rápida >50 kW",
+          "price": 0.59
+        }
+      ],
+      "source": "https://www.zunder.com/usuario-ve/",
+      "status": "official",
+      "note": "Puede variar por ubicación; convenios y suscripciones tienen otros precios.",
+      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "sourceReachable": true
+    },
+    {
+      "id": "endesa",
+      "name": "Endesa",
+      "tiers": [],
+      "source": "https://www.endesaxway.com/es/es/productos-y-servicios/app-endesaxway-servicio-recarga/tarifas",
+      "status": "station_price_required",
+      "note": "Usar precio del conector mostrado por Endesa On Your Way.",
+      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "sourceReachable": true
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla Supercharger",
+      "tiers": [],
+      "source": "https://www.tesla.com/es_es/support/charging/supercharger/fees",
+      "status": "station_price_required",
+      "note": "Precio variable por estación/horario; usar precio específico cuando esté disponible.",
+      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "sourceReachable": false,
+      "lastError": "HTTP 403"
+    },
+    {
+      "id": "ionity",
+      "name": "IONITY",
+      "tiers": [],
+      "source": "https://www.ionity.eu/es/red/acceso-pagos",
+      "status": "station_price_required",
+      "note": "Precio depende de ubicación/tarifa/suscripción.",
+      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "sourceReachable": true
+    },
+    {
+      "id": "powerdot",
+      "name": "Powerdot",
+      "tiers": [],
+      "source": "https://www.powerdot.eu/mobility-apps",
+      "status": "ocpi_available",
+      "note": "Powerdot ofrece integración OCPI para precio y disponibilidad en tiempo real.",
+      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "sourceReachable": true
+    }
+  ]
+}

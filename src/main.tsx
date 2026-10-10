@@ -154,7 +154,13 @@ function App(){
       const progressKm=hav(current,target)-hav([x.c.lat,x.c.lng],target);
       if(progressKm<Math.max(12,distance*.15))continue;
       const detour=x.nearest*2;
-      const score=(routeMode==='fast'?(Math.min(maxChargeKw,x.c.power)*-.4+detour+Math.abs(distance-availableKm*.7)*.15):routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1)-Math.min(progressKm,availableKm)*.12;
+      // En modo rápido comparar minutos estimados de conducción y recarga,
+      // no una bonificación arbitraria por potencia que favorecía 22 kW.
+      const estimatedChargeKwh=battery-remaining;
+      const estimatedChargeMinutes=estimatedChargeKwh/Math.max(1,Math.min(maxChargeKw,x.c.power)*.55)*60;
+      const score=routeMode==='fast'
+       ?leg.duration/60+estimatedChargeMinutes+Math.max(0,detour)*.8-Math.min(progressKm,availableKm)*.12
+       :(routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1)-Math.min(progressKm,availableKm)*.12;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};
      }catch{}
     }

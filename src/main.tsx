@@ -143,7 +143,7 @@ function App(){
     }).filter(x=>x.nearest<=20&&x.progress>=(stage>0?0:.015)&&x.progress<.985)
       // Con pocos operadores, priorizar estaciones alcanzables y próximas al recorrido;
       // ordenar primero por potencia descartaba cargadores útiles antes de evaluarlos.
-      .sort((x,y)=>x.nearest-y.nearest).slice(0,70);
+      .sort((x,y)=>x.nearest-y.nearest).slice(0,140);
     let best:{c:Charger,r:any,remaining:number,score:number}|null=null;
     for(const x of eligible){
      try{
@@ -154,7 +154,7 @@ function App(){
       const progressKm=hav(current,target)-hav([x.c.lat,x.c.lng],target);
       if(progressKm<Math.max(12,distance*.15))continue;
       const detour=x.nearest*2;
-      const score=routeMode==='fast'?(Math.min(maxChargeKw,x.c.power)*-.4+detour+Math.abs(distance-availableKm*.7)*.15):routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1;
+      const score=(routeMode==='fast'?(Math.min(maxChargeKw,x.c.power)*-.4+detour+Math.abs(distance-availableKm*.7)*.15):routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1)-Math.min(progressKm,availableKm)*.12;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};
      }catch{}
     }

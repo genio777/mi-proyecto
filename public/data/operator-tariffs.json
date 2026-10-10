@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09T11:22:59.078Z",
+  "updated": "2026-10-10T10:40:17.461Z",
   "currency": "EUR",
   "unit": "kWh",
   "note": "Tarifas de referencia. El precio del conector/estación prevalece siempre.",
@@ -35,7 +35,7 @@
       ],
       "source": "https://www.repsol.es/particulares/vehiculos/movilidad-electrica/recarga-fuera-de-casa/",
       "status": "official",
-      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "lastCheck": "2026-10-10T10:40:17.461Z",
       "sourceReachable": true
     },
     {
@@ -65,7 +65,7 @@
       ],
       "source": "https://iberdrola-bppulse.es/cargar-coche-electrico/tarifas/",
       "status": "official",
-      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "lastCheck": "2026-10-10T10:40:17.461Z",
       "sourceReachable": true
     },
     {
@@ -84,7 +84,7 @@
       "source": "https://www.zunder.com/usuario-ve/",
       "status": "official",
       "note": "Puede variar por ubicación; convenios y suscripciones tienen otros precios.",
-      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "lastCheck": "2026-10-10T10:40:17.461Z",
       "sourceReachable": true
     },
     {
@@ -94,7 +94,7 @@
       "source": "https://www.endesaxway.com/es/es/productos-y-servicios/app-endesaxway-servicio-recarga/tarifas",
       "status": "station_price_required",
       "note": "Usar precio del conector mostrado por Endesa On Your Way.",
-      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "lastCheck": "2026-10-10T10:40:17.461Z",
       "sourceReachable": true
     },
     {
@@ -104,7 +104,7 @@
       "source": "https://www.tesla.com/es_es/support/charging/supercharger/fees",
       "status": "station_price_required",
       "note": "Precio variable por estación/horario; usar precio específico cuando esté disponible.",
-      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "lastCheck": "2026-10-10T10:40:17.461Z",
       "sourceReachable": false,
       "lastError": "HTTP 403"
     },
@@ -115,7 +115,7 @@
       "source": "https://www.ionity.eu/es/red/acceso-pagos",
       "status": "station_price_required",
       "note": "Precio depende de ubicación/tarifa/suscripción.",
-      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "lastCheck": "2026-10-10T10:40:17.461Z",
       "sourceReachable": true
     },
     {
@@ -125,7 +125,7 @@
       "source": "https://www.powerdot.eu/mobility-apps",
       "status": "ocpi_available",
       "note": "Powerdot ofrece integración OCPI para precio y disponibilidad en tiempo real.",
-      "lastCheck": "2026-10-09T11:22:59.078Z",
+      "lastCheck": "2026-10-10T10:40:17.461Z",
       "sourceReachable": true
     }
   ]

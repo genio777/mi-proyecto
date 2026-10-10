@@ -205,7 +205,7 @@ function App(){
     stageCharge+=minutes;
     if(best.c.price===null)stageUnknown++;else stageCost+=chargeKwh*best.c.price;
     allStops.push(best.c);used.add(best.c.id);
-    stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · llegada '+Math.round(arrivalEnergy/battery*100)+'% · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
+    stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · SOC llegada '+Math.round(arrivalEnergy/battery*100)+'% · distancia restante aprox. '+Math.round(hav([best.c.lat,best.c.lng],target))+' km (línea recta) · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
     energy=battery;current=[best.c.lat,best.c.lng];
     if(step===23){failureDetail='Etapa '+(stage+1)+' ('+name+'): se agotaron 24 paradas en esta etapa sin llegar al destino; faltan aproximadamente '+Math.round(directKm)+' km desde la posición anterior.';complete=false;}
    }

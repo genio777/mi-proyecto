@@ -107,7 +107,7 @@ function App(){
    let pending=routeCache.get(key);
    if(!pending){
     const u='https://router.project-osrm.org/route/v1/driving/'+points.map(p=>p[1]+','+p[0]).join(';')+'?overview='+(geometry?'full':'false')+(geometry?'&geometries=geojson':'');
-    pending=(async()=>{const r=await fetch(u);if(!r.ok)throw Error('Servicio de rutas no disponible');const j=await r.json();if(j.code!=='Ok'||!j.routes?.[0])throw Error('No se encontró ruta por carretera');return j.routes[0]})();
+    pending=(async()=>{const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),9000);let r:Response;try{r=await fetch(u,{signal:controller.signal})}finally{clearTimeout(timeout)}if(!r.ok)throw Error('Servicio de rutas no disponible');const j=await r.json();if(j.code!=='Ok'||!j.routes?.[0])throw Error('No se encontró ruta por carretera');return j.routes[0]})();
     routeCache.set(key,pending);
     pending.catch(()=>routeCache.delete(key));
    }
@@ -115,18 +115,18 @@ function App(){
   };
   for(let stage=0;stage<targets.length&&complete;stage++){
    const target=targets[stage],name=targetNames[stage];let stageKm=0,stageDrive=0,stageCharge=0,stageCost=0,stageUnknown=0,stageStops=0;
-   // En etapas posteriores, permitir recargar cerca del destino anterior antes de iniciar
-   // el trayecto de regreso. De otro modo el filtro de progreso excluye las estaciones
-   // de Barcelona cuando se llega con poca batería.
-   if(stage>0&&energy<battery*.90){
+   // Solo buscar recarga inicial cuando la autonomía restante no permite
+   // llegar a una estación de avance; limitar las consultas de carretera.
+   if(stage>0&&energy<battery*.55){
+    const availableAtStart=(energy-minimum)*100/consumption;
     const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
-     .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=100)
-     .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,60);
+     .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=Math.min(availableAtStart,45))
+     .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,8);
     for(const c of nearby){
      try{
       const leg=await route([current,[c.lat,c.lng]]);
       const d=leg.distance/1000,arrival=energy-d*consumption/100;
-      if(d>0.5&&arrival>=minimum&&d<=(energy-minimum)*100/consumption){
+      if(d>0.5&&arrival>=minimum&&d<=availableAtStart){
        const chargeKwh=battery-arrival,avgKw=Math.min(maxChargeKw,c.power)*.55;
        if(avgKw<=0)continue;
        const minutes=chargeKwh/avgKw*60;
@@ -135,7 +135,7 @@ function App(){
        stageKm+=d;stageDrive+=leg.duration/60;stageCharge+=minutes;stageStops++;
        if(c.price===null)stageUnknown++;else stageCost+=chargeKwh*c.price;
        allStops.push(c);used.add(c.id);
-       stageLines.push('Etapa '+(stage+1)+' · Recarga antes del regreso: '+displayStation(c)+' · '+c.power+' kW · llegada '+Math.round(arrival/battery*100)+'% · carga '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min');
+       stageLines.push('Etapa '+(stage+1)+' · Recarga al inicio: '+displayStation(c)+' · '+c.power+' kW · llegada '+Math.round(arrival/battery*100)+'% · carga '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min');
        current=[c.lat,c.lng];energy=battery;break;
       }
      }catch{}
@@ -169,7 +169,7 @@ function App(){
        const ax=x.nearest*2+Math.abs(hav(current,[x.c.lat,x.c.lng])-availableKm*.7)*.08;
        const ay=y.nearest*2+Math.abs(hav(current,[y.c.lat,y.c.lng])-availableKm*.7)*.08;
        return ax-ay;
-      }).slice(0,45);
+      }).slice(0,12);
     let best:{c:Charger,r:any,remaining:number,score:number}|null=null;
     for(const x of eligible){
      try{

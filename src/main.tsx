@@ -103,7 +103,7 @@ function App(){
    // el trayecto de regreso. De otro modo el filtro de progreso excluye las estaciones
    // de Barcelona cuando se llega con poca batería.
    if(stage>0&&energy<battery*.90){
-    const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
+    const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>routeMode!=='fast'||c.power>=50)
      .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=100)
      .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,60);
     for(const c of nearby){
@@ -136,7 +136,7 @@ function App(){
     if(allStops.length>=40){failureDetail='Límite de seguridad de 40 paradas alcanzado en etapa '+(stage+1);complete=false;break}
     const points:[number,number][]=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
     const availableKm=(energy-minimum)*100/consumption;
-    const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
+    const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>routeMode!=='fast'||c.power>=50).filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
      let nearest=Infinity,idx=0;const stride=Math.max(1,Math.floor(points.length/110));
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};

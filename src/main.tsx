@@ -150,6 +150,9 @@ function App(){
       const leg=await route([current,[x.c.lat,x.c.lng]],false),distance=leg.distance/1000;
       const remaining=energy-distance*consumption/100;
       if(distance<5||distance>availableKm||remaining<minimum||(stage===0&&used.has(x.c.id)))continue;
+      // Exigir avance real hacia el destino: evita bucles entre cargadores cercanos.
+      const progressKm=hav(current,target)-hav([x.c.lat,x.c.lng],target);
+      if(progressKm<Math.max(12,distance*.15))continue;
       const detour=x.nearest*2;
       const score=routeMode==='fast'?(Math.min(maxChargeKw,x.c.power)*-.4+detour+Math.abs(distance-availableKm*.7)*.15):routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};

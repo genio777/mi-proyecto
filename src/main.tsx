@@ -110,7 +110,7 @@ function App(){
   };
   for(let stage=0;stage<targets.length&&complete;stage++){
    const target=targets[stage],name=targetNames[stage];let stageKm=0,stageDrive=0,stageCharge=0,stageCost=0,stageUnknown=0,stageStops=0;
-   for(let step=0;step<10;step++){
+   for(let step=0;step<16;step++){
     const direct=await route([current,target]);
     const directKm=direct.distance/1000;
     if(directKm*consumption/100+minimum<=energy+1e-7){
@@ -118,15 +118,15 @@ function App(){
      const line=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
      allCoords.push(...(allCoords.length?line.slice(1):line));current=target;break;
     }
-    if(allStops.length>=12){complete=false;break}
+    if(allStops.length>=24){complete=false;break}
     const points:[number,number][]=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
     const availableKm=(energy-minimum)*100/consumption;
     const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>!used.has(c.id)&&(routeMode!=='free'||c.price===0)).map(c=>{
      let nearest=Infinity,idx=0;const stride=Math.max(1,Math.floor(points.length/110));
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};
-    }).filter(x=>x.nearest<=12&&x.progress>.03&&x.progress<.97)
-      .sort((x,y)=>x.nearest-y.nearest).slice(0,18);
+    }).filter(x=>x.nearest<=25&&x.progress>.015&&x.progress<.985)
+      .sort((x,y)=>x.nearest-y.nearest).slice(0,65);
     let best:{c:Charger,r:any,remaining:number,score:number}|null=null;
     for(const x of eligible){
      try{
@@ -137,17 +137,20 @@ function App(){
       const onwardLeg=await route([[x.c.lat,x.c.lng],target],false);
       const onwardKm=onwardLeg.distance/1000;
       const detourKm=Math.max(0,distance+onwardKm-directKm);
+      // No seleccionar estaciones que alejen el vehículo del destino o provoquen ciclos.
+      if(onwardKm>=directKm-5)continue;
       const detourMin=Math.max(0,leg.duration/60+onwardLeg.duration/60-direct.duration/60);
       const minChargeKwh=Math.max(0,Math.min(battery,Math.min(onwardKm,availableKm*.75)*consumption/100+minimum+battery*.05)-remaining);
       const estimatedChargeMin=estimatedChargeMinutes(remaining,remaining+minChargeKwh,battery,x.c.power,maxChargeKw);
       const unknownTariff=x.c.price===null;
       const estimatedCost=minChargeKwh*(x.c.price??0);
       const progressPenalty=Math.abs(distance-availableKm*.7)*.04;
+      const insufficientProgressPenalty=Math.max(0,Math.min(availableKm*.6,directKm*.6)-(directKm-onwardKm))*.6;
       const score=routeMode==='fast'
-       ?detourMin+estimatedChargeMin+progressPenalty
+       ?detourMin+estimatedChargeMin+progressPenalty+insufficientProgressPenalty
        :routeMode==='cheap'
         ?(unknownTariff?10000:estimatedCost*30)+detourMin*.4+progressPenalty
-        :detourMin+estimatedChargeMin+progressPenalty;
+        :detourMin+estimatedChargeMin+progressPenalty+insufficientProgressPenalty;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};
      }catch{}
     }
@@ -168,7 +171,7 @@ function App(){
     allStops.push(best.c);used.add(best.c.id);
     stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · llegada '+Math.round(arrivalEnergy/battery*100)+'% · cargar hasta '+Math.round(departureEnergy/battery*100)+'% ('+chargeKwh.toFixed(1)+' kWh) · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
     energy=departureEnergy;current=[best.c.lat,best.c.lng];
-    if(step===9)complete=false;
+    if(step===15)complete=false;
    }
    kmTotal+=stageKm;driveTotal+=stageDrive;chargeTotal+=stageCharge;cost+=stageCost;unknownPrices+=stageUnknown;
    if(complete)stageArrivals.push({name:tripType==='round'?(stage===0?'Destino':'Regreso al origen'):'Destino '+(stage+1),soc:Math.round(energy/battery*100)});if(complete)stageLines.push('Destino '+(stage+1)+' ('+name+'): '+Math.round(stageKm)+' km en la etapa · '+Math.floor(stageDrive/60)+' h '+Math.round(stageDrive%60)+' min conduciendo · SOC llegada '+Math.round(energy/battery*100)+'%');

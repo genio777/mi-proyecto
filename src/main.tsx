@@ -114,14 +114,16 @@ function App(){
      let nearest=Infinity,idx=0;const stride=Math.max(1,Math.floor(points.length/110));
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};
-    }).filter(x=>x.nearest<=12&&x.progress>.03&&x.progress<.97)
-      .sort((x,y)=>routeMode==='fast'?(y.c.power-x.c.power)||x.nearest-y.nearest:routeMode==='cheap'?(x.c.price??999)-(y.c.price??999)||x.nearest-y.nearest:x.nearest-y.nearest).slice(0,35);
+    }).filter(x=>x.nearest<=20&&x.progress>.015&&x.progress<.985)
+      // Con pocos operadores, priorizar estaciones alcanzables y próximas al recorrido;
+      // ordenar primero por potencia descartaba cargadores útiles antes de evaluarlos.
+      .sort((x,y)=>x.nearest-y.nearest).slice(0,70);
     let best:{c:Charger,r:any,remaining:number,score:number}|null=null;
     for(const x of eligible){
      try{
       const leg=await route([current,[x.c.lat,x.c.lng]],false),distance=leg.distance/1000;
       const remaining=energy-distance*consumption/100;
-      if(distance<5||distance>availableKm||remaining<minimum)continue;
+      if(distance<5||distance>availableKm||remaining<minimum||used.has(x.c.id))continue;
       const detour=x.nearest*2;
       const score=routeMode==='fast'?(Math.min(maxChargeKw,x.c.power)*-.4+detour+Math.abs(distance-availableKm*.7)*.15):routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};

@@ -99,6 +99,32 @@ function App(){
   };
   for(let stage=0;stage<targets.length&&complete;stage++){
    const target=targets[stage],name=targetNames[stage];let stageKm=0,stageDrive=0,stageCharge=0,stageCost=0,stageUnknown=0,stageStops=0;
+   // En etapas posteriores, permitir recargar cerca del destino anterior antes de iniciar
+   // el trayecto de regreso. De otro modo el filtro de progreso excluye las estaciones
+   // de Barcelona cuando se llega con poca batería.
+   if(stage>0&&energy<minimum+battery*.30){
+    const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
+     .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=35)
+     .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,25);
+    for(const c of nearby){
+     try{
+      const leg=await route([current,[c.lat,c.lng]]);
+      const d=leg.distance/1000,arrival=energy-d*consumption/100;
+      if(d>0.5&&arrival>=minimum&&d<=(energy-minimum)*100/consumption){
+       const chargeKwh=battery-arrival,avgKw=Math.min(maxChargeKw,c.power)*.55;
+       if(avgKw<=0)continue;
+       const minutes=chargeKwh/avgKw*60;
+       const line=leg.geometry.coordinates.map((p:number[])=>[p[1],p[0]] as [number,number]);
+       allCoords.push(...(allCoords.length?line.slice(1):line));
+       stageKm+=d;stageDrive+=leg.duration/60;stageCharge+=minutes;stageStops++;
+       if(c.price===null)stageUnknown++;else stageCost+=chargeKwh*c.price;
+       allStops.push(c);used.add(c.id);
+       stageLines.push('Etapa '+(stage+1)+' · Recarga antes del regreso: '+displayStation(c)+' · '+c.power+' kW · llegada '+Math.round(arrival/battery*100)+'% · carga '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min');
+       current=[c.lat,c.lng];energy=battery;break;
+      }
+     }catch{}
+    }
+   }
    for(let step=0;step<10;step++){
     const direct=await route([current,target]);
     const directKm=direct.distance/1000;

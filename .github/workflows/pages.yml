@@ -36,6 +36,28 @@ jobs:
           node -e "const d=require('./public/data/chargers-spain.json');const t=d.chargers.filter(c=>/tesla/i.test((c.operator||'')+' '+c.name));console.log('Superchargers Tesla identificados:',t.length);if(!t.length)process.exit(1)"
       - name: Compilar CargaGratis
         run: npm run build
+      - name: Comprobar funcionalidades críticas antes de publicar
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const src=fs.readFileSync('src/main.tsx','utf8');
+          const required=[
+            ['selector de viajes', "tripTypeSelector"],
+            ['cálculo de dos destinos', "tripType==='two'"],
+            ['ida y vuelta', "tripType==='round'"],
+            ['SOC por etapas', 'stageArrivals'],
+            ['resumen de SOC', 'tripSocMetric'],
+            ['tarifa desconocida', 'Precio no disponible'],
+            ['recarga por SOC', 'estimatedChargeMinutes('],
+            ['paradas y coste', 'chargingStops']
+          ];
+          for(const [name,token] of required){if(!src.includes(token))throw Error('Falta funcionalidad crítica: '+name)}
+          const js=fs.readdirSync('dist/assets').filter(f=>f.endsWith('.js'));
+          if(!js.length)throw Error('No se ha generado JavaScript');
+          const compiled=js.map(f=>fs.readFileSync('dist/assets/'+f,'utf8')).join('');
+          for(const label of ['SOC de llegada','Tipo de viaje','Coste de recarga'])if(!compiled.includes(label))throw Error('No se encuentra en la compilación: '+label);
+          console.log('Comprobaciones estáticas de publicación superadas');
+          JS
       - name: Verificar archivos compilados
         shell: bash
         run: |

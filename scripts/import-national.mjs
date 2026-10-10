@@ -16,10 +16,14 @@ const sites=[];for(const raw of xml.split('<egi:energyInfrastructureSite ').slic
  if(!conn.length)continue;
  const n=s.indexOf('<fac:name>');const name=n>=0?clean(get(s.slice(n),'com:value')):'Punto de recarga';
  const city=clean(s.match(/Municipio: ([^<]*)/)?.[1]||'');
- sites.push([id,name,lat,lng,city,conn]);
+ const province=clean(s.match(/Provincia: ([^<]*)/)?.[1]||'');
+ const address=clean(s.match(/Dirección: ([^<]*)/)?.[1]||'');
+ const opStart=s.indexOf('<fac:operator');const opBlock=opStart>=0?s.slice(opStart).split('</fac:operator>')[0]:'';
+ const operator=opBlock.includes('<fac:name>')?clean(get(opBlock.slice(opBlock.indexOf('<fac:name>')),'com:value')):'';
+ sites.push([id,name,lat,lng,city,conn,province,address,operator]);
 }
 if(sites.length<5000)throw Error('Importación incompleta: '+sites.length+' estaciones');
 await mkdir('public/data',{recursive:true});
 const now=new Date().toISOString();
-await writeFile('public/data/chargers-spain.json',JSON.stringify({updated:now,source:'DGT MITERD REVE DATEX II',chargers:sites.map(([id,name,lat,lng,city,conns])=>({id,name,city,lat,lng,power:Math.max(...conns.map(c=>c[1])),connector:[...new Set(conns.map(c=>c[0]))].join(', '),price:null,source:'DGT MITERD REVE',verified:'No verificada individualmente',availability:'Desconocida'}))}));
+await writeFile('public/data/chargers-spain.json',JSON.stringify({updated:now,source:'DGT MITERD REVE DATEX II',chargers:sites.map(([id,name,lat,lng,city,conns,province,address,operator])=>({id,name,city,province,address,operator,lat,lng,power:Math.max(...conns.map(c=>c[1])),connector:[...new Set(conns.map(c=>c[0]))].join(', '),price:null,source:'DGT MITERD REVE',verified:'No verificada individualmente',availability:'Desconocida'}))}));
 console.log('Imported official stations:',sites.length);

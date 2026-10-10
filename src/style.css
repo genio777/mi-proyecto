@@ -23,3 +23,5 @@
 @media(min-width:800px){.tripDashboard{grid-template-columns:repeat(5,minmax(0,1fr))}}.tripMetric strong{overflow-wrap:anywhere}
 
 .freeImpossible{margin:14px 0;padding:16px;border:2px solid #b42318;border-radius:14px;background:#fff0ed;color:#8d2019;font-weight:800;font-size:17px;line-height:1.35}.freeImpossible small{display:block;margin-top:8px;font-size:13px;font-weight:500}
+
+.tripSocMetric{gap:7px}.tripSocLine{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;font-size:13px}.tripSocLine span{color:#416451}.tripSocLine strong{font-size:19px;white-space:nowrap}@media(min-width:800px){.tripDashboard{grid-template-columns:repeat(3,minmax(0,1fr))}}

@@ -48,7 +48,7 @@ jobs:
             ['SOC por etapas', 'stageArrivals'],
             ['resumen de SOC', 'tripSocMetric'],
             ['tarifa desconocida', 'Precio no disponible'],
-            ['recarga por SOC', 'estimatedChargeMinutes('],
+            ['cálculo de carga conservador', 'chargingMinutes'],
             ['paradas y coste', 'chargingStops']
           ];
           for(const [name,token] of required){if(!src.includes(token))throw Error('Falta funcionalidad crítica: '+name)}

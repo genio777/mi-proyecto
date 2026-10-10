@@ -43,13 +43,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cp -a dist/. ./
+          # Evita conflictos cuando otra compilación publica antes que esta.
+          # Guardamos dist fuera del árbol Git antes de sincronizar main.
+          mkdir -p /tmp/cargagratis-dist
+          cp -a dist/. /tmp/cargagratis-dist/
+          git fetch origin main
+          git reset --hard origin/main
+          cp -a /tmp/cargagratis-dist/. ./
           git config user.name 'cargagratis-deploy-bot'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A -- index.html assets data manifest.webmanifest sw.js 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m 'Publish compiled CargaGratis site [skip ci]'
-            git pull --rebase origin main
             git push origin HEAD:main
           fi
       - name: Verificar HTML publicado en la rama

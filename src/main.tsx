@@ -110,7 +110,7 @@ function App(){
     if(allStops.length>=12){failureDetail='Límite de 12 paradas alcanzado en etapa '+(stage+1);complete=false;break}
     const points:[number,number][]=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
     const availableKm=(energy-minimum)*100/consumption;
-    const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>!used.has(c.id)&&(routeMode!=='free'||c.price===0)).map(c=>{
+    const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
      let nearest=Infinity,idx=0;const stride=Math.max(1,Math.floor(points.length/110));
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};
@@ -123,7 +123,7 @@ function App(){
      try{
       const leg=await route([current,[x.c.lat,x.c.lng]],false),distance=leg.distance/1000;
       const remaining=energy-distance*consumption/100;
-      if(distance<5||distance>availableKm||remaining<minimum||used.has(x.c.id))continue;
+      if(distance<5||distance>availableKm||remaining<minimum||(stage===0&&used.has(x.c.id)))continue;
       const detour=x.nearest*2;
       const score=routeMode==='fast'?(Math.min(maxChargeKw,x.c.power)*-.4+detour+Math.abs(distance-availableKm*.7)*.15):routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};

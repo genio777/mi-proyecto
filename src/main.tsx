@@ -115,15 +115,28 @@ function App(){
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};
     }).filter(x=>x.nearest<=12&&x.progress>.03&&x.progress<.97)
-      .sort((x,y)=>routeMode==='fast'?(y.c.power-x.c.power)||x.nearest-y.nearest:routeMode==='cheap'?(x.c.price??999)-(y.c.price??999)||x.nearest-y.nearest:x.nearest-y.nearest).slice(0,35);
+      .sort((x,y)=>x.nearest-y.nearest).slice(0,18);
     let best:{c:Charger,r:any,remaining:number,score:number}|null=null;
     for(const x of eligible){
      try{
       const leg=await route([current,[x.c.lat,x.c.lng]],false),distance=leg.distance/1000;
       const remaining=energy-distance*consumption/100;
       if(distance<5||distance>availableKm||remaining<minimum)continue;
-      const detour=x.nearest*2;
-      const score=routeMode==='fast'?(Math.min(maxChargeKw,x.c.power)*-.4+detour+Math.abs(distance-availableKm*.7)*.15):routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1;
+      // Comparar desvío y conducción reales por carretera, no solo potencia nominal.
+      const onwardLeg=await route([[x.c.lat,x.c.lng],target],false);
+      const onwardKm=onwardLeg.distance/1000;
+      const detourKm=Math.max(0,distance+onwardKm-directKm);
+      const detourMin=Math.max(0,leg.duration/60+onwardLeg.duration/60-direct.duration/60);
+      const minChargeKwh=Math.max(0,Math.min(battery,Math.min(onwardKm,availableKm*.75)*consumption/100+minimum+battery*.05)-remaining);
+      const estimatedChargeMin=minChargeKwh/Math.max(1,Math.min(maxChargeKw,x.c.power)*.55)*60;
+      const unknownTariff=x.c.price===null;
+      const estimatedCost=minChargeKwh*(x.c.price??0);
+      const progressPenalty=Math.abs(distance-availableKm*.7)*.04;
+      const score=routeMode==='fast'
+       ?detourMin+estimatedChargeMin+progressPenalty
+       :routeMode==='cheap'
+        ?(unknownTariff?10000:estimatedCost*30)+detourMin*.4+progressPenalty
+        :detourMin+estimatedChargeMin+progressPenalty;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};
      }catch{}
     }

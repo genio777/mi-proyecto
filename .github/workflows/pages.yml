@@ -30,9 +30,10 @@ jobs:
       - name: Informar estado del catálogo
         if: steps.import_dgt.outcome == 'failure'
         run: echo '::warning::Falló la importación DGT. Se publica la aplicación sin inventar cargadores; el mapa informará que no hay catálogo disponible.'
-      - name: Completar Superchargers Tesla desde catálogo comunitario
-        continue-on-error: true
-        run: node scripts/import-tesla.mjs
+      - name: Importar y verificar Superchargers Tesla
+        run: |
+          node scripts/import-tesla.mjs
+          node -e "const d=require('./public/data/chargers-spain.json');const t=d.chargers.filter(c=>/tesla/i.test((c.operator||'')+' '+c.name));console.log('Superchargers Tesla identificados:',t.length);if(!t.length)process.exit(1)"
       - name: Compilar CargaGratis
         run: npm run build
       - name: Verificar archivos compilados

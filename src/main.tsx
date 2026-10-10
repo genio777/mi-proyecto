@@ -162,7 +162,7 @@ function App(){
       .filter(x=>{
        const straightKm=hav(current,[x.c.lat,x.c.lng]);
        const advance=hav(current,target)-hav([x.c.lat,x.c.lng],target);
-       return straightKm>=5&&straightKm<=availableKm&&advance>=Math.max(12,straightKm*.15);
+       return straightKm>=5&&straightKm<=availableKm&&advance>=Math.max(12,straightKm*.15)&&hav([x.c.lat,x.c.lng],target)<hav(current,target);
       })
       .sort((x,y)=>{
        // Priorizar cercanía al corredor sin excluir las estaciones que avanzan.
@@ -184,9 +184,12 @@ function App(){
       // no una bonificación arbitraria por potencia que favorecía 22 kW.
       const estimatedChargeKwh=battery-remaining;
       const estimatedChargeMinutes=estimatedChargeKwh/Math.max(1,Math.min(maxChargeKw,x.c.power)*.55)*60;
+      // Evitar encadenar estaciones a pocos kilómetros con cargas de 2-3 kWh.
+      // Una parada implica tiempo fijo de conexión además de los minutos de carga.
+      const shortHopPenalty=remaining>battery*.75?45+(remaining/battery-.75)*100:0;
       const score=routeMode==='fast'
-       ?leg.duration/60+estimatedChargeMinutes+Math.max(0,detour)*.8-Math.min(progressKm,availableKm)*.12
-       :(routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1)-Math.min(progressKm,availableKm)*.12;
+       ?leg.duration/60+estimatedChargeMinutes+Math.max(0,detour)*.8-Math.min(progressKm,availableKm)*.28+shortHopPenalty
+       :(routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1)-Math.min(progressKm,availableKm)*.24+shortHopPenalty;
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};
      }catch{}
     }

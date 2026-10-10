@@ -206,8 +206,23 @@ else{
   // Probar estaciones hacia adelante. Las distancias sobre la ruta solo preseleccionan; la distancia real la calcula OSRM.
   const eligible=along.filter(x=>!used.has(x.c.id)&&x.approxKm>positionKm+8&&x.approxKm<positionKm+rangeKm*1.12+12);
   const ordered=eligible.sort((x,y)=>{const reachX=Math.abs(x.approxKm-(positionKm+rangeKm*.75)),reachY=Math.abs(y.approxKm-(positionKm+rangeKm*.75));const weight=(v:typeof x)=>routeMode==='fast'?(Math.max(0,maxChargeKw-Math.min(maxChargeKw,v.c.power))*.9+(/tesla/i.test(v.c.operator+' '+v.c.name)&&/tesla/i.test(vehicleName)?-30:0)):routeMode==='cheap'?(v.c.price??10)*5:0;return reachX+weight(x)+x.corridor*2-(reachY+weight(y)+y.corridor*2)}).slice(0,14);
-  let chosen:{c:Charger,distance:number,progress:number,remaining:number}|null=null;
-  for(const x of ordered){try{const distance=await road(current,[x.c.lat,x.c.lng]);const remaining=available-distance*consumption/100;if(remaining<minEnergy||distance<5)continue;chosen={c:x.c,distance,progress:x.approxKm,remaining};break}catch{}}
+  let chosen:{c:Charger,distance:number,progress:number,remaining:number,score:number}|null=null;
+  // Evaluar los candidatos por desvío real y duración de carga, no elegir simplemente el primero.
+  const roadMetrics=async(from:[number,number],to:[number,number])=>{const u='https://router.project-osrm.org/route/v1/driving/'+from[1]+','+from[0]+';'+to[1]+','+to[0]+'?overview=false';const response=await fetch(u);if(!response.ok)throw Error('Servicio de rutas no disponible');const data=await response.json();if(data.code!=='Ok'||!data.routes?.[0])throw Error('Tramo sin ruta');return {km:data.routes[0].distance/1000 as number,min:data.routes[0].duration/60 as number}};
+  let directMetrics:{km:number,min:number}|null=null;try{directMetrics=await roadMetrics(current,b)}catch{}
+  for(const x of ordered){try{
+    const leg=await roadMetrics(current,[x.c.lat,x.c.lng]),distance=leg.km;
+    const remaining=available-distance*consumption/100;if(remaining<minEnergy||distance<5)continue;
+    const onward=await roadMetrics([x.c.lat,x.c.lng],b);
+    const detourMin=directMetrics?Math.max(0,leg.min+onward.min-directMetrics.min):x.corridor*2;
+    const estimatedKwh=Math.max(0,Math.min(battery,onward.km*consumption/100+minEnergy+battery*.05)-remaining);
+    const estimatedChargeMin=estimatedKwh/Math.max(1,Math.min(maxChargeKw,x.c.power)*.55)*60;
+    const progressPenalty=Math.abs(x.approxKm-(positionKm+rangeKm*.75))*.05;
+    const score=routeMode==='fast'?detourMin+estimatedChargeMin+progressPenalty
+      :routeMode==='cheap'?(x.c.price===null?10000:estimatedKwh*x.c.price*30)+detourMin*.4+progressPenalty
+      :detourMin+estimatedChargeMin+progressPenalty;
+    if(!chosen||score<chosen.score)chosen={c:x.c,distance,progress:x.approxKm,remaining,score};
+  }catch{}}
   if(!chosen)break;
   stops.push(chosen.c);used.add(chosen.c.id);totalLegKm+=chosen.distance;segmentKm.push(chosen.distance);
   const arrivalSoc=chosen.remaining/battery*100;

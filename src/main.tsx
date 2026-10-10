@@ -87,11 +87,11 @@ else{
  const along=candidates.map(x=>{let best=Infinity,idx=0;const stride=Math.max(1,Math.floor(coords.length/160));for(let i=0;i<coords.length;i+=stride){const d=hav(coords[i],[x.c.lat,x.c.lng]);if(d<best){best=d;idx=i}}return {...x,approxKm:km*cumulative[idx]/totalShape}}).filter(x=>x.corridor<=12).sort((x,y)=>x.approxKm-y.approxKm);
  const road=async(from:[number,number],to:[number,number])=>{const u='https://router.project-osrm.org/route/v1/driving/'+from[1]+','+from[0]+';'+to[1]+','+to[0]+'?overview=false';const response=await fetch(u);if(!response.ok)throw Error('Servicio de rutas no disponible');const data=await response.json();if(data.code!=='Ok'||!Number.isFinite(data.routes?.[0]?.distance))throw Error('Tramo sin ruta por carretera');return data.routes[0].distance/1000 as number};
  let current=a,positionKm=0,available=startEnergy;const chargingStops:{name:string,kwh:number,minutes:number}[]=[];
- const legs:string[]=[];const used=new Set<string>();
+ const legs:string[]=[];const segmentKm:number[]=[];const used=new Set<string>();
  for(let step=0;step<8;step++){
   // Validar primero si el destino es alcanzable con la energía actual.
   let finalLeg=Infinity;try{finalLeg=await road(current,b)}catch{}
-  if(finalLeg*consumption/100+minEnergy<=available){totalLegKm+=finalLeg;legs.push('Destino: '+finalLeg.toFixed(0)+' km; SOC '+((available-finalLeg*consumption/100)/battery*100).toFixed(0)+'%');complete=true;break}
+  if(finalLeg*consumption/100+minEnergy<=available){totalLegKm+=finalLeg;segmentKm.push(finalLeg);legs.push('Destino: '+finalLeg.toFixed(0)+' km; SOC '+((available-finalLeg*consumption/100)/battery*100).toFixed(0)+'%');complete=true;break}
   const rangeKm=(available-minEnergy)*100/consumption;
   // Probar estaciones hacia adelante. Las distancias sobre la ruta solo preseleccionan; la distancia real la calcula OSRM.
   const eligible=along.filter(x=>!used.has(x.c.id)&&x.approxKm>positionKm+8&&x.approxKm<positionKm+rangeKm*1.12+12);
@@ -99,15 +99,28 @@ else{
   let chosen:{c:Charger,distance:number,progress:number,remaining:number}|null=null;
   for(const x of ordered){try{const distance=await road(current,[x.c.lat,x.c.lng]);const remaining=available-distance*consumption/100;if(remaining<minEnergy||distance<5)continue;chosen={c:x.c,distance,progress:x.approxKm,remaining};break}catch{}}
   if(!chosen)break;
-  stops.push(chosen.c);used.add(chosen.c.id);totalLegKm+=chosen.distance;
+  stops.push(chosen.c);used.add(chosen.c.id);totalLegKm+=chosen.distance;segmentKm.push(chosen.distance);
   const arrivalSoc=chosen.remaining/battery*100;
   // Estimación: se carga hasta el 100 % para permitir el siguiente tramo; no se asume tiempo de carga.
   const charge=battery-chosen.remaining;const effectiveKw=Math.min(maxChargeKw,chosen.c.power);const avgKw=effectiveKw*.55;const chargeMin=charge/avgKw*60;chargingMinutes+=chargeMin;chargingStops.push({name:displayStation(chosen.c),kwh:charge,minutes:chargeMin});
   legs.push('Parada '+stops.length+': '+displayStation(chosen.c)+' ('+chosen.c.city+') · '+chosen.distance.toFixed(0)+' km · SOC llegada '+arrivalSoc.toFixed(0)+'% · cargar hasta 100% (aprox. '+charge.toFixed(1)+' kWh) · carga estimada '+Math.round(chargeMin)+' min (potencia media supuesta 55% del limite de '+effectiveKw.toFixed(0)+' kW) · '+(chosen.c.price===0?'0 € identificado':chosen.c.price==null?'precio desconocido':chosen.c.price.toFixed(2)+' €/kWh'));
   current=[chosen.c.lat,chosen.c.lng];positionKm=chosen.progress;available=battery;
  }
+ if(complete&&stops.length){
+  // Recalcular cada recarga usando solo la energía necesaria para el siguiente tramo y un margen del 5% de batería.
+  chargingMinutes=0;legs.length=0;let actualEnergy=startEnergy;
+  for(let i=0;i<stops.length;i++){
+   const station=stops[i],distance=segmentKm[i];const arrivalEnergy=actualEnergy-distance*consumption/100;
+   const nextDistance=segmentKm[i+1];const requiredEnergy=Math.min(battery,nextDistance*consumption/100+minEnergy+battery*.05);
+   const departureEnergy=Math.max(arrivalEnergy,requiredEnergy);const chargeKwh=Math.max(0,departureEnergy-arrivalEnergy);
+   const effectiveKw=Math.min(maxChargeKw,station.power),averageKw=effectiveKw*.55;const chargeMin=averageKw>0?chargeKwh/averageKw*60:0;
+   chargingMinutes+=chargeMin;actualEnergy=departureEnergy;
+   legs.push('Parada '+(i+1)+': '+displayStation(station)+' · '+distance.toFixed(0)+' km · SOC llegada '+Math.round(arrivalEnergy/battery*100)+'% · cargar hasta '+Math.round(departureEnergy/battery*100)+'% ('+chargeKwh.toFixed(1)+' kWh) · carga estimada '+Math.round(chargeMin)+' min · '+(station.price===0?'0 € identificado':station.price==null?'precio desconocido':station.price.toFixed(2)+' €/kWh'));
+  }
+  const lastKm=segmentKm[segmentKm.length-1];legs.push('Destino: '+lastKm.toFixed(0)+' km · SOC '+Math.round((actualEnergy-lastKm*consumption/100)/battery*100)+'%');
+ }
  if(complete){decision='ITINERARIO CON '+stops.length+' PARADA(S) VALIDADO POR DISTANCIAS DE CARRETERA Y CONSUMO ESTIMADO: '+legs.join(' | ')+'. ⚠️ No se verifica funcionamiento, disponibilidad, potencia real ni acceso a las estaciones. Confirmar antes de viajar. La autonomía real puede variar.'}
- else{stops.length=0;decision='RUTA MULTIPARADA NO VALIDADA: no se ha podido completar una secuencia de estaciones compatibles y alcanzables manteniendo la reserva. No se proponen paradas parciales como ruta viable.'}
+ else{stops.length=0;chargingMinutes=0;decision='RUTA MULTIPARADA NO VALIDADA: no se ha podido completar una secuencia de estaciones compatibles y alcanzables manteniendo la reserva. No se proponen paradas parciales como ruta viable.'}
 }
 let waypointRouteKm:number|null=null,waypointDriveMinutes:number|null=null;
 if(stops.length){try{const waypoints=[a,...stops.map(c=>[c.lat,c.lng] as [number,number]),b];const url='https://router.project-osrm.org/route/v1/driving/'+waypoints.map(p=>p[1]+','+p[0]).join(';')+'?overview=full&geometries=geojson';const resp=await fetch(url);const data=await resp.json();if(resp.ok&&data.code==='Ok'&&data.routes?.[0]?.geometry?.coordinates){waypointRouteKm=data.routes[0].distance/1000;waypointDriveMinutes=data.routes[0].duration/60;setRouteCoords(data.routes[0].geometry.coordinates.map((p:number[])=>[p[1],p[0]]));}else{setRouteCoords([]);decision+=' No se pudo dibujar el itinerario completo.'}}catch{setRouteCoords([]);decision+=' No se pudo dibujar el itinerario completo.'}}

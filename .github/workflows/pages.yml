@@ -44,7 +44,7 @@ jobs:
           const required=[
             ['selector de viajes', "tripTypeSelector"],
             ['cálculo de dos destinos', "tripType==='two'"],
-            ['ida y vuelta', "tripType==='round'"],
+            ['tres destinos', "tripType==='three'"],
             ['SOC por etapas', 'stageArrivals'],
             ['resumen de SOC', 'tripSocMetric'],
             ['tarifa desconocida', 'Precio no disponible'],

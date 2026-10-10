@@ -157,26 +157,9 @@ function App(){
     if(arrivalEnergy<minimum){complete=false;break}
     stageKm+=distance;stageDrive+=leg.duration/60;stageStops++;
     const line=leg.geometry.coordinates.map((p:number[])=>[p[1],p[0]] as [number,number]);allCoords.push(...(allCoords.length?line.slice(1):line));
-    // Calcular SOC objetivo: energía hasta el destino o el próximo cargador alcanzable, sin forzar el 100%.
-    const stationPos:[number,number]=[best.c.lat,best.c.lng];
-    const onward=await route([stationPos,target]);
-    const onwardKm=onward.distance/1000;
-    let requiredKm=onwardKm;
-    const nextLine:[number,number][]=onward.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
-    const nextStations=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>!used.has(c.id)&&c.id!==best.c.id&&(routeMode!=='free'||c.price===0)&&c.power>0);
-    const potential=nextStations.map(c=>{
-      let near=Infinity,idx=0;const stride=Math.max(1,Math.floor(nextLine.length/100));
-      for(let j=0;j<nextLine.length;j+=stride){const d=hav(nextLine[j],[c.lat,c.lng]);if(d<near){near=d;idx=j}}
-      return{c,near,progress:idx/Math.max(1,nextLine.length-1)};
-    }).filter(x=>x.near<=10&&x.progress>.04&&x.progress<.95).sort((x,y)=>x.progress-y.progress).slice(0,12);
-    for(const next of potential){
-      try{const legNext=await route([stationPos,[next.c.lat,next.c.lng]],false);const kmNext=legNext.distance/1000;
-       if(kmNext>=8&&kmNext<requiredKm&&kmNext*consumption/100+minimum+battery*.05<=battery){requiredKm=kmNext;break}
-      }catch{}
-    }
-    const requiredEnergy=requiredKm*consumption/100+minimum+battery*.05;
-    if(requiredEnergy>battery+1e-6){complete=false;break}
-    const departureEnergy=Math.max(arrivalEnergy,Math.min(battery,requiredEnergy));
+    // Restauración conservadora: recarga completa para asegurar autonomía en etapas posteriores.
+    // La optimización parcial de SOC queda desactivada hasta validar la cadena de paradas.
+    const departureEnergy=battery;
     const chargeKwh=Math.max(0,departureEnergy-arrivalEnergy);
     const minutes=estimatedChargeMinutes(arrivalEnergy,departureEnergy,battery,best.c.power,maxChargeKw);
     if(!Number.isFinite(minutes)){complete=false;break}

@@ -133,14 +133,34 @@ function App(){
     if(arrivalEnergy<minimum){complete=false;break}
     stageKm+=distance;stageDrive+=leg.duration/60;stageStops++;
     const line=leg.geometry.coordinates.map((p:number[])=>[p[1],p[0]] as [number,number]);allCoords.push(...(allCoords.length?line.slice(1):line));
-    const chargeKwh=battery-arrivalEnergy,avgKw=Math.min(maxChargeKw,best.c.power)*.55;
+    // Calcular SOC objetivo: energía hasta el destino o el próximo cargador alcanzable, sin forzar el 100%.
+    const stationPos:[number,number]=[best.c.lat,best.c.lng];
+    const onward=await route([stationPos,target]);
+    const onwardKm=onward.distance/1000;
+    let requiredKm=onwardKm;
+    const nextLine:[number,number][]=onward.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
+    const nextStations=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>!used.has(c.id)&&c.id!==best.c.id&&(routeMode!=='free'||c.price===0)&&c.power>0);
+    const potential=nextStations.map(c=>{
+      let near=Infinity,idx=0;const stride=Math.max(1,Math.floor(nextLine.length/100));
+      for(let j=0;j<nextLine.length;j+=stride){const d=hav(nextLine[j],[c.lat,c.lng]);if(d<near){near=d;idx=j}}
+      return{c,near,progress:idx/Math.max(1,nextLine.length-1)};
+    }).filter(x=>x.near<=10&&x.progress>.04&&x.progress<.95).sort((x,y)=>x.progress-y.progress).slice(0,12);
+    for(const next of potential){
+      try{const legNext=await route([stationPos,[next.c.lat,next.c.lng]],false);const kmNext=legNext.distance/1000;
+       if(kmNext>=8&&kmNext<requiredKm&&kmNext*consumption/100+minimum+battery*.05<=battery){requiredKm=kmNext;break}
+      }catch{}
+    }
+    const requiredEnergy=requiredKm*consumption/100+minimum+battery*.05;
+    if(requiredEnergy>battery+1e-6){complete=false;break}
+    const departureEnergy=Math.max(arrivalEnergy,Math.min(battery,requiredEnergy));
+    const chargeKwh=Math.max(0,departureEnergy-arrivalEnergy),avgKw=Math.min(maxChargeKw,best.c.power)*.55;
     const minutes=avgKw>0?chargeKwh/avgKw*60:Infinity;
     if(!Number.isFinite(minutes)){complete=false;break}
     stageCharge+=minutes;
     if(best.c.price===null)stageUnknown++;else stageCost+=chargeKwh*best.c.price;
     allStops.push(best.c);used.add(best.c.id);
-    stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · llegada '+Math.round(arrivalEnergy/battery*100)+'% · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
-    energy=battery;current=[best.c.lat,best.c.lng];
+    stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · llegada '+Math.round(arrivalEnergy/battery*100)+'% · cargar hasta '+Math.round(departureEnergy/battery*100)+'% ('+chargeKwh.toFixed(1)+' kWh) · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
+    energy=departureEnergy;current=[best.c.lat,best.c.lng];
     if(step===9)complete=false;
    }
    kmTotal+=stageKm;driveTotal+=stageDrive;chargeTotal+=stageCharge;cost+=stageCost;unknownPrices+=stageUnknown;
@@ -153,7 +173,7 @@ function App(){
   setRouteCoords(allCoords);setRouteStops(allStops);
   const totalMinutes=driveTotal+chargeTotal,costLabel=unknownPrices?'Precio no disponible':cost.toFixed(2)+' €';
   setRouteMeta({km:kmTotal,minutes:driveTotal,chargingMinutes:chargeTotal,totalMinutes,costLabel,complete:true,modeName:routeMode,arrival:energy/battery*100,stageArrivals});
-  setRouteResult('VIAJE '+(tripType==='round'?'IDA Y VUELTA':'DOS DESTINOS')+' · '+Math.round(kmTotal)+' km · conducción '+Math.floor(driveTotal/60)+' h '+Math.round(driveTotal%60)+' min · recargas '+Math.round(chargeTotal)+' min · tiempo total '+Math.floor(totalMinutes/60)+' h '+Math.round(totalMinutes%60)+' min · coste de recargas '+costLabel+' · SOC final '+Math.round(energy/battery*100)+'% · '+stageLines.join(' | ')+'. Estimaciones sin tráfico ni esperas. En esta primera versión multietapa, cada recarga se estima hasta 100%; se mejorará la optimización del SOC. Disponibilidad y tarifas no verificadas en tiempo real.');
+  setRouteResult('VIAJE '+(tripType==='round'?'IDA Y VUELTA':'DOS DESTINOS')+' · '+Math.round(kmTotal)+' km · conducción '+Math.floor(driveTotal/60)+' h '+Math.round(driveTotal%60)+' min · recargas '+Math.round(chargeTotal)+' min · tiempo total '+Math.floor(totalMinutes/60)+' h '+Math.round(totalMinutes%60)+' min · coste de recargas '+costLabel+' · SOC final '+Math.round(energy/battery*100)+'% · '+stageLines.join(' | ')+'. Estimaciones sin tráfico ni esperas. El SOC objetivo se calcula con la energía necesaria hasta el siguiente punto viable más una reserva adicional estimada del 5%. Disponibilidad y tarifas no verificadas en tiempo real.');
  }catch(e){setRouteStops([]);setRouteCoords([]);setRouteMeta(null);setRouteResult('⚠️ '+(e instanceof Error?e.message:'Error calculando viaje multietapa'))}finally{setRouting(false)}
  return
 }setRouting(true);setRouteResult('Calculando ruta y paradas…');setRouteStops([]);setRouteCoords([]);setRouteMeta(null);let a:[number,number];if(origin.trim().toLowerCase().startsWith('mi ubicación')){if(!pos)throw new Error('Pulsa primero “Mi ubicación” para usar tu GPS');a=pos}else a=await geocode(origin);const b=await geocode(destination);const r=await fetch('https://router.project-osrm.org/route/v1/driving/'+a[1]+','+a[0]+';'+b[1]+','+b[0]+'?overview=full&geometries=geojson');const j=await r.json();if(j.code!=='Ok'||!j.routes?.length)throw new Error('No se ha podido calcular la ruta por carretera');const rr=j.routes[0],km=rr.distance/1000,minutes=rr.duration/60;const coords:[number,number][]=rr.geometry.coordinates.map((p:number[])=>[p[1],p[0]]);setRouteCoords(coords);const battery=batteryKwh,consumption=consumptionKwh;if(!(maxChargeKw>=10&&maxChargeKw<=500))throw new Error('Revisa la potencia maxima de carga DC del vehiculo');if(!(battery>0&&battery<=250&&consumption>0&&consumption<=80))throw new Error('Revisa la batería útil y el consumo del vehículo');if(!(Number.isFinite(soc)&&soc>0&&soc<=100&&Number.isFinite(reserve)&&reserve>=0&&reserve<soc))throw new Error('El SOC de salida debe superar la reserva mínima y estar entre 1 y 100 %.');const energy=km*consumption/100,startEnergy=battery*soc/100,minEnergy=battery*reserve/100,need=Math.max(0,energy-(startEnergy-minEnergy)),arrival=soc-energy/battery*100;let candidates=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).map(c=>{let corridor=Infinity,idx=0;for(let i=0;i<coords.length;i+=Math.max(1,Math.floor(coords.length/120))){const d=hav(coords[i], [c.lat,c.lng]);if(d<corridor){corridor=d;idx=i}}return{c,corridor,progress:idx/Math.max(1,coords.length-1)}}).filter(x=>x.corridor<=35&&x.progress>.08&&x.progress<.96);if(routeMode==='free')candidates=candidates.filter(x=>x.c.price===0).sort((x,y)=>x.corridor-y.corridor);else if(routeMode==='fast')candidates.sort((x,y)=>(y.c.power-x.c.power)||(x.corridor-y.corridor));else candidates.sort((x,y)=>((x.c.price??999)-(y.c.price??999))||(x.corridor-y.corridor));let arrivalSocFinal:number|null=null;const stops:Charger[]=[];const chargingStops:{name:string,kwh:number,minutes:number}[]=[];let complete=false;let totalLegKm=0;let chargingMinutes=0;let decision='';const modeName=routeMode==='free'?'0 €':routeMode==='cheap'?'MENOR COSTE':'MÁS RÁPIDO';

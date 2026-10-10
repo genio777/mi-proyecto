@@ -92,7 +92,7 @@ function App(){
   const targetNames=tripType==='round'?[destination,'Regreso al origen']:[destination,destination2];
   const minimum=battery*reserve/100;
   let energy=battery*soc/100,current=start,kmTotal=0,driveTotal=0,chargeTotal=0,cost=0,unknownPrices=0,complete=true;
-  const allStops:Charger[]=[],allCoords:[number,number][]=[],stageLines:string[]=[],stageArrivals:{name:string,soc:number}[]=[],used=new Set<string>();
+  const allStops:Charger[]=[],allCoords:[number,number][]=[],stageLines:string[]=[],stageArrivals:{name:string,soc:number}[]=[],used=new Set<string>();let failureDetail='';
   const route=async(points:[number,number][],geometry=true)=>{
    const u='https://router.project-osrm.org/route/v1/driving/'+points.map(p=>p[1]+','+p[0]).join(';')+'?overview='+(geometry?'full':'false')+(geometry?'&geometries=geojson':'');
    const r=await fetch(u);if(!r.ok)throw Error('Servicio de rutas no disponible');const j=await r.json();if(j.code!=='Ok'||!j.routes?.[0])throw Error('No se encontró ruta por carretera');return j.routes[0];
@@ -107,7 +107,7 @@ function App(){
      const line=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
      allCoords.push(...(allCoords.length?line.slice(1):line));current=target;break;
     }
-    if(allStops.length>=12){complete=false;break}
+    if(allStops.length>=12){failureDetail='Límite de 12 paradas alcanzado en etapa '+(stage+1);complete=false;break}
     const points:[number,number][]=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
     const availableKm=(energy-minimum)*100/consumption;
     const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>!used.has(c.id)&&(routeMode!=='free'||c.price===0)).map(c=>{
@@ -129,7 +129,7 @@ function App(){
       if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};
      }catch{}
     }
-    if(!best){complete=false;break}
+    if(!best){failureDetail='Etapa '+(stage+1)+' ('+name+'): quedan '+Math.round(directKm)+' km hasta el destino; autonomía utilizable '+Math.round(availableKm)+' km; '+eligible.length+' candidatos cercanos examinados, ninguno alcanzable con la reserva. Operadores: '+(operatorMode==='tesla'?'Solo Tesla':operatorMode==='custom'?selectedOperators.join(', '):'Todos')+'; potencia máxima '+(maximumPower||'sin límite')+' kW.';complete=false;break}
     const leg=await route([current,[best.c.lat,best.c.lng]]);
     const distance=leg.distance/1000,arrivalEnergy=energy-distance*consumption/100;
     if(arrivalEnergy<minimum){complete=false;break}
@@ -143,14 +143,14 @@ function App(){
     allStops.push(best.c);used.add(best.c.id);
     stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · llegada '+Math.round(arrivalEnergy/battery*100)+'% · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
     energy=battery;current=[best.c.lat,best.c.lng];
-    if(step===9)complete=false;
+    if(step===9){failureDetail='Etapa '+(stage+1)+' ('+name+'): se agotaron 10 paradas sin llegar al destino; faltan aproximadamente '+Math.round(directKm)+' km desde la posición anterior.';complete=false;}
    }
    kmTotal+=stageKm;driveTotal+=stageDrive;chargeTotal+=stageCharge;cost+=stageCost;unknownPrices+=stageUnknown;
    if(complete)stageArrivals.push({name:tripType==='round'?(stage===0?'Destino':'Regreso al origen'):'Destino '+(stage+1),soc:Math.round(energy/battery*100)});if(complete)stageLines.push('Destino '+(stage+1)+' ('+name+'): '+Math.round(stageKm)+' km en la etapa · '+Math.floor(stageDrive/60)+' h '+Math.round(stageDrive%60)+' min conduciendo · SOC llegada '+Math.round(energy/battery*100)+'%');
   }
   if(!complete){
    setRouteCoords([]);setRouteStops([]);setRouteMeta(null);
-   setRouteResult((routeMode==='free'?'⛔ IMPOSIBLE REALIZAR ESTA RUTA A COSTE 0 €':'⚠️ NO SE HA PODIDO VALIDAR EL VIAJE COMPLETO')+' con los cargadores y filtros seleccionados, manteniendo la reserva. No se muestra una ruta parcial como válida.');return;
+   setRouteResult((routeMode==='free'?'⛔ IMPOSIBLE REALIZAR ESTA RUTA A COSTE 0 €':'⚠️ NO SE HA PODIDO VALIDAR EL VIAJE COMPLETO')+' con los cargadores y filtros seleccionados, manteniendo la reserva. '+(failureDetail||'No se ha podido completar un tramo de la ruta.')+' No se muestra una ruta parcial como válida.');return;
   }
   setRouteCoords(allCoords);setRouteStops(allStops);
   const totalMinutes=driveTotal+chargeTotal,costLabel=unknownPrices?'Precio no disponible':cost.toFixed(2)+' €';

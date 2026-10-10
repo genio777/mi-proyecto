@@ -50,6 +50,9 @@ jobs:
           # Guardamos dist fuera del árbol Git antes de sincronizar main.
           mkdir -p /tmp/cargagratis-dist
           cp -a dist/. /tmp/cargagratis-dist/
+          # Versionar la referencia al JS/CSS en cada publicación para evitar HTML/recursos antiguos en móviles.
+          BUILD_REV="$(git rev-parse --short HEAD)"
+          sed -i -E "s@(src|href)=\"(\\./assets/[^\"]+)\"@\\1=\"\\2?v=${BUILD_REV}\"@g" /tmp/cargagratis-dist/index.html
           git fetch origin main
           git reset --hard origin/main
           cp -a /tmp/cargagratis-dist/. ./

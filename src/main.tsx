@@ -102,10 +102,10 @@ function App(){
    // En etapas posteriores, permitir recargar cerca del destino anterior antes de iniciar
    // el trayecto de regreso. De otro modo el filtro de progreso excluye las estaciones
    // de Barcelona cuando se llega con poca batería.
-   if(stage>0&&energy<minimum+battery*.30){
+   if(stage>0&&energy<battery*.90){
     const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
-     .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=35)
-     .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,25);
+     .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=100)
+     .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,60);
     for(const c of nearby){
      try{
       const leg=await route([current,[c.lat,c.lng]]);
@@ -140,7 +140,7 @@ function App(){
      let nearest=Infinity,idx=0;const stride=Math.max(1,Math.floor(points.length/110));
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};
-    }).filter(x=>x.nearest<=20&&x.progress>.015&&x.progress<.985)
+    }).filter(x=>x.nearest<=20&&x.progress>=(stage>0?0:.015)&&x.progress<.985)
       // Con pocos operadores, priorizar estaciones alcanzables y próximas al recorrido;
       // ordenar primero por potencia descartaba cargadores útiles antes de evaluarlos.
       .sort((x,y)=>x.nearest-y.nearest).slice(0,70);

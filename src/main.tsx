@@ -125,7 +125,7 @@ function App(){
      }catch{}
     }
    }
-   for(let step=0;step<10;step++){
+   for(let step=0;step<24;step++){
     const direct=await route([current,target]);
     const directKm=direct.distance/1000;
     if(directKm*consumption/100+minimum<=energy+1e-7){
@@ -133,7 +133,7 @@ function App(){
      const line=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
      allCoords.push(...(allCoords.length?line.slice(1):line));current=target;break;
     }
-    if(allStops.length>=12){failureDetail='Límite de 12 paradas alcanzado en etapa '+(stage+1);complete=false;break}
+    if(allStops.length>=40){failureDetail='Límite de seguridad de 40 paradas alcanzado en etapa '+(stage+1);complete=false;break}
     const points:[number,number][]=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
     const availableKm=(energy-minimum)*100/consumption;
     const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
@@ -172,7 +172,7 @@ function App(){
     allStops.push(best.c);used.add(best.c.id);
     stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · llegada '+Math.round(arrivalEnergy/battery*100)+'% · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
     energy=battery;current=[best.c.lat,best.c.lng];
-    if(step===9){failureDetail='Etapa '+(stage+1)+' ('+name+'): se agotaron 10 paradas sin llegar al destino; faltan aproximadamente '+Math.round(directKm)+' km desde la posición anterior.';complete=false;}
+    if(step===23){failureDetail='Etapa '+(stage+1)+' ('+name+'): se agotaron 24 paradas en esta etapa sin llegar al destino; faltan aproximadamente '+Math.round(directKm)+' km desde la posición anterior.';complete=false;}
    }
    kmTotal+=stageKm;driveTotal+=stageDrive;chargeTotal+=stageCharge;cost+=stageCost;unknownPrices+=stageUnknown;
    if(complete)stageArrivals.push({name:tripType==='round'?(stage===0?'Destino':'Regreso al origen'):'Destino '+(stage+1),soc:Math.round(energy/battery*100)});if(complete)stageLines.push('Destino '+(stage+1)+' ('+name+'): '+Math.round(stageKm)+' km en la etapa · '+Math.floor(stageDrive/60)+' h '+Math.round(stageDrive%60)+' min conduciendo · SOC llegada '+Math.round(energy/battery*100)+'%');

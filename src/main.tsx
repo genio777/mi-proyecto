@@ -204,9 +204,31 @@ function App(){
     // En los demás casos conservamos la estrategia validada de cargar al 100%.
     const energyToDestination=remainingRoadKm*consumption/100;
     const requiredAtDeparture=energyToDestination+minimum+battery*.03;
-    const chargeTarget=requiredAtDeparture<=battery
+    let chargeTarget=requiredAtDeparture<=battery
      ?Math.min(battery,Math.max(arrivalEnergy,requiredAtDeparture))
      :battery;
+    // En tramos intermedios, permitir salir al 95 % únicamente si se
+    // verifica por carretera un siguiente cargador compatible y alcanzable.
+    if(requiredAtDeparture>battery&&arrivalEnergy<battery*.95){
+     const fromStation:[number,number]=[best.c.lat,best.c.lng];
+     const directToTarget=hav(fromStation,target);
+     const maxNextKm=(battery*.95-minimum-battery*.03)*100/consumption;
+     const nextOptions=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
+      .filter(c=>c.id!==best.c.id&&!used.has(c.id)&&(routeMode!=='free'||c.price===0))
+      .map(c=>({c,d:hav(fromStation,[c.lat,c.lng]),left:hav([c.lat,c.lng],target)}))
+      .filter(x=>x.d>=25&&x.d<=maxNextKm&&x.left<directToTarget-20)
+      .sort((a,b)=>a.left-b.left).slice(0,3);
+     for(const option of nextOptions){
+      try{
+       const nextLeg=await route([fromStation,[option.c.lat,option.c.lng]],false);
+       const requiredNext=nextLeg.distance/1000*consumption/100+minimum+battery*.03;
+       if(requiredNext<=battery*.95){
+        chargeTarget=battery*.95;
+        break;
+       }
+      }catch{}
+     }
+    }
     const chargeKwh=Math.max(0,chargeTarget-arrivalEnergy);
     const avgKw=Math.min(maxChargeKw,best.c.power)*.55;
     const minutes=avgKw>0?chargeKwh/avgKw*60:Infinity;

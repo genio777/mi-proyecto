@@ -149,7 +149,17 @@ function App(){
     }).filter(x=>x.nearest<=20&&x.progress>=(stage>0?0:.015)&&x.progress<.985)
       // Con pocos operadores, priorizar estaciones alcanzables y próximas al recorrido;
       // ordenar primero por potencia descartaba cargadores útiles antes de evaluarlos.
-      .sort((x,y)=>x.nearest-y.nearest).slice(0,140);
+      .filter(x=>{
+       const straightKm=hav(current,[x.c.lat,x.c.lng]);
+       const advance=hav(current,target)-hav([x.c.lat,x.c.lng],target);
+       return straightKm>=5&&straightKm<=availableKm&&advance>=Math.max(12,straightKm*.15);
+      })
+      .sort((x,y)=>{
+       // Priorizar cercanía al corredor sin excluir las estaciones que avanzan.
+       const ax=x.nearest*2+Math.abs(hav(current,[x.c.lat,x.c.lng])-availableKm*.7)*.08;
+       const ay=y.nearest*2+Math.abs(hav(current,[y.c.lat,y.c.lng])-availableKm*.7)*.08;
+       return ax-ay;
+      }).slice(0,45);
     let best:{c:Charger,r:any,remaining:number,score:number}|null=null;
     for(const x of eligible){
      try{

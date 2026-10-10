@@ -40,7 +40,13 @@ function App(){
  const[maximumPower,setMaximumPower]=useState(()=>{try{return Number(localStorage.getItem('cg_max_power')||0)}catch{return 0}});
  useEffect(()=>{try{localStorage.setItem('cg_max_power',String(maximumPower))}catch{}},[maximumPower]);
  const powerLevels=[0,22,50,100,150,200,250,300,350];
- const powerFiltered=(items:Charger[])=>maximumPower===0?items:items.filter(c=>c.power<=maximumPower);
+ const powerFiltered=(items:Charger[])=>items.filter(c=>{
+  if(maximumPower>0&&c.power>maximumPower)return false;
+  if(routeMode==='fast')return c.power>=100;
+  if(routeMode==='cheap')return c.power>=50;
+  if(routeMode==='free')return c.power>0&&c.power<=50;
+  return true;
+ });
  const operatorPowers=(op:string)=>Array.from(new Set(chargers.filter(c=>operatorLabel(c)===op).map(c=>c.power).filter(p=>Number.isFinite(p)&&p>0))).sort((a,b)=>a-b);
  const teslaCount=chargers.filter(c=>operatorLabel(c)==='Tesla Supercharger').length;
  const routeOperatorFilter=(items:Charger[])=>operatorMode==='all'?items:operatorMode==='tesla'?items.filter(c=>operatorLabel(c)==='Tesla Supercharger'):items.filter(c=>selectedOperators.includes(operatorLabel(c)));
@@ -103,7 +109,7 @@ function App(){
    // el trayecto de regreso. De otro modo el filtro de progreso excluye las estaciones
    // de Barcelona cuando se llega con poca batería.
    if(stage>0&&energy<battery*.90){
-    const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>routeMode!=='fast'||c.power>=50)
+    const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
      .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=100)
      .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,60);
     for(const c of nearby){
@@ -136,7 +142,7 @@ function App(){
     if(allStops.length>=40){failureDetail='Límite de seguridad de 40 paradas alcanzado en etapa '+(stage+1);complete=false;break}
     const points:[number,number][]=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
     const availableKm=(energy-minimum)*100/consumption;
-    const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>routeMode!=='fast'||c.power>=50).filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
+    const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
      let nearest=Infinity,idx=0;const stride=Math.max(1,Math.floor(points.length/110));
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};

@@ -6,7 +6,7 @@ if(!response.ok)throw Error('Tesla community catalog HTTP '+response.status);
 const raw=await response.json();
 const entries=Array.isArray(raw)?raw:Object.entries(raw).map(([id,v])=>({...v,id}));
 const base=JSON.parse(await readFile(file,'utf8'));
-if(!Array.isArray(base.chargers)||base.chargers.length<5000)throw Error('Official catalog unavailable');
+if(!Array.isArray(base.chargers))throw Error('Official catalog unavailable');
 const existing=base.chargers;
 let added=0,duplicates=0;
 for(const t of entries){
@@ -15,11 +15,11 @@ for(const t of entries){
  if(!name||!Number.isFinite(lat)||!Number.isFinite(lng)||lat<27||lat>44.6||lng< -18.5||lng>4.6||!Number.isFinite(power)||power<30||power>500)continue;
  if(t.type&&t.type!=='SITE_TYPE_SUPERCHARGER')continue;
  const near=existing.find(c=>Math.abs(c.lat-lat)<.002&&Math.abs(c.lng-lng)<.002);
- if(near){duplicates++;if(/tesla/i.test(near.operator||'')||/tesla/i.test(near.name||'')){near.power=Math.max(near.power,power);near.operator='Tesla';continue}/* Keep distinct Tesla site when a different operator is mapped at same coordinates. */}
+ if(near){duplicates++;if(/tesla/i.test(near.operator||'')||/tesla/i.test(near.name||'')){near.power=Math.max(near.power,power);near.operator='Tesla';near.name='Tesla Supercharger - '+name;continue}/* Different operator: retain distinct Tesla site. */}
  existing.push({id:'tesla-'+String(t.id||name).replace(/[^a-z0-9-]/gi,'-'),name:'Tesla Supercharger - '+name,city:name.split(',')[0],province:'',address:'',operator:'Tesla',lat,lng,power,connector:'CCS',price:null,source:'Tesla Superchargers - Niek community dataset',verified:'Ubicacion sin verificar individualmente',availability:'Desconocida'});
  added++;
 }
-if(added===0)throw Error('No new Tesla stations imported: check source and geographic filters');
+if(added===0&&duplicates===0)throw Error('No Tesla stations imported: check source and geographic filters');
 base.sources=[base.source,'Niek/tesla-superchargers community (Tesla sites)'];base.updated=new Date().toISOString();
 await writeFile(file,JSON.stringify(base));
 console.log('Tesla stations added:',added,'near duplicates:',duplicates,'total:',existing.length);

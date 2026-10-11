@@ -72,5 +72,15 @@ for(const station of catalog.chargers){
  else item.unverifiedCatalogPrices++;
 }
 summary.operatorReview=Array.from(operatorMap.values()).sort((a,b)=>b.unknownPrices-a.unknownPrices||b.total-a.total);
+const counted=summary.operatorReview.reduce((tot,item)=>tot+item.total,0);
+if(counted!==summary.catalogStations)throw Error('Operator price audit does not cover entire catalog');
+for(const item of summary.operatorReview){
+ if(item.verifiedPrices+item.unknownPrices+item.unverifiedCatalogPrices!==item.total)throw Error('Inconsistent price audit for operator: '+item.operator);
+}
+summary.coverage={
+ individuallyVerifiedPercent:summary.catalogStations?Number((100*summary.appliedVerifiedStationPrices/summary.catalogStations).toFixed(2)):0,
+ unknownPricePercent:summary.catalogStations?Number((100*summary.stationsWithUnknownPrice/summary.catalogStations).toFixed(2)):0,
+ operatorsReviewed:summary.operatorReview.length
+};
 await writeFile('public/data/price-verification-status.json',JSON.stringify(summary,null,2));
 console.log('Station-specific verified prices applied:',applied,'unknown:',summary.stationsWithUnknownPrice,'catalog prices without individual verification:',summary.stationsWithCatalogPriceButNoIndividualVerification);

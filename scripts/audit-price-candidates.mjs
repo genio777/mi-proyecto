@@ -18,10 +18,10 @@ for(const group of groups){
  const stations=catalog.chargers.filter(c=>{
   const name=String(c.name||'')+' '+String(c.operator||'');
   return group.terms.some(term=>name.toLowerCase().includes(term));
- }).map(c=>({id:c.id,name:c.name,city:c.city,province:c.province,address:c.address,operator:c.operator,power:c.power,price:c.price,verification:'pending'}));
+ }).map(c=>({id:c.id,name:c.name,city:c.city,province:c.province,address:c.address,operator:c.operator,power:c.power,connector:c.connector,lat:c.lat,lng:c.lng,price:c.price,verification:'pending',stationPriceSource:null,stationCheckedAt:null,requiresPurchase:null,timeLimitMinutes:null,hasExtraFees:null,publicAccess:null}));
  report.groups.push({name:group.name,source:group.source,conditions:group.conditions,status:group.status,verificationRequirements:conditionsByOperator[group.name],count:stations.length,stations});
  console.log(group.name+': '+stations.length+' candidates, zero verified free by this audit');
 }
 await mkdir('public/data',{recursive:true});
 await writeFile('public/data/price-audit-candidates.json',JSON.stringify(report));
-console.log('Audit report generated; routing prices unchanged');
+console.log('Audit report generated with coordinates, connectors and individual verification fields; routing prices unchanged');

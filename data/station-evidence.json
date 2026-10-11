@@ -1,0 +1,66 @@
+{
+  "updated": "2026-10-11",
+  "purpose": "Official site-specific charging conditions for crossmatching; not automatically eligible for zero-euro routing",
+  "records": [
+    {
+      "operator": "Lidl",
+      "city": "Albox",
+      "province": "Almería",
+      "address": "Av. 28 de Febrero, 04800 Albox, Almería",
+      "energyPrice": 0,
+      "currency": "EUR",
+      "unit": "kWh",
+      "timeLimitMinutes": 30,
+      "requiresPurchase": true,
+      "unrestrictedFree": false,
+      "sourceUrl": "https://empresa.lidl.es/sostenibilidad/bueno-para-el-planeta/proteger-el-clima/construccion-y-logistica-sostenible/puntos-de-recarga",
+      "sourceType": "operator_official",
+      "note": "Official page lists this store among charging locations and states 30 free minutes while shopping. No per-connector verification."
+    },
+    {
+      "operator": "Lidl",
+      "city": "El Ejido",
+      "province": "Almería",
+      "address": "Ctra. Mojonera, 16, 04700 El Ejido, Almería",
+      "energyPrice": 0,
+      "currency": "EUR",
+      "unit": "kWh",
+      "timeLimitMinutes": 30,
+      "requiresPurchase": true,
+      "unrestrictedFree": false,
+      "sourceUrl": "https://empresa.lidl.es/sostenibilidad/bueno-para-el-planeta/proteger-el-clima/construccion-y-logistica-sostenible/puntos-de-recarga",
+      "sourceType": "operator_official",
+      "note": "Listed official charging location; conditional promotion, no connector price verified."
+    },
+    {
+      "operator": "Lidl",
+      "city": "Alcalá de Henares",
+      "province": "Madrid",
+      "address": "Avenida de Madrid 32, 28802 Alcalá de Henares, Madrid",
+      "energyPrice": 0,
+      "currency": "EUR",
+      "unit": "kWh",
+      "timeLimitMinutes": 30,
+      "requiresPurchase": true,
+      "unrestrictedFree": false,
+      "sourceUrl": "https://empresa.lidl.es/sostenibilidad/bueno-para-el-planeta/proteger-el-clima/construccion-y-logistica-sostenible/puntos-de-recarga",
+      "sourceType": "operator_official",
+      "note": "Listed official charging location; conditional promotion, no connector price verified."
+    },
+    {
+      "operator": "EMT Madrid",
+      "city": "Madrid",
+      "province": "Madrid",
+      "address": "Jardines del Descubrimiento (Colón), Madrid",
+      "energyPrice": 0.4,
+      "currency": "EUR",
+      "unit": "kWh",
+      "timeLimitMinutes": null,
+      "requiresPurchase": false,
+      "unrestrictedFree": false,
+      "sourceUrl": "https://www.emtmadrid.es/emting/eulaelectroemt.aspx",
+      "sourceType": "operator_official",
+      "note": "Official fast-charging tariff 0.40 EUR/kWh; possible reservation and overstaying fees, no catalog connector match."
+    }
+  ]
+}

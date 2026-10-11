@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-10-11T16:38:57.751Z",
+  "source": "data/verified-station-prices.json",
+  "appliedVerifiedStationPrices": 0,
+  "verifiedFreeStations": 0,
+  "stationsWithUnknownPrice": 11954,
+  "stationsWithCatalogPriceButNoIndividualVerification": 0,
+  "catalogStations": 11954,
+  "caution": "Un precio en el catálogo sin fecha y fuente individual verificadas no equivale a una tarifa confirmada."
+}

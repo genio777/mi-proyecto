@@ -13,6 +13,8 @@ for(const row of overlay.prices){
  if(typeof row.sourceUrl!=='string'||!/^https:\/\//.test(row.sourceUrl)||!Number.isFinite(Date.parse(row.checkedAt)))throw Error('Unverified tariff: '+row.id);
  if(typeof row.price!=='number'||!Number.isFinite(row.price)||row.price<0||row.unit!=='EUR/kWh')throw Error('Invalid price/unit: '+row.id);
  if(row.hasExtraFees!==false)throw Error('Additional fees or uncertain total price: '+row.id);
+ if(row.taxIncluded!==true)throw Error('Final customer price must include taxes: '+row.id);
+ if(row.priceBasis!=='ad_hoc')throw Error('Price must be public pay-as-you-go tariff: '+row.id);
  if(!Array.isArray(row.tariffElements)||row.tariffElements.length!==1)throw Error('Connector tariff must contain exactly one unconditional energy element: '+row.id);
  const element=row.tariffElements[0];
  if(element.type!=='ENERGY'||element.price!==row.price||element.currency!=='EUR'||element.restrictions!=null)throw Error('Conditional or multi-component tariff cannot be reduced to EUR/kWh: '+row.id);
@@ -33,6 +35,7 @@ for(const row of overlay.prices){
  if(String(station.connector||'').toLowerCase().indexOf(row.connectorType.toLowerCase())===-1)throw Error('Connector type mismatch: '+row.id);
  if(Math.abs(Number(station.power)-row.powerKw)>1)throw Error('Connector power mismatch: '+row.id);
  if(!row.stationEvidence.includes(row.connectorId))throw Error('Official connector ID not present in station evidence: '+row.id);
+ if(!/^https:\/\//.test(row.sourceUrl))throw Error('Invalid source URL: '+row.id);
  station.price=row.price;
  station.priceSource=row.sourceUrl;
  station.priceVerifiedAt=row.checkedAt;

@@ -68,9 +68,14 @@ report.groupSummary=report.groups.map(g=>({
  candidates:g.count,
  withUnknownPrice:g.stations.filter(c=>c.price===null).length,
  withCatalogZero:g.stations.filter(c=>c.price===0).length,
- verifiedFree:g.stations.filter(c=>valid.some(v=>v.id===c.id&&v.price===0)).length,
+ verifiedFree:g.stations.filter(c=>valid.some(v=>String(v.id)===String(c.id)&&v.price===0)).length,
  status:'review_only'
 }));
+report.reviewPriority=report.reviewQueue.map(item=>({
+ ...item,
+ priority:item.matchStatus==='candidate_unique'&&item.tariffEvidenceStatus!=='conditional_or_paid'?'HIGH':item.matchStatus==='ambiguous'?'MEDIUM':'LOW',
+ readyToPublish:false
+})).sort((a,b)=>({HIGH:0,MEDIUM:1,LOW:2}[a.priority]-{HIGH:0,MEDIUM:1,LOW:2}[b.priority]));
 report.verifiedPriceCount=valid.length;
 report.verifiedFreeCount=valid.filter(row=>row.price===0).length;
 await mkdir('public/data',{recursive:true});

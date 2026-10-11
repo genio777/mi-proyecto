@@ -56,6 +56,21 @@ report.reviewSummary={
  missing:report.reviewQueue.filter(x=>x.matchStatus==='not_found').length,
  verifiedFree:valid.filter(x=>x.price===0).length
 };
+report.catalogPriceSummary={
+ totalStations:catalog.chargers.length,
+ explicitlyFree:catalog.chargers.filter(c=>c.price===0).length,
+ unknownPrice:catalog.chargers.filter(c=>c.price===null).length,
+ priced:catalog.chargers.filter(c=>Number.isFinite(c.price)&&c.price>0).length,
+ warning:'Los precios del catálogo no son necesariamente tarifas verificadas y vigentes; únicamente los registros individuales con fuente y fecha válidas pueden considerarse confirmados.'
+};
+report.groupSummary=report.groups.map(g=>({
+ name:g.name,
+ candidates:g.count,
+ withUnknownPrice:g.stations.filter(c=>c.price===null).length,
+ withCatalogZero:g.stations.filter(c=>c.price===0).length,
+ verifiedFree:g.stations.filter(c=>valid.some(v=>v.id===c.id&&v.price===0)).length,
+ status:'review_only'
+}));
 report.verifiedPriceCount=valid.length;
 report.verifiedFreeCount=valid.filter(row=>row.price===0).length;
 await mkdir('public/data',{recursive:true});

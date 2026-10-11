@@ -35,7 +35,18 @@ jobs:
           node scripts/import-tesla.mjs
           node -e "const d=require('./public/data/chargers-spain.json');const t=d.chargers.filter(c=>/tesla/i.test((c.operator||'')+' '+c.name));console.log('Superchargers Tesla identificados:',t.length);if(!t.length)process.exit(1)"
       - name: Validar catálogo nacional antes de publicar
-        run: node --input-type=module -e "import fs from 'node:fs';const d=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));if(!Array.isArray(d.chargers)||d.chargers.length<5000)throw Error('Catálogo incompleto');const ids=new Set();for(const c of d.chargers){if(!c.id||ids.has(c.id)||!c.source||!Number.isFinite(c.lat)||!Number.isFinite(c.lng)||!Number.isFinite(c.power)||c.power<=0||!(c.price===null||(Number.isFinite(c.price)&&c.price>=0)))throw Error('Registro inválido: '+c.id);ids.add(c.id)}console.log('Catálogo validado:',d.chargers.length,'registros; precios desconocidos:',d.chargers.filter(c=>c.price===null).length)"
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const d=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));
+          if(!Array.isArray(d.chargers)||d.chargers.length<5000)throw Error('Catálogo incompleto');
+          const ids=new Set();
+          for(const c of d.chargers){
+            if(!c.id||ids.has(c.id)||!c.source||!Number.isFinite(c.lat)||!Number.isFinite(c.lng)||!Number.isFinite(c.power)||c.power<=0||!(c.price===null||(Number.isFinite(c.price)&&c.price>=0)))throw Error('Registro inválido: '+c.id);
+            ids.add(c.id);
+          }
+          console.log('Catálogo validado:',d.chargers.length,'registros; precios desconocidos:',d.chargers.filter(c=>c.price===null).length);
+          JS
       - name: Compilar CargaGratis
         run: npm run build
       - name: Comprobar funcionalidades críticas antes de publicar

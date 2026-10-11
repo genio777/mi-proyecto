@@ -28,7 +28,13 @@ for(const group of groups){
  console.log(group.name+': '+stations.length+' candidates, zero verified free by this audit');
 }
 report.locationEvidence=evidence.records.map(row=>{
- const matches=catalog.chargers.filter(c=>normalize(c.city)===normalize(row.city)&&normalize(c.address).includes(normalize(row.address).slice(0,12))).map(c=>({id:c.id,name:c.name,address:c.address,operator:c.operator,connector:c.connector,power:c.power}));
+ const key=normalize(row.address).slice(0,12);
+ const matches=catalog.chargers.filter(c=>{
+  const city=normalize(c.city)===normalize(row.city);
+  const address=key.length>=8&&normalize(c.address).includes(key);
+  const operator=normalize([c.operator,c.name].join(' ')).includes(normalize(row.operator).split('madrid')[0]);
+  return city&&address&&operator;
+ }).map(c=>({id:c.id,name:c.name,address:c.address,operator:c.operator,connector:c.connector,power:c.power,lat:c.lat,lng:c.lng}));
  return {...row,matchingCatalogStations:matches,matchCount:matches.length,matchStatus:matches.length===1?'candidate_unique':matches.length===0?'not_found':'ambiguous',nextAction:matches.length===1?'Verify connector and full station-specific tariff':matches.length===0?'Find matching station in national catalog':'Resolve multiple stations before assigning price',eligibleForZeroEuroRouting:false};
 });
 report.reviewQueue=report.locationEvidence.map(item=>({

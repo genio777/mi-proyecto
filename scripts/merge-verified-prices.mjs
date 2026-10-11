@@ -88,5 +88,24 @@ summary.priorityOperators=summary.operatorReview.filter(item=>item.unknownPrices
  catalogCoveragePercent:item.total?Number((100*item.verifiedPrices/item.total).toFixed(2)):0,
  action:'Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar.'
 }));
+summary.stationReviewQueue=catalog.chargers
+ .filter(c=>c.price===null)
+ .map(c=>({
+  id:String(c.id),
+  operator:String(c.operator||'Operador no identificado'),
+  name:String(c.name||''),
+  city:String(c.city||''),
+  province:String(c.province||''),
+  address:String(c.address||''),
+  connector:String(c.connector||''),
+  powerKw:c.power,
+  latitude:c.lat,
+  longitude:c.lng,
+  priceStatus:'UNKNOWN_NOT_FREE',
+  checksRequired:['current_station_tariff','connector_identity','taxes_and_session_fees','public_access','verification_date_and_source']
+ }))
+ .sort((a,b)=>a.operator.localeCompare(b.operator,'es')||a.city.localeCompare(b.city,'es')||a.id.localeCompare(b.id))
+ .slice(0,100);
+summary.stationReviewQueueLimit=100;
 await writeFile('public/data/price-verification-status.json',JSON.stringify(summary,null,2));
 console.log('Station-specific verified prices applied:',applied,'unknown:',summary.stationsWithUnknownPrice,'catalog prices without individual verification:',summary.stationsWithCatalogPriceButNoIndividualVerification);

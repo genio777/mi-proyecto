@@ -13,15 +13,20 @@ const conditionsByOperator={
  'EMT Madrid':{eligibility:'Depende de aparcamiento y tipo de conector',source:'https://www.emtmadrid.es/',review:'Confirmar tarifa y condiciones de acceso por punto'},
  Municipales:{eligibility:'Depende de ordenanza y operador local',source:'https://www.mapareve.es/',review:'Confirmar ordenanza, tarifa actual y acceso público'}
 };
+const confirmed=JSON.parse(await readFile('data/verified-station-prices.json','utf8'));
+const confirmedById=new Map(confirmed.prices.map(row=>[row.id,row]));
+const valid=confirmed.prices.filter(row=>Date.now()-Date.parse(row.checkedAt)>=0&&Date.now()-Date.parse(row.checkedAt)<=7*86400000);
 const report={updated:new Date().toISOString(),note:'Solo candidatos para revisión. Ninguna coincidencia implica precio cero.',groups:[]};
 for(const group of groups){
  const stations=catalog.chargers.filter(c=>{
   const name=String(c.name||'')+' '+String(c.operator||'');
   return group.terms.some(term=>name.toLowerCase().includes(term));
- }).map(c=>({id:c.id,name:c.name,city:c.city,province:c.province,address:c.address,operator:c.operator,power:c.power,connector:c.connector,lat:c.lat,lng:c.lng,price:c.price,verification:'pending',stationPriceSource:null,stationCheckedAt:null,requiresPurchase:null,timeLimitMinutes:null,hasExtraFees:null,publicAccess:null}));
+ }).map(c=>({id:c.id,name:c.name,city:c.city,province:c.province,address:c.address,operator:c.operator,power:c.power,connector:c.connector,lat:c.lat,lng:c.lng,price:c.price,verification:'pending',stationPriceSource:confirmedById.get(String(c.id))?.sourceUrl||null,stationCheckedAt:confirmedById.get(String(c.id))?.checkedAt||null,requiresPurchase:confirmedById.get(String(c.id))?.requiresPurchase??null,timeLimitMinutes:confirmedById.get(String(c.id))?.timeLimitMinutes??null,hasExtraFees:confirmedById.get(String(c.id))?.hasExtraFees??null,publicAccess:confirmedById.get(String(c.id))?.publicAccess??null}));
  report.groups.push({name:group.name,source:group.source,conditions:group.conditions,status:group.status,verificationRequirements:conditionsByOperator[group.name],count:stations.length,stations});
  console.log(group.name+': '+stations.length+' candidates, zero verified free by this audit');
 }
+report.verifiedPriceCount=valid.length;
+report.verifiedFreeCount=valid.filter(row=>row.price===0).length;
 await mkdir('public/data',{recursive:true});
 await writeFile('public/data/price-audit-candidates.json',JSON.stringify(report));
 console.log('Audit report generated with coordinates, connectors and individual verification fields; routing prices unchanged');

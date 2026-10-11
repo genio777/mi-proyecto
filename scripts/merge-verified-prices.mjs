@@ -107,5 +107,11 @@ summary.stationReviewQueue=catalog.chargers
  .sort((a,b)=>((operatorMap.get(b.operator)?.unknownPrices||0)-(operatorMap.get(a.operator)?.unknownPrices||0))||a.operator.localeCompare(b.operator,'es')||a.city.localeCompare(b.city,'es')||a.id.localeCompare(b.id))
  .slice(0,100);
 summary.stationReviewQueueLimit=100;
+summary.stationReviewQueueStats={
+ selected:summary.stationReviewQueue.length,
+ totalUnknown:summary.stationsWithUnknownPrice,
+ remainingOutsideQueue:Math.max(0,summary.stationsWithUnknownPrice-summary.stationReviewQueue.length),
+ operatorsInQueue:new Set(summary.stationReviewQueue.map(s=>s.operator)).size
+};
 await writeFile('public/data/price-verification-status.json',JSON.stringify(summary,null,2));
 console.log('Station-specific verified prices applied:',applied,'unknown:',summary.stationsWithUnknownPrice,'catalog prices without individual verification:',summary.stationsWithCatalogPriceButNoIndividualVerification);

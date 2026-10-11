@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T16:41:06.610Z",
+  "generatedAt": "2026-10-11T16:42:52.257Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
@@ -1160,5 +1160,10 @@
       "unverifiedCatalogPrices": 0
     }
   ],
-  "caution": "Un precio en el catálogo sin fecha y fuente individual verificadas no equivale a una tarifa confirmada."
+  "caution": "Un precio en el catálogo sin fecha y fuente individual verificadas no equivale a una tarifa confirmada.",
+  "coverage": {
+    "individuallyVerifiedPercent": 0,
+    "unknownPricePercent": 100,
+    "operatorsReviewed": 144
+  }
 }

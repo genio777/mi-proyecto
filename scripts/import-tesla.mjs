@@ -8,18 +8,38 @@ const entries=Array.isArray(raw)?raw:Object.entries(raw).map(([id,v])=>({...v,id
 const base=JSON.parse(await readFile(file,'utf8'));
 if(!Array.isArray(base.chargers))throw Error('Official catalog unavailable');
 const existing=base.chargers;
-let added=0,duplicates=0;
+const distanceMeters=(a,b)=>{
+ const rad=Math.PI/180,dLat=(a.lat-b.lat)*rad,dLng=(a.lng-b.lng)*rad;
+ const h=Math.sin(dLat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLng/2)**2;
+ return 12742000*Math.asin(Math.min(1,Math.sqrt(h)));
+};
+const isTesla=c=>/tesla/i.test(String(c.operator||'')+' '+String(c.name||''));
+const safeId=v=>String(v).replace(/[^a-z0-9-]/gi,'-');
+const ids=new Set(existing.map(c=>String(c.id)));
+let added=0,duplicates=0,nearOtherOperators=0;
 for(const t of entries){
  const lat=Number(t.location?.latitude??t.latitude),lng=Number(t.location?.longitude??t.longitude);
  const name=String(t.name||'').trim(),power=Number(t.power);
  if(!name||!Number.isFinite(lat)||!Number.isFinite(lng)||lat<27||lat>44.6||lng< -18.5||lng>4.6||!Number.isFinite(power)||power<30||power>500)continue;
  if(t.type&&t.type!=='SITE_TYPE_SUPERCHARGER')continue;
- const near=existing.find(c=>Math.abs(c.lat-lat)<.002&&Math.abs(c.lng-lng)<.002);
- if(near){duplicates++;if(/tesla/i.test(near.operator||'')||/tesla/i.test(near.name||'')){near.power=Math.max(near.power,power);near.operator='Tesla';near.name='Tesla Supercharger - '+name;continue}/* Different operator: retain distinct Tesla site. */}
- existing.push({id:'tesla-'+String(t.id||name).replace(/[^a-z0-9-]/gi,'-'),name:'Tesla Supercharger - '+name,city:name.split(',')[0],province:'',address:'',operator:'Tesla',lat,lng,power,connector:'CCS',price:null,source:'Tesla Superchargers - Niek community dataset',verified:'Ubicacion sin verificar individualmente',availability:'Desconocida'});
+ const candidate={lat,lng};
+ // Unificar solo estaciones Tesla a menos de 100 m; no mezclar operadores.
+ const match=existing.find(c=>isTesla(c)&&distanceMeters(candidate,c)<=100);
+ if(match){
+  duplicates++;
+  // No sobrescribir potencia, nombre ni fuente oficiales con datos comunitarios.
+  // Si el registro ya es comunitario, mantenerlo sin crear una copia.
+  continue;
+ }
+ if(existing.some(c=>!isTesla(c)&&distanceMeters(candidate,c)<=100))nearOtherOperators++;
+ const baseId='tesla-'+safeId(t.id||name);
+ let id=baseId,serial=2;
+ while(ids.has(id))id=baseId+'-'+serial++;
+ ids.add(id);
+ existing.push({id,name:'Tesla Supercharger - '+name,city:name.split(',')[0],province:'',address:'',operator:'Tesla',lat,lng,power,connector:'CCS',price:null,source:'Tesla Superchargers - Niek community dataset',verified:'Ubicacion sin verificar individualmente',availability:'Desconocida'});
  added++;
 }
 if(added===0&&duplicates===0)throw Error('No Tesla stations imported: check source and geographic filters');
 base.sources=[base.source,'Niek/tesla-superchargers community (Tesla sites)'];base.updated=new Date().toISOString();
 await writeFile(file,JSON.stringify(base));
-console.log('Tesla stations added:',added,'near duplicates:',duplicates,'total:',existing.length);
+console.log('Tesla stations added:',added,'Tesla duplicates omitted:',duplicates,'other operators nearby retained:',nearOtherOperators,'total:',existing.length);

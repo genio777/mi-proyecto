@@ -181,14 +181,16 @@ function App(){
        return ax-ay;
       }).slice(0,12);
     let best:{c:Charger,r:any,remaining:number,score:number}|null=null;
-    for(const x of eligible){
+    // Consultas OSRM independientes: ejecutarlas en paralelo en grupos pequeños.
+    // Antes se esperaban secuencialmente hasta 12 respuestas por parada.
+    const evaluated=await Promise.all(eligible.map(async x=>{
      try{
       const leg=await route([current,[x.c.lat,x.c.lng]],false),distance=leg.distance/1000;
       const remaining=energy-distance*consumption/100;
-      if(distance<5||distance>availableKm||remaining<minimum||(stage===0&&used.has(x.c.id)))continue;
+      if(distance<5||distance>availableKm||remaining<minimum||(stage===0&&used.has(x.c.id)))return null;
       // Exigir avance real hacia el destino: evita bucles entre cargadores cercanos.
       const progressKm=hav(current,target)-hav([x.c.lat,x.c.lng],target);
-      if(progressKm<Math.max(12,distance*.15))continue;
+      if(progressKm<Math.max(12,distance*.15))return null;
       const detour=x.nearest*2;
       // En modo rápido comparar minutos estimados de conducción y recarga,
       // no una bonificación arbitraria por potencia que favorecía 22 kW.
@@ -200,9 +202,10 @@ function App(){
       const score=routeMode==='fast'
        ?leg.duration/60+estimatedChargeMinutes+Math.max(0,detour)*.8-Math.min(progressKm,availableKm)*.28+shortHopPenalty
        :(routeMode==='cheap'?(x.c.price??20)*25+detour+Math.abs(distance-availableKm*.7)*.1:detour+Math.abs(distance-availableKm*.7)*.1)-Math.min(progressKm,availableKm)*.24+shortHopPenalty;
-      if(!best||score<best.score)best={c:x.c,r:leg,remaining,score};
-     }catch{}
-    }
+      return {c:x.c,r:leg,remaining,score};
+     }catch{return null}
+    }));
+    for(const option of evaluated){if(option&&(!best||option.score<best.score))best=option}
     if(!best){failureDetail='Etapa '+(stage+1)+' ('+name+'): quedan '+Math.round(directKm)+' km hasta el destino; autonomía utilizable '+Math.round(availableKm)+' km; '+eligible.length+' candidatos cercanos examinados, ninguno alcanzable con la reserva. Operadores: '+(operatorMode==='tesla'?'Solo Tesla':operatorMode==='custom'?selectedOperators.join(', '):'Todos')+'; potencia máxima '+(maximumPower||'sin límite')+' kW.';complete=false;break}
     const leg=await route([current,[best.c.lat,best.c.lng]]);
     const distance=leg.distance/1000,arrivalEnergy=energy-distance*consumption/100;

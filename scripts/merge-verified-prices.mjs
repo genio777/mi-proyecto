@@ -57,7 +57,20 @@ const summary={
  stationsWithUnknownPrice:catalog.chargers.filter(c=>c.price===null).length,
  stationsWithCatalogPriceButNoIndividualVerification:catalog.chargers.filter(c=>c.price!==null&&!c.priceVerifiedAt).length,
  catalogStations:catalog.chargers.length,
+ operatorReview:[],
+
  caution:'Un precio en el catálogo sin fecha y fuente individual verificadas no equivale a una tarifa confirmada.'
 };
+const operatorMap=new Map();
+for(const station of catalog.chargers){
+ const name=String(station.operator||'Operador no identificado').trim()||'Operador no identificado';
+ let item=operatorMap.get(name);
+ if(!item){item={operator:name,total:0,verifiedPrices:0,verifiedFree:0,unknownPrices:0,unverifiedCatalogPrices:0};operatorMap.set(name,item)}
+ item.total++;
+ if(station.priceVerifiedAt){item.verifiedPrices++;if(station.price===0)item.verifiedFree++}
+ else if(station.price===null)item.unknownPrices++;
+ else item.unverifiedCatalogPrices++;
+}
+summary.operatorReview=Array.from(operatorMap.values()).sort((a,b)=>b.unknownPrices-a.unknownPrices||b.total-a.total);
 await writeFile('public/data/price-verification-status.json',JSON.stringify(summary,null,2));
 console.log('Station-specific verified prices applied:',applied,'unknown:',summary.stationsWithUnknownPrice,'catalog prices without individual verification:',summary.stationsWithCatalogPriceButNoIndividualVerification);

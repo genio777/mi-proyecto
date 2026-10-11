@@ -35,7 +35,12 @@ for(const row of overlay.prices){
  if(String(station.connector||'').toLowerCase().indexOf(row.connectorType.toLowerCase())===-1)throw Error('Connector type mismatch: '+row.id);
  if(Math.abs(Number(station.power)-row.powerKw)>1)throw Error('Connector power mismatch: '+row.id);
  if(!row.stationEvidence.includes(row.connectorId))throw Error('Official connector ID not present in station evidence: '+row.id);
+ const connectors=Array.isArray(station.connectors)?station.connectors:[];
+ const matching=connectors.filter(c=>c.officialConnectorId===row.connectorId&&c.type.toLowerCase()===row.connectorType.toLowerCase()&&Math.abs(c.powerKw-row.powerKw)<=1);
+ if(matching.length!==1)throw Error('No unique official connector identity in national catalog: '+row.id);
+ if(connectors.length!==1)throw Error('Multi-connector station cannot receive a station-wide price: '+row.id);
  if(!/^https:\/\//.test(row.sourceUrl))throw Error('Invalid source URL: '+row.id);
+ matching[0].price=row.price;
  station.price=row.price;
  station.priceSource=row.sourceUrl;
  station.priceVerifiedAt=row.checkedAt;

@@ -13,6 +13,8 @@ for(const row of overlay.prices){
  if(typeof row.sourceUrl!=='string'||!/^https:\/\//.test(row.sourceUrl)||!Number.isFinite(Date.parse(row.checkedAt)))throw Error('Unverified tariff: '+row.id);
  if(typeof row.price!=='number'||!Number.isFinite(row.price)||row.price<0||row.unit!=='EUR/kWh')throw Error('Invalid price/unit: '+row.id);
  if(row.hasExtraFees!==false)throw Error('Additional fees or uncertain total price: '+row.id);
+ if(row.price===0&&(row.requiresPurchase!==false||row.timeLimitMinutes!==null||row.membershipRequired!==false||row.publicAccess!==true))throw Error('Conditional free tariff cannot be used for unrestricted 0 EUR routes: '+row.id);
+ if(typeof row.stationEvidence!=='string'||row.stationEvidence.trim().length<12)throw Error('Missing station-specific evidence: '+row.id);
  const age=Date.now()-Date.parse(row.checkedAt);
  if(age<0||age>7*86400000)throw Error('Tariff expired (7 days): '+row.id);
  const station=byId.get(row.id);

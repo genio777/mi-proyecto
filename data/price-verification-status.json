@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T16:47:24.761Z",
+  "generatedAt": "2026-10-11T16:49:45.423Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
@@ -1287,5 +1287,2008 @@
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     }
-  ]
+  ],
+  "stationReviewQueue": [
+    {
+      "id": "2023004097",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "ES La Gaviota - Albacete",
+      "city": "Albacete",
+      "province": "Albacete",
+      "address": "C/Autovía, Avenida Sexta, Campollano Norte",
+      "connector": "CCS",
+      "powerKw": 100,
+      "latitude": 39.02962,
+      "longitude": -1.8881468,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004088",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Exit - L'Aldea",
+      "city": "Aldea, L'",
+      "province": "Tarragona",
+      "address": "Ap7-Pol Ind Estacio Mercaderies 0,Pcl,58 Nau",
+      "connector": "CHAdeMO, CCS, Tipo2",
+      "powerKw": 180,
+      "latitude": 40.75308,
+      "longitude": 0.606343,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004154",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Hotel Restaurante Portugal II - Almaraz",
+      "city": "Almaraz",
+      "province": "Cáceres",
+      "address": "Autovía Del Suroeste A5, Km. 200, Almaraz",
+      "connector": "CCS",
+      "powerKw": 300,
+      "latitude": 39.79144,
+      "longitude": -5.6963925,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004077",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Hotel Acosta Vetonia - Almendralejo",
+      "city": "Almendralejo",
+      "province": "Badajoz",
+      "address": "Carretera N-630, Km 647",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 50,
+      "latitude": 38.70991,
+      "longitude": -6.400214,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004113",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Alovera",
+      "city": "Alovera",
+      "province": "Guadalajara",
+      "address": "Con A-2, Gu-105, Pk 48, 000, 19208 Alovera, G",
+      "connector": "CCS",
+      "powerKw": 360,
+      "latitude": 40.594845,
+      "longitude": -3.2253006,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004126",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Aranda de Duero - Prado Sport",
+      "city": "Aranda de Duero",
+      "province": "Burgos",
+      "address": "Polígono Prado Marina, C. Vendimia, S/N",
+      "connector": "CCS, Tipo2",
+      "powerKw": 120,
+      "latitude": 41.653645,
+      "longitude": -3.7019217,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004128",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Cepsa I Dir.Francia - Mutilva",
+      "city": "Aranguren",
+      "province": "Navarra",
+      "address": "Aranguren, 31192, Navarra",
+      "connector": "CCS",
+      "powerKw": 360,
+      "latitude": 42.800457,
+      "longitude": -1.6115102,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004075",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "La Panadella",
+      "city": "Argençola",
+      "province": "Barcelona",
+      "address": "Carretera N-2, Km 535 Estación De Servicio",
+      "connector": "Tipo2, CHAdeMO, CCS",
+      "powerKw": 50,
+      "latitude": 41.617115,
+      "longitude": 1.39949,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004069",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Calle de la Igualdad",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "C. De La Igualdad, 5",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.350525,
+      "longitude": -3.669021,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004078",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Av. Del Cid Campeador",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "Avda. Del Cid Campeador, 15",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.344986,
+      "longitude": -3.6984627,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004079",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Calle de Loudun",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "C. De Loudun, 49",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.359867,
+      "longitude": -3.6756487,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004082",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Calle Villadiego",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "C. De Villadiego, 2",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.342407,
+      "longitude": -3.7304008,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004084",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Av. de la Paz",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "Av. De La Paz, 1",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.344154,
+      "longitude": -3.6956096,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004093",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Calle del Carmen",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "C. Del Carmen 2 - 6",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.336815,
+      "longitude": -3.705334,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004100",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Calle Alfonso XI",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "C. De Alfonso Xi, 9",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.3536,
+      "longitude": -3.6745744,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004108",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Calle Calleja y Zurita",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "Calle De Calleja Y Zurita, 2",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.33271,
+      "longitude": -3.7019994,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004109",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Av. Cantabria",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "Avenida De Cantabria, 10, N-627",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.345863,
+      "longitude": -3.6869256,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004124",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Plaza Santa Teresa",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "Plaza De Sta. Teresa",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.340267,
+      "longitude": -3.6953535,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004127",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Burgos - Calle Alfonso X El Sabio",
+      "city": "Burgos",
+      "province": "Burgos",
+      "address": "Calle Alfonso X El Sabio, 1",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 42.3473,
+      "longitude": -3.6960614,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004103",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Salamanca - Tejares Nave Aparcamientos",
+      "city": "Carbajosa de la Sagrada",
+      "province": "Salamanca",
+      "address": "Av. Juan Pablo Ii, 126",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 40.955505,
+      "longitude": -5.7040777,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004116",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "La Estrella - Castillejo",
+      "city": "Castillejo de Iniesta",
+      "province": "Cuenca",
+      "address": "Cam. De Castillejo De Iniesta",
+      "connector": "CCS",
+      "powerKw": 300,
+      "latitude": 39.516518,
+      "longitude": -1.753888,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004072",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Hotel Meleiros - Castro de Sanabria",
+      "city": "Cobreros",
+      "province": "Zamora",
+      "address": "Hotel Meleiros",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 90,
+      "latitude": 42.061142,
+      "longitude": -6.642669,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004125",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vulcanizados Hoznayo Barros - Corrales de Buelna",
+      "city": "Corrales de Buelna, Los",
+      "province": "Cantabria",
+      "address": "Polígono Ind.De Barros,Parcela 32",
+      "connector": "CCS",
+      "powerKw": 180,
+      "latitude": 43.28525,
+      "longitude": -4.076768,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004090",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "ZUNDER - Lasarte",
+      "city": "Donostia/San Sebastián",
+      "province": "Gipuzkoa",
+      "address": "A1 Arrapide Pasealekua, Avda Del Hipódromo",
+      "connector": "Tipo2, CHAdeMO, CCS",
+      "powerKw": 50,
+      "latitude": 43.254353,
+      "longitude": -2.022994,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004112",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Dueñas - Restaurante Zamorano",
+      "city": "Dueñas",
+      "province": "Palencia",
+      "address": "A62 Km 96",
+      "connector": "CCS",
+      "powerKw": 360,
+      "latitude": 41.85898,
+      "longitude": -4.551042,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004118",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "ZUNDER - Estepona",
+      "city": "Estepona",
+      "province": "Málaga",
+      "address": "Ap7/A7 A. Del Mediterráneo, Pk 154",
+      "connector": "Tipo2, CCS, CHAdeMO",
+      "powerKw": 90,
+      "latitude": 36.434433,
+      "longitude": -5.160388,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004117",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Hotel Área Tudanca - Aranda de Duero",
+      "city": "Fuentelcésped",
+      "province": "Burgos",
+      "address": "N-I, 153",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 250,
+      "latitude": 41.623463,
+      "longitude": -3.687533,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004110",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Getafe3 - Mercasa",
+      "city": "Getafe",
+      "province": "Madrid",
+      "address": "Avd Juan Carlos I, 1",
+      "connector": "CCS",
+      "powerKw": 120,
+      "latitude": 40.295864,
+      "longitude": -3.745295,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004080",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Pantera rosa - Gijón",
+      "city": "Gijón",
+      "province": "Asturias",
+      "address": "Calle De Luís Ortiz Berrocal, 71",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 50,
+      "latitude": 43.524715,
+      "longitude": -5.641344,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004076",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Exit - La Gineta",
+      "city": "Gineta, La",
+      "province": "Albacete",
+      "address": "A-31 Salida 52",
+      "connector": "CHAdeMO, CCS, Tipo2",
+      "powerKw": 360,
+      "latitude": 39.13535,
+      "longitude": -2.03989,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004153",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Gomezserracín - Restaurante La Zamorana",
+      "city": "Gomezserracín",
+      "province": "Segovia",
+      "address": "Carretera Segovia Valladolid, 0 Km 62 4, A-60",
+      "connector": "CCS",
+      "powerKw": 300,
+      "latitude": 41.29213,
+      "longitude": -4.3002553,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004115",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Luz shopping - Jerez de la Frontera",
+      "city": "Jerez de la Frontera",
+      "province": "Cádiz",
+      "address": "Parking Del Cc Luz Shopping",
+      "connector": "CCS, CHAdeMO, Tipo2",
+      "powerKw": 360,
+      "latitude": 36.69195,
+      "longitude": -6.15939,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004104",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Langreo - Calle Aurelio Delbrouk",
+      "city": "Langreo",
+      "province": "Asturias",
+      "address": "Calle Aurelio Delbrouck, S/N, 33909",
+      "connector": "CCS, Tipo2, CHAdeMO",
+      "powerKw": 150,
+      "latitude": 43.295254,
+      "longitude": -5.684115,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004120",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Langreo - Calle Dolores Ibárruri \"La Pasionaria\"",
+      "city": "Langreo",
+      "province": "Asturias",
+      "address": "Calle Dolores Ibarruri Pasionaria, S/N",
+      "connector": "CCS, Tipo2, CHAdeMO",
+      "powerKw": 150,
+      "latitude": 43.302696,
+      "longitude": -5.6905913,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004130",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "La Lastrilla - Hotel Avenida del Sotillo",
+      "city": "Lastrilla, La",
+      "province": "Segovia",
+      "address": "Av. El Sotillo, 3, 40196",
+      "connector": "CCS",
+      "powerKw": 100,
+      "latitude": 40.965427,
+      "longitude": -4.097522,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004132",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Lloret de Mar - Carrer Joan Miró",
+      "city": "Lloret de Mar",
+      "province": "Girona",
+      "address": "Carrer Joan Miró, 79",
+      "connector": "CCS",
+      "powerKw": 100,
+      "latitude": 41.71371,
+      "longitude": 2.8307858,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004087",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Lobón - Área de Autocaravanas",
+      "city": "Lobón",
+      "province": "Badajoz",
+      "address": "Av. Adolfo Suárez, 39",
+      "connector": "CCS",
+      "powerKw": 65,
+      "latitude": 38.84465,
+      "longitude": -6.6214876,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004121",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Manzanares - Venta del Tizón",
+      "city": "Manzanares",
+      "province": "Ciudad Real",
+      "address": "A-4, Km 167",
+      "connector": "CCS",
+      "powerKw": 100,
+      "latitude": 39.058544,
+      "longitude": -3.372538,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004123",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Manzanares - El Cruce",
+      "city": "Manzanares",
+      "province": "Ciudad Real",
+      "address": "N-Iv Km-173,100,27",
+      "connector": "Tipo2, CHAdeMO, CCS",
+      "powerKw": 50,
+      "latitude": 39.00641,
+      "longitude": -3.3835087,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004131",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Mérida - Hotel Romero",
+      "city": "Mérida",
+      "province": "Badajoz",
+      "address": "Autovía A-66, Km 630",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 50,
+      "latitude": 38.85955,
+      "longitude": -6.36511,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004074",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Miranda de Ebro - Hotel Tudanca",
+      "city": "Miranda de Ebro",
+      "province": "Burgos",
+      "address": "Carretera Nacional I, Km 318",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 50,
+      "latitude": 42.688583,
+      "longitude": -2.953472,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004083",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Miranda de Ebro - Calle Juan Ramón Jiménez",
+      "city": "Miranda de Ebro",
+      "province": "Burgos",
+      "address": "Calle Juan Ramo´n Jimenez 41",
+      "connector": "CCS, Tipo2",
+      "powerKw": 150,
+      "latitude": 42.68507,
+      "longitude": -2.9398463,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004094",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Miranda de Ebro - Ronda del Ferrocarril",
+      "city": "Miranda de Ebro",
+      "province": "Burgos",
+      "address": "Calle Ronda Del Ferrocarril, 91",
+      "connector": "CCS, Tipo2",
+      "powerKw": 150,
+      "latitude": 42.689938,
+      "longitude": -2.9414196,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004095",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Miranda de Ebro - Francisco Cantera",
+      "city": "Miranda de Ebro",
+      "province": "Burgos",
+      "address": "Calle Francisco Cantera 16",
+      "connector": "CCS, Tipo2",
+      "powerKw": 150,
+      "latitude": 42.684944,
+      "longitude": -2.9442966,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004098",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Miranda de Ebro - Polideportivo de Anduva",
+      "city": "Miranda de Ebro",
+      "province": "Burgos",
+      "address": "Cam. Anduva, S/N",
+      "connector": "CCS, Tipo2",
+      "powerKw": 150,
+      "latitude": 42.67951,
+      "longitude": -2.932874,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004102",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Miranda de Ebro - Parking Sagrados Corazones",
+      "city": "Miranda de Ebro",
+      "province": "Burgos",
+      "address": "Cam. De Fuencaliente, 9, 7",
+      "connector": "CCS, Tipo2",
+      "powerKw": 150,
+      "latitude": 42.681156,
+      "longitude": -2.95197,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004085",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "La Gaviota  - Motilla del Palancar",
+      "city": "Motilla del Palancar",
+      "province": "Cuenca",
+      "address": "N-320,Km71",
+      "connector": "CHAdeMO, CCS, Tipo2",
+      "powerKw": 300,
+      "latitude": 39.553684,
+      "longitude": -1.902913,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004101",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Alar del Rey - Puerta de la Montaña",
+      "city": "Olmos de Ojeda",
+      "province": "Palencia",
+      "address": "Puerta De La Montaña",
+      "connector": "Tipo2, CCS, CHAdeMO",
+      "powerKw": 50,
+      "latitude": 42.71779,
+      "longitude": -4.291774,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004105",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Area 507 - Outeiro de rei",
+      "city": "Outeiro de Rei",
+      "province": "Lugo",
+      "address": "A6  Km 507 - Salida 507 - Rúa E",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 180,
+      "latitude": 43.10722,
+      "longitude": -7.605561,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004071",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Restaurante Ruta 62 - Tordesillas",
+      "city": "San Miguel del Pino",
+      "province": "Valladolid",
+      "address": "A-62 Salida 142",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 50,
+      "latitude": 41.542202,
+      "longitude": -4.897237,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004073",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Hostal Rio Deva II - Unquera",
+      "city": "San Vicente de la Barquera",
+      "province": "Cantabria",
+      "address": "N-634, 33A",
+      "connector": "CCS",
+      "powerKw": 360,
+      "latitude": 43.374832,
+      "longitude": -4.500147,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004129",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Hotel Emperatriz III - Salamanca",
+      "city": "Santa Marta de Tormes",
+      "province": "Salamanca",
+      "address": "Ctra. Madrid, 2",
+      "connector": "CCS",
+      "powerKw": 100,
+      "latitude": 40.95146,
+      "longitude": -5.6535707,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004114",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Hotel Puerta del Camino - Santiago de Compostela",
+      "city": "Santiago de Compostela",
+      "province": "Coruña, A",
+      "address": "Rúa De Miguel Ferro Caaveiro, 85",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 50,
+      "latitude": 42.884346,
+      "longitude": -8.512924,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004092",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Tapia de Casariego",
+      "city": "Tapia de Casariego",
+      "province": "Asturias",
+      "address": "Cs Cortaficio 302(A) Parcela I-9",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 43.561832,
+      "longitude": -6.922828,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004099",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "La Gaviota - Tarazona de la Mancha",
+      "city": "Tarazona de la Mancha",
+      "province": "Albacete",
+      "address": "Av Albacete, 35",
+      "connector": "CCS",
+      "powerKw": 100,
+      "latitude": 39.256268,
+      "longitude": -1.912183,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004089",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Área El Canto - Torquemada",
+      "city": "Torquemada",
+      "province": "Palencia",
+      "address": "A62 Salida 68 - Autovía De Castilla",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 360,
+      "latitude": 42.03616,
+      "longitude": -4.280605,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004086",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Torre-Pacheco - Calle de Cartagena",
+      "city": "Torre-Pacheco",
+      "province": "Murcia",
+      "address": "Calle De Cartagena, 64",
+      "connector": "CCS, Tipo2",
+      "powerKw": 90,
+      "latitude": 37.73445,
+      "longitude": -0.9523152,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004096",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Torre-Pacheco - Club De Golf",
+      "city": "Torre-Pacheco",
+      "province": "Murcia",
+      "address": "C. Gregory Peter, 14",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 37.740654,
+      "longitude": -0.9608148,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004111",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Torre-Pacheco - Centro de Salud",
+      "city": "Torre-Pacheco",
+      "province": "Murcia",
+      "address": "C/ Trasvase S/N",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 37.74118,
+      "longitude": -0.9498342,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004119",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Torre-Pacheco - Centro Cívico Balsicas",
+      "city": "Torre-Pacheco",
+      "province": "Murcia",
+      "address": "Plaza Parroco Andrés Cánovas S/N",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 37.816086,
+      "longitude": -0.9567288,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004070",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "ZUNDER Dir. Castellón - Torrent",
+      "city": "Torrent",
+      "province": "Valencia/València",
+      "address": "Ap7 Km 519 Dirección Castellón",
+      "connector": "CHAdeMO, CCS, Tipo2",
+      "powerKw": 90,
+      "latitude": 39.400677,
+      "longitude": -0.491817,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004107",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "ZUNDER Dir. Alicante - Torrent",
+      "city": "Torrent",
+      "province": "Valencia/València",
+      "address": "Ap7 Km519 Dirección Alicante",
+      "connector": "CHAdeMO, CCS",
+      "powerKw": 90,
+      "latitude": 39.400467,
+      "longitude": -0.49283,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004081",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Exit - Villalpando",
+      "city": "Villalpando",
+      "province": "Zamora",
+      "address": "Carretera De Zamora 15",
+      "connector": "CCS",
+      "powerKw": 130,
+      "latitude": 41.859493,
+      "longitude": -5.416823,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004106",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "El Raso - Villalpando",
+      "city": "Villalpando",
+      "province": "Zamora",
+      "address": "Autovia A6, Km 231",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 180,
+      "latitude": 41.82612,
+      "longitude": -5.378892,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004091",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "ZUNDER Dir. Madrid - Villargordo del Cabriel",
+      "city": "Villargordo del Cabriel",
+      "province": "Valencia/València",
+      "address": "Autovia A3, Km 255",
+      "connector": "CHAdeMO, Tipo2, CCS",
+      "powerKw": 50,
+      "latitude": 39.52892,
+      "longitude": -1.433511,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004133",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Castillo de Quejana 2",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Castillo De Quejana, 10",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.84222,
+      "longitude": -2.688111,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004134",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Castillo de Quejana 3",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Castillo De Quejana, 1",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.842,
+      "longitude": -2.687972,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004135",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Ramón Rubial",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Ramón Rubial, 2",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.85525,
+      "longitude": -2.693361,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004136",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Plaza Amadeo García de Salazar",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Plaza Amadeo García De Salazar",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.83766,
+      "longitude": -2.686803,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004137",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Centro Cívico Ibaiondo",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Del Duque De Wellington, 52",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.868,
+      "longitude": -2.697,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004138",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Sierra de Aralar - Centro de Salud",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Baiona, 26, 01010 Vitoria-Gasteiz Vitor",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.86248,
+      "longitude": -2.696306,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004139",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Centro Comercial Gazalbide",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "C\\ Juana Jugan 3",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.856388,
+      "longitude": -2.685583,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004140",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Sansomendi",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Av. Los Huetos 18",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.85422,
+      "longitude": -2.698722,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004141",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Tarragona",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "C\\ Tarragona 9",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.868584,
+      "longitude": -2.689472,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004142",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Pintor Teodoro Dublang",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "C\\ Pintor Teodoro Dublang 7",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.844913,
+      "longitude": -2.6893,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004143",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Juan Gris",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "C\\ Juan Gris 15",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.845165,
+      "longitude": -2.7058012,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004144",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Obispo Ballester",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "C. Del Obispo Ballester, 33",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.85471,
+      "longitude": -2.6630046,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004145",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Calle Polvorín Viejo",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Polvorín Viejo, 8",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.845856,
+      "longitude": -2.6585763,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004146",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Paseo Biosfera",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Paseo De La Biosfera, 2",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.862453,
+      "longitude": -2.6444547,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004147",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Iturritxu",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle De Iturritxu, 5A, 01006 Vitoria-Gasteiz",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.834187,
+      "longitude": -2.6668131,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004148",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - BM Portal de Elorriaga",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Portal De Elorriaga 14",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.8478,
+      "longitude": -2.65269,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004149",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Beroil Vitoria",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "B.º Zearsoloeta, 1 -  Vitoria - Gasteiz",
+      "connector": "CCS",
+      "powerKw": 20,
+      "latitude": 42.84727,
+      "longitude": -2.75244,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004150",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Pedro de Asua",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Pedro De Asua Kalea, 21",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.848637,
+      "longitude": -2.689613,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004151",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Plaza de San Martín",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle José Miguel Barandiaran, 6",
+      "connector": "CCS",
+      "powerKw": 150,
+      "latitude": 42.851906,
+      "longitude": -2.6862242,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004152",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Vitoria-Gasteiz - Plazuela de la Estación",
+      "city": "Vitoria-Gasteiz",
+      "province": "Araba/Álava",
+      "address": "Calle Eduardo Dato, 46A",
+      "connector": "CCS",
+      "powerKw": 25,
+      "latitude": 42.841717,
+      "longitude": -2.672931,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2023004122",
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "name": "Zamora - Hotel Rey Sancho",
+      "city": "Zamora",
+      "province": "Zamora",
+      "address": "Av. De Galicia, S/N",
+      "connector": "CCS",
+      "powerKw": 360,
+      "latitude": 41.521126,
+      "longitude": -5.755018,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004430",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - Molina de Segura - Calle Mayor",
+      "city": "Abarán",
+      "province": "Murcia",
+      "address": "Calle Mayor, 42",
+      "connector": "CCS, CHAdeMO, Tipo2",
+      "powerKw": 50,
+      "latitude": 38.051533,
+      "longitude": -1.2108834,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004434",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - Molina de Segura - Av. Gutiérrez Mellado",
+      "city": "Abarán",
+      "province": "Murcia",
+      "address": "Avenida Gutiérrez Mellado, 101",
+      "connector": "CCS",
+      "powerKw": 120,
+      "latitude": 38.066143,
+      "longitude": -1.2051479,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004420",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - H. LOS CEREZOS",
+      "city": "Acebeda, La",
+      "province": "Madrid",
+      "address": "Calle Mayor, 884K",
+      "connector": "CCS, CHAdeMO, Tipo2",
+      "powerKw": 50,
+      "latitude": 41.096478,
+      "longitude": -3.594362,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004376",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - Agramunt",
+      "city": "Agramunt",
+      "province": "Lleida",
+      "address": "Plaça Fondandana, 4",
+      "connector": "CCS, CHAdeMO, Tipo2",
+      "powerKw": 50,
+      "latitude": 41.78415,
+      "longitude": 1.0950007,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004374",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - Estacion autobuses Emisalba",
+      "city": "Albacete",
+      "province": "Albacete",
+      "address": "Calle Federico García Lorca, 6",
+      "connector": "Tipo2, CCS, CHAdeMO",
+      "powerKw": 50,
+      "latitude": 38.99828,
+      "longitude": -1.847515,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004457",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - Balcón de Júcar",
+      "city": "Alberic",
+      "province": "Valencia/València",
+      "address": "Plaça Numero 13, 2",
+      "connector": "Tipo2, CCS, CHAdeMO",
+      "powerKw": 50,
+      "latitude": 39.09007,
+      "longitude": -0.537396,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024006460",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - Parque Guadaíra",
+      "city": "Alcalá de Guadaíra",
+      "province": "Sevilla",
+      "address": "Avenida Príncipe De Asturias",
+      "connector": "CCS",
+      "powerKw": 100,
+      "latitude": 37.353424,
+      "longitude": -5.858124,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004391",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - C.C. Moraleja Green",
+      "city": "Alcobendas",
+      "province": "Madrid",
+      "address": "Avenida De Europa, 13",
+      "connector": "Tipo2",
+      "powerKw": 7,
+      "latitude": 40.518658,
+      "longitude": -3.655331,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004449",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - C.C. Alcora Plaza",
+      "city": "Alcorcón",
+      "province": "Madrid",
+      "address": "Avenida De Europa, 22",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 40.34332,
+      "longitude": -3.8519976,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004411",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - E.S. Pastores - CCS",
+      "city": "Algeciras",
+      "province": "Cádiz",
+      "address": "Urbanizacion Ue Los Pastores Sur, 4I",
+      "connector": "CCS",
+      "powerKw": 50,
+      "latitude": 36.11206,
+      "longitude": -5.453326,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004395",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - First Stop Almendralejo",
+      "city": "Almendralejo",
+      "province": "Badajoz",
+      "address": "Carretera Gijón-Sevilla, 120",
+      "connector": "CCS, CHAdeMO, Tipo2",
+      "powerKw": 50,
+      "latitude": 38.673912,
+      "longitude": -6.390387,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004384",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - Restaurante El Vasco - Villarubio",
+      "city": "Almendros",
+      "province": "Cuenca",
+      "address": "N-Iii, 13",
+      "connector": "CCS, Tipo2",
+      "powerKw": 100,
+      "latitude": 39.946594,
+      "longitude": -2.8946514,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004383",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - La Molina C/Romaní",
+      "city": "Alp",
+      "province": "Girona",
+      "address": "Barri Plan Estacion, 47",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 42.345238,
+      "longitude": 1.9570138,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    },
+    {
+      "id": "2024004390",
+      "operator": "ACCIONA Recarga",
+      "name": "ACCIONA - (A) La Molina Avd. Supermolina",
+      "city": "Alp",
+      "province": "Girona",
+      "address": "Avinguda Supermolina, 1",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 42.336884,
+      "longitude": 1.9365222,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
+    }
+  ],
+  "stationReviewQueueLimit": 100
 }

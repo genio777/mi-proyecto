@@ -49,4 +49,15 @@ for(const row of overlay.prices){
 }
 if(missing)throw Error('Tariff station IDs absent from current catalog: '+missing);
 await writeFile(file,JSON.stringify(catalog));
-console.log('Station-specific verified prices applied:',applied,'unknown:',catalog.chargers.filter(c=>c.price===null).length);
+const summary={
+ generatedAt:new Date().toISOString(),
+ source:'data/verified-station-prices.json',
+ appliedVerifiedStationPrices:applied,
+ verifiedFreeStations:catalog.chargers.filter(c=>c.price===0&&c.priceVerifiedAt).length,
+ stationsWithUnknownPrice:catalog.chargers.filter(c=>c.price===null).length,
+ stationsWithCatalogPriceButNoIndividualVerification:catalog.chargers.filter(c=>c.price!==null&&!c.priceVerifiedAt).length,
+ catalogStations:catalog.chargers.length,
+ caution:'Un precio en el catálogo sin fecha y fuente individual verificadas no equivale a una tarifa confirmada.'
+};
+await writeFile('public/data/price-verification-status.json',JSON.stringify(summary,null,2));
+console.log('Station-specific verified prices applied:',applied,'unknown:',summary.stationsWithUnknownPrice,'catalog prices without individual verification:',summary.stationsWithCatalogPriceButNoIndividualVerification);

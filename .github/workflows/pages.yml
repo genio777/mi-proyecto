@@ -38,6 +38,17 @@ jobs:
         run: node scripts/audit-price-candidates.mjs
       - name: Integrar únicamente tarifas individuales verificadas
         run: node scripts/merge-verified-prices.mjs
+      - name: Validar informe de precios y prioridades de revisión
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const d=JSON.parse(fs.readFileSync('public/data/price-verification-status.json','utf8'));
+          if(!Array.isArray(d.operatorReview)||!Array.isArray(d.priorityOperators))throw Error('Falta desglose económico por operador');
+          if(d.priorityOperators.length>20)throw Error('Lista de revisión demasiado larga');
+          if(d.operatorReview.reduce((sum,o)=>sum+o.total,0)!==d.catalogStations)throw Error('Totales de operadores no coinciden');
+          if(d.verifiedFreeStations>d.appliedVerifiedStationPrices)throw Error('Más estaciones gratis verificadas que tarifas verificadas');
+          console.log('Informe económico validado:',d.catalogStations,'estaciones;',d.priorityOperators.length,'operadores prioritarios');
+          JS
       - name: Validar catálogo nacional antes de publicar
         run: |
           node --input-type=module <<'JS'

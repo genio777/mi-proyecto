@@ -44,7 +44,7 @@ function App(){
   if(maximumPower>0&&c.power>maximumPower)return false;
   if(routeMode==='fast')return c.power>=100;
   if(routeMode==='cheap')return c.power>=50;
-  if(routeMode==='free')return c.power>0&&c.power<=50;
+  if(routeMode==='free')return c.power>0&&c.price===0;
   return true;
  });
  const operatorPowers=(op:string)=>Array.from(new Set(chargers.filter(c=>operatorLabel(c)===op).map(c=>c.power).filter(p=>Number.isFinite(p)&&p>0))).sort((a,b)=>a-b);

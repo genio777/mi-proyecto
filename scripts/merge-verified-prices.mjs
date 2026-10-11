@@ -17,12 +17,18 @@ for(const row of overlay.prices){
  if(typeof row.stationEvidence!=='string'||row.stationEvidence.trim().length<12)throw Error('Missing station-specific evidence: '+row.id);
  if(typeof row.conditions!=='string'||!row.conditions.trim())throw Error('Missing usage conditions: '+row.id);
  if(!Number.isFinite(row.lat)||!Number.isFinite(row.lng))throw Error('Missing station coordinates: '+row.id);
+ if(typeof row.connectorId!=='string'||!row.connectorId.trim())throw Error('Missing official connector ID: '+row.id);
+ if(typeof row.connectorType!=='string'||!row.connectorType.trim())throw Error('Missing connector type: '+row.id);
+ if(!Number.isFinite(row.powerKw)||row.powerKw<=0)throw Error('Missing connector power: '+row.id);
  const age=Date.now()-Date.parse(row.checkedAt);
  if(age<0||age>7*86400000)throw Error('Tariff expired (7 days): '+row.id);
  const station=byId.get(row.id);
  if(!station){missing++;continue}
  const distance=Math.hypot((station.lat-row.lat)*111000,(station.lng-row.lng)*111000*Math.cos(station.lat*Math.PI/180));
  if(distance>100)throw Error('Tariff coordinates do not match catalog station: '+row.id);
+ if(String(station.connector||'').toLowerCase().indexOf(row.connectorType.toLowerCase())===-1)throw Error('Connector type mismatch: '+row.id);
+ if(Math.abs(Number(station.power)-row.powerKw)>1)throw Error('Connector power mismatch: '+row.id);
+ if(!row.stationEvidence.includes(row.connectorId))throw Error('Official connector ID not present in station evidence: '+row.id);
  station.price=row.price;
  station.priceSource=row.sourceUrl;
  station.priceVerifiedAt=row.checkedAt;

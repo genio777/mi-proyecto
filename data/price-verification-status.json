@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T16:53:48.226Z",
+  "generatedAt": "2026-10-11T16:55:35.417Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
@@ -3290,5 +3290,11 @@
       ]
     }
   ],
-  "stationReviewQueueLimit": 100
+  "stationReviewQueueLimit": 100,
+  "stationReviewQueueStats": {
+    "selected": 100,
+    "totalUnknown": 11954,
+    "remainingOutsideQueue": 11854,
+    "operatorsInQueue": 1
+  }
 }

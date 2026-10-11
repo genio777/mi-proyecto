@@ -27,8 +27,16 @@ for(const t of entries){
  const match=existing.find(c=>isTesla(c)&&distanceMeters(candidate,c)<=100);
  if(match){
   duplicates++;
-  // No sobrescribir potencia, nombre ni fuente oficiales con datos comunitarios.
-  // Si el registro ya es comunitario, mantenerlo sin crear una copia.
+  // El catálogo nacional puede registrar una toma AC de baja potencia en la
+  // misma ubicación. No utilizarla como potencia del Supercharger CCS.
+  // La potencia comunitaria solo corrige el cálculo del Supercharger Tesla,
+  // nunca se presenta como potencia medida o disponibilidad en tiempo real.
+  if(power>=50&&match.power<50){
+   match.power=power;
+   match.connector=[...new Set([...String(match.connector||'').split(',').map(x=>x.trim()).filter(Boolean),'CCS'])].join(', ');
+   match.powerSource='Tesla Superchargers - Niek community dataset (potencia nominal no verificada en tiempo real)';
+   match.powerVerified=false;
+  }
   continue;
  }
  if(existing.some(c=>!isTesla(c)&&distanceMeters(candidate,c)<=100))nearOtherOperators++;

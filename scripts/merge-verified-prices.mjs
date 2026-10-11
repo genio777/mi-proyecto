@@ -15,13 +15,18 @@ for(const row of overlay.prices){
  if(row.hasExtraFees!==false)throw Error('Additional fees or uncertain total price: '+row.id);
  if(row.price===0&&(row.requiresPurchase!==false||row.timeLimitMinutes!==null||row.membershipRequired!==false||row.publicAccess!==true))throw Error('Conditional free tariff cannot be used for unrestricted 0 EUR routes: '+row.id);
  if(typeof row.stationEvidence!=='string'||row.stationEvidence.trim().length<12)throw Error('Missing station-specific evidence: '+row.id);
+ if(typeof row.conditions!=='string'||!row.conditions.trim())throw Error('Missing usage conditions: '+row.id);
+ if(!Number.isFinite(row.lat)||!Number.isFinite(row.lng))throw Error('Missing station coordinates: '+row.id);
  const age=Date.now()-Date.parse(row.checkedAt);
  if(age<0||age>7*86400000)throw Error('Tariff expired (7 days): '+row.id);
  const station=byId.get(row.id);
  if(!station){missing++;continue}
+ const distance=Math.hypot((station.lat-row.lat)*111000,(station.lng-row.lng)*111000*Math.cos(station.lat*Math.PI/180));
+ if(distance>100)throw Error('Tariff coordinates do not match catalog station: '+row.id);
  station.price=row.price;
  station.priceSource=row.sourceUrl;
  station.priceVerifiedAt=row.checkedAt;
+ station.priceConditions=row.conditions;
  applied++;
 }
 if(missing)throw Error('Tariff station IDs absent from current catalog: '+missing);

@@ -33,14 +33,15 @@ function MapView({position,onlyFree,routeCoords=[],stops=[],chargers=[],focusSea
 }
 
 function App(){
- const[connectorFilters,setConnectorFilters]=useState<string[]>(()=>{try{const saved=localStorage.getItem('cg_connectors');const value=saved?JSON.parse(saved):localStorage.getItem('cg_connector');return Array.isArray(value)?value.filter((x:unknown)=>['CCS','Tipo2','CHAdeMO'].includes(String(x))):['CCS','Tipo2','CHAdeMO'].includes(value||'')?[value as string]:[]}catch{return []}});useEffect(()=>{try{localStorage.setItem('cg_connectors',JSON.stringify(connectorFilters))}catch{}},[connectorFilters]);const toggleConnector=(id:string)=>setConnectorFilters(old=>id==='todos'?[]:old.includes(id)?old.filter(x=>x!==id):[...old,id]);const filterConnectors=(items:Charger[])=>connectorFilters.length===0?items:items.filter(c=>c.connector.split(',').some(x=>connectorFilters.some(id=>x.trim().toLowerCase()===id.toLowerCase())));const[searchText,setSearchText]=useState(''),[tab,setTab]=useState('mapa'),[pos,setPos]=useState<[number,number]|null>(null),[msg,setMsg]=useState('Sin localizar'),[onlyFree,setOnlyFree]=useState(false),[chargers,setChargers]=useState<Charger[]>(emptyChargers),[chargerInfo,setChargerInfo]=useState('Cargando base nacional…');
+ const[connectorFilters,setConnectorFilters]=useState<string[]>(()=>{try{const saved=localStorage.getItem('cg_connectors');const value=saved?JSON.parse(saved):localStorage.getItem('cg_connector');return Array.isArray(value)?value.filter((x:unknown)=>['CCS','Tipo2','CHAdeMO'].includes(String(x))):['CCS','Tipo2','CHAdeMO'].includes(value||'')?[value as string]:[]}catch{return []}});useEffect(()=>{try{localStorage.setItem('cg_connectors',JSON.stringify(connectorFilters))}catch{}},[connectorFilters]);const toggleConnector=(id:string)=>setConnectorFilters(old=>id==='todos'?[]:old.includes(id)?old.filter(x=>x!==id):[...old,id]);const filterConnectors=(items:Charger[])=>connectorFilters.length===0?items:items.filter(c=>(c.connector||'').split(',').some(x=>connectorFilters.some(id=>x.trim().toLowerCase()===id.toLowerCase())));const[searchText,setSearchText]=useState(''),[tab,setTab]=useState('mapa'),[pos,setPos]=useState<[number,number]|null>(null),[msg,setMsg]=useState('Sin localizar'),[onlyFree,setOnlyFree]=useState(false),[chargers,setChargers]=useState<Charger[]>(emptyChargers),[chargerInfo,setChargerInfo]=useState('Cargando base nacional…');
  const[operatorMode,setOperatorMode]=useState<'all'|'tesla'|'custom'>(()=>{try{const v=localStorage.getItem('cg_operator_mode');return v==='tesla'||v==='custom'?v:'all'}catch{return 'all'}}),[selectedOperators,setSelectedOperators]=useState<string[]>(()=>{try{return JSON.parse(localStorage.getItem('cg_selected_operators')||'[]')}catch{return []}});
- const operatorLabel=(c:Charger)=>/tesla/i.test((c.operator||'')+' '+c.name)?'Tesla Supercharger':(c.operator||'Operador no identificado').trim();
+ const operatorLabel=(c:Charger)=>/tesla/i.test((c.operator||'')+' '+c.name)?'Tesla Supercharger':((c.operator||'').trim()||'Operador no identificado');
  const operatorNames=Array.from(new Set(chargers.map(operatorLabel))).sort((a,b)=>a.localeCompare(b,'es'));
  const[maximumPower,setMaximumPower]=useState(()=>{try{return Number(localStorage.getItem('cg_max_power')||0)}catch{return 0}});
  useEffect(()=>{try{localStorage.setItem('cg_max_power',String(maximumPower))}catch{}},[maximumPower]);
  const powerLevels=[0,22,50,100,150,200,250,300,350];
  const powerFiltered=(items:Charger[])=>items.filter(c=>{
+  if(!Number.isFinite(c.power)||c.power<=0)return false;
   if(maximumPower>0&&c.power>maximumPower)return false;
   if(routeMode==='fast')return c.power>=100;
   if(routeMode==='cheap')return c.power>0;
@@ -49,7 +50,7 @@ function App(){
  });
  const operatorPowers=(op:string)=>Array.from(new Set(chargers.filter(c=>operatorLabel(c)===op).map(c=>c.power).filter(p=>Number.isFinite(p)&&p>0))).sort((a,b)=>a-b);
  const teslaCount=chargers.filter(c=>operatorLabel(c)==='Tesla Supercharger').length;
- const routeOperatorFilter=(items:Charger[])=>operatorMode==='all'?items:operatorMode==='tesla'?items.filter(c=>operatorLabel(c)==='Tesla Supercharger'):items.filter(c=>selectedOperators.includes(operatorLabel(c)));
+ const routeOperatorFilter=(items:Charger[])=>operatorMode==='all'?items:operatorMode==='tesla'?items.filter(c=>operatorLabel(c)==='Tesla Supercharger'):selectedOperators.length?items.filter(c=>selectedOperators.includes(operatorLabel(c))):items;
  useEffect(()=>{try{localStorage.setItem('cg_operator_mode',operatorMode);localStorage.setItem('cg_selected_operators',JSON.stringify(selectedOperators))}catch{}},[operatorMode,selectedOperators]);
  const[favorites,setFavorites]=useState<string[]>(()=>{try{return JSON.parse(localStorage.getItem('cg_favorites')||'[]')}catch{return []}});useEffect(()=>{localStorage.setItem('cg_favorites',JSON.stringify(favorites))},[favorites]);const toggleFavorite=(id:string)=>setFavorites(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]);
  const vehiclePresets=[{name:'Tesla Model Y Standard Range',connectors:['CCS','Tipo2']},{name:'Renault Zoe R90',connectors:['Tipo2']}];
@@ -85,7 +86,7 @@ function App(){
  if(operatorId==='zunder'){const t=powerKw<=50?tiers.find((x:any)=>x.label.includes('hasta 50')):tiers.find((x:any)=>x.label.includes('>50'));return t?{price:t.price,label:t.label}:null}
  const valid=tiers.filter((x:any)=>Number.isFinite(x.price));return valid.length?{price:valid[0].price,label:valid[0].label}:null};
  const hav=(a:[number,number],b:[number,number])=>{const R=6371,dLat=(b[0]-a[0])*Math.PI/180,dLon=(b[1]-a[1])*Math.PI/180,x=Math.sin(dLat/2)**2+Math.cos(a[0]*Math.PI/180)*Math.cos(b[0]*Math.PI/180)*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
- const geocode=async(q:string)=>{const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q));const j=await r.json();if(!j.length)throw new Error('No encuentro esa localidad');return [Number(j[0].lat),Number(j[0].lon)] as [number,number]};
+ const geocode=async(q:string)=>{const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q));if(!r.ok)throw new Error('Servicio de búsqueda de localidades no disponible ('+r.status+')');const j=await r.json();if(!Array.isArray(j)||!j.length)throw new Error('No encuentro esa localidad');const lat=Number(j[0].lat),lon=Number(j[0].lon);if(!Number.isFinite(lat)||!Number.isFinite(lon))throw new Error('Coordenadas de destino no válidas');return [lat,lon] as [number,number]};
  const displayStation=(c:Charger)=>{const n=(c.name||'').trim();const name=n&& !/^[A-Z0-9_-]{14,}$/i.test(n)?n:[c.city,c.address].filter(Boolean).join(' · ')||'Estacion '+c.id;return /tesla/i.test((c.operator||'')+' '+n)?'Tesla Supercharger · '+name.replace(/^Tesla Supercharger\s*[-·:]?\s*/i,''):(c.operator&&!name.toLowerCase().includes(c.operator.toLowerCase())?c.operator+' · ':'')+name};
  const calculateRoute=async()=>{try{if(tripType!=='one'){
  setRouting(true);setRouteResult('Calculando todas las etapas…');setRouteStops([]);setRouteCoords([]);setRouteMeta(null);

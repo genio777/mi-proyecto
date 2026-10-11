@@ -34,6 +34,8 @@ jobs:
         run: |
           node scripts/import-tesla.mjs
           node -e "const d=require('./public/data/chargers-spain.json');const t=d.chargers.filter(c=>/tesla/i.test((c.operator||'')+' '+c.name));console.log('Superchargers Tesla identificados:',t.length);if(!t.length)process.exit(1)"
+      - name: Integrar únicamente tarifas individuales verificadas
+        run: node scripts/merge-verified-prices.mjs
       - name: Validar catálogo nacional antes de publicar
         run: |
           node --input-type=module <<'JS'

@@ -27,7 +27,10 @@ for(const group of groups){
  report.groups.push({name:group.name,source:group.source,conditions:group.conditions,status:group.status,verificationRequirements:conditionsByOperator[group.name],count:stations.length,stations});
  console.log(group.name+': '+stations.length+' candidates, zero verified free by this audit');
 }
-report.locationEvidence=evidence.records.map(row=>({...row,matchingCatalogStations:catalog.chargers.filter(c=>normalize(c.city)===normalize(row.city)&&normalize(c.address).includes(normalize(row.address).slice(0,12))).map(c=>({id:c.id,name:c.name,address:c.address})),eligibleForZeroEuroRouting:false}));
+report.locationEvidence=evidence.records.map(row=>{
+ const matches=catalog.chargers.filter(c=>normalize(c.city)===normalize(row.city)&&normalize(c.address).includes(normalize(row.address).slice(0,12))).map(c=>({id:c.id,name:c.name,address:c.address,operator:c.operator,connector:c.connector,power:c.power}));
+ return {...row,matchingCatalogStations:matches,matchCount:matches.length,matchStatus:matches.length===1?'candidate_unique':matches.length===0?'not_found':'ambiguous',nextAction:matches.length===1?'Verify connector and full station-specific tariff':matches.length===0?'Find matching station in national catalog':'Resolve multiple stations before assigning price',eligibleForZeroEuroRouting:false};
+});
 report.verifiedPriceCount=valid.length;
 report.verifiedFreeCount=valid.filter(row=>row.price===0).length;
 await mkdir('public/data',{recursive:true});

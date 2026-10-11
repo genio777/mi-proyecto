@@ -212,12 +212,14 @@ function App(){
     // En los demás casos conservamos la estrategia validada de cargar al 100%.
     const energyToDestination=remainingRoadKm*consumption/100;
     const requiredAtDeparture=energyToDestination+minimum+battery*.03;
-    let chargeTarget=requiredAtDeparture<=battery
+    // Con destinos posteriores, no agotar la bateria en el destino intermedio:
+    // conservar una carga completa en la ultima estacion de esta etapa.
+    let chargeTarget=stage<targets.length-1?battery:(requiredAtDeparture<=battery
      ?Math.min(battery,Math.max(arrivalEnergy,requiredAtDeparture))
-     :battery;
+     :battery);
     // En tramos intermedios, permitir salir al 95 % únicamente si se
     // verifica por carretera un siguiente cargador compatible y alcanzable.
-    if(requiredAtDeparture>battery&&arrivalEnergy<battery*.95){
+    if(stage===targets.length-1&&requiredAtDeparture>battery&&arrivalEnergy<battery*.95){
      const fromStation:[number,number]=[best.c.lat,best.c.lng];
      const directToTarget=hav(fromStation,target);
      const maxNextKm=(battery*.95-minimum-battery*.03)*100/consumption;

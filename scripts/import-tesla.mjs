@@ -36,7 +36,7 @@ for(const t of entries){
  let id=baseId,serial=2;
  while(ids.has(id))id=baseId+'-'+serial++;
  ids.add(id);
- existing.push({id,name:'Tesla Supercharger - '+name,city:name.split(',')[0],province:'',address:'',operator:'Tesla',lat,lng,power,connector:'CCS',price:null,source:'Tesla Superchargers - Niek community dataset',verified:'Ubicacion sin verificar individualmente',availability:'Desconocida'});
+ existing.push({id,name:'Tesla Supercharger - '+name,city:name.split(',')[0],province:'',address:'',operator:'Tesla',lat,lng,power,connector:'CCS',price:null,priceSource:null,priceVerifiedAt:null,source:'Tesla Superchargers - Niek community dataset',verified:'Ubicacion sin verificar individualmente',availability:'Desconocida'});
  added++;
 }
 if(added===0&&duplicates===0)throw Error('No Tesla stations imported: check source and geographic filters');

@@ -107,6 +107,12 @@ function App(){
   const route=async(points:[number,number][],geometry=true)=>{
    const key=points.map(p=>p.map(v=>v.toFixed(5)).join(',')).join(';')+'|'+geometry;
    let pending=routeCache.get(key);
+   // Una ruta con geometría ya contiene distancia y duración: reutilizarla
+   // cuando otra comprobación solo necesita esos datos.
+   if(!pending&&!geometry){
+    const fullKey=points.map(p=>p.map(v=>v.toFixed(5)).join(',')).join(';')+'|true';
+    pending=routeCache.get(fullKey);
+   }
    if(!pending){
     const u='https://router.project-osrm.org/route/v1/driving/'+points.map(p=>p[1]+','+p[0]).join(';')+'?overview='+(geometry?'full':'false')+(geometry?'&geometries=geojson':'');
     pending=(async()=>{const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),9000);let r:Response;try{r=await fetch(u,{signal:controller.signal})}finally{clearTimeout(timeout)}if(!r.ok)throw Error('Servicio de rutas no disponible');const j=await r.json();if(j.code!=='Ok'||!j.routes?.[0])throw Error('No se encontró ruta por carretera');return j.routes[0]})();

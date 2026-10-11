@@ -82,5 +82,11 @@ summary.coverage={
  unknownPricePercent:summary.catalogStations?Number((100*summary.stationsWithUnknownPrice/summary.catalogStations).toFixed(2)):0,
  operatorsReviewed:summary.operatorReview.length
 };
+summary.priorityOperators=summary.operatorReview.filter(item=>item.unknownPrices>0).slice(0,20).map(item=>({
+ operator:item.operator,
+ stationsToVerify:item.unknownPrices,
+ catalogCoveragePercent:item.total?Number((100*item.verifiedPrices/item.total).toFixed(2)):0,
+ action:'Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar.'
+}));
 await writeFile('public/data/price-verification-status.json',JSON.stringify(summary,null,2));
 console.log('Station-specific verified prices applied:',applied,'unknown:',summary.stationsWithUnknownPrice,'catalog prices without individual verification:',summary.stationsWithCatalogPriceButNoIndividualVerification);

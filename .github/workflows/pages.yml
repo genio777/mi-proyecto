@@ -66,7 +66,12 @@ jobs:
             ['resumen de SOC', 'tripSocMetric'],
             ['tarifa desconocida', 'Precio no disponible'],
             ['cálculo de carga conservador', 'chargingMinutes'],
-            ['paradas y coste', 'chargingStops']
+            ['paradas y coste', 'chargingStops'],
+            ['perfiles separados Tesla y Zoe', 'cg_vehicle_profiles_v2'],
+            ['recuperación del perfil al cambiar de coche', 'const profile=storedVehicle(name)'],
+            ['guardado individual de potencia de carga', 'maxCharge:maxChargeKw'],
+            ['consulta concurrente de cargadores', 'Promise.all(eligible.map'],
+            ['precio desconocido separado de gratuito', "unknownPrices?'Precio no disponible'"]
           ];
           for(const [name,token] of required){if(!src.includes(token))throw Error('Falta funcionalidad crítica: '+name)}
           const js=fs.readdirSync('dist/assets').filter(f=>f.endsWith('.js'));

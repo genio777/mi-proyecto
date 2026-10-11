@@ -13,6 +13,10 @@ for(const row of overlay.prices){
  if(typeof row.sourceUrl!=='string'||!/^https:\/\//.test(row.sourceUrl)||!Number.isFinite(Date.parse(row.checkedAt)))throw Error('Unverified tariff: '+row.id);
  if(typeof row.price!=='number'||!Number.isFinite(row.price)||row.price<0||row.unit!=='EUR/kWh')throw Error('Invalid price/unit: '+row.id);
  if(row.hasExtraFees!==false)throw Error('Additional fees or uncertain total price: '+row.id);
+ if(!Array.isArray(row.tariffElements)||row.tariffElements.length!==1)throw Error('Connector tariff must contain exactly one unconditional energy element: '+row.id);
+ const element=row.tariffElements[0];
+ if(element.type!=='ENERGY'||element.price!==row.price||element.currency!=='EUR'||element.restrictions!=null)throw Error('Conditional or multi-component tariff cannot be reduced to EUR/kWh: '+row.id);
+ if(row.tariffElements.some(e=>e.type!=='ENERGY'))throw Error('Non-energy fees found: '+row.id);
  if(row.price===0&&(row.requiresPurchase!==false||row.timeLimitMinutes!==null||row.membershipRequired!==false||row.publicAccess!==true))throw Error('Conditional free tariff cannot be used for unrestricted 0 EUR routes: '+row.id);
  if(typeof row.stationEvidence!=='string'||row.stationEvidence.trim().length<12)throw Error('Missing station-specific evidence: '+row.id);
  if(typeof row.conditions!=='string'||!row.conditions.trim())throw Error('Missing usage conditions: '+row.id);

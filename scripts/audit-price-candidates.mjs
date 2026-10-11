@@ -31,6 +31,25 @@ report.locationEvidence=evidence.records.map(row=>{
  const matches=catalog.chargers.filter(c=>normalize(c.city)===normalize(row.city)&&normalize(c.address).includes(normalize(row.address).slice(0,12))).map(c=>({id:c.id,name:c.name,address:c.address,operator:c.operator,connector:c.connector,power:c.power}));
  return {...row,matchingCatalogStations:matches,matchCount:matches.length,matchStatus:matches.length===1?'candidate_unique':matches.length===0?'not_found':'ambiguous',nextAction:matches.length===1?'Verify connector and full station-specific tariff':matches.length===0?'Find matching station in national catalog':'Resolve multiple stations before assigning price',eligibleForZeroEuroRouting:false};
 });
+report.reviewQueue=report.locationEvidence.map(item=>({
+ operator:item.operator,city:item.city,address:item.address,sourceUrl:item.sourceUrl,
+ candidateIds:item.matchingCatalogStations.map(c=>c.id),matchStatus:item.matchStatus,
+ tariffEvidenceStatus:item.unrestrictedFree===false?'conditional_or_paid':'review_required',
+ missingChecks:[
+  ...(item.matchCount!==1?['unique_catalog_station']:[]),
+  'connector_identity','current_connector_tariff','all_session_fees','public_access',
+  ...(item.timeLimitMinutes!==null?['time_limit_and_after_limit_tariff']:[])
+ ],
+ decision:'NOT_ELIGIBLE_FOR_ZERO_EUR',
+ nextAction:item.nextAction
+}));
+report.reviewSummary={
+ total:report.reviewQueue.length,
+ unique:report.reviewQueue.filter(x=>x.matchStatus==='candidate_unique').length,
+ ambiguous:report.reviewQueue.filter(x=>x.matchStatus==='ambiguous').length,
+ missing:report.reviewQueue.filter(x=>x.matchStatus==='not_found').length,
+ verifiedFree:valid.filter(x=>x.price===0).length
+};
 report.verifiedPriceCount=valid.length;
 report.verifiedFreeCount=valid.filter(row=>row.price===0).length;
 await mkdir('public/data',{recursive:true});

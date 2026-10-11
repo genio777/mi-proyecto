@@ -45,6 +45,11 @@ jobs:
           const d=JSON.parse(fs.readFileSync('public/data/price-verification-status.json','utf8'));
           if(!Array.isArray(d.operatorReview)||!Array.isArray(d.priorityOperators))throw Error('Falta desglose económico por operador');
           if(d.priorityOperators.length>20)throw Error('Lista de revisión demasiado larga');
+          if(!Array.isArray(d.stationReviewQueue)||d.stationReviewQueue.length>100)throw Error('Cola de estaciones sin precio inválida');
+          const unknownIds=new Set(d.stationReviewQueue.map(c=>c.id));
+          if(unknownIds.size!==d.stationReviewQueue.length)throw Error('IDs duplicados en cola de revisión');
+          if(d.stationReviewQueue.some(c=>c.priceStatus!=='UNKNOWN_NOT_FREE'||!Array.isArray(c.checksRequired)||c.checksRequired.length<5))throw Error('La cola contiene una tarifa no comprobada o sin controles');
+
           if(d.operatorReview.reduce((sum,o)=>sum+o.total,0)!==d.catalogStations)throw Error('Totales de operadores no coinciden');
           if(d.verifiedFreeStations>d.appliedVerifiedStationPrices)throw Error('Más estaciones gratis verificadas que tarifas verificadas');
           console.log('Informe económico validado:',d.catalogStations,'estaciones;',d.priorityOperators.length,'operadores prioritarios');

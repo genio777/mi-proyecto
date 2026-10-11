@@ -13,6 +13,8 @@ const conditionsByOperator={
  'EMT Madrid':{eligibility:'Depende de aparcamiento y tipo de conector',source:'https://www.emtmadrid.es/',review:'Confirmar tarifa y condiciones de acceso por punto'},
  Municipales:{eligibility:'Depende de ordenanza y operador local',source:'https://www.mapareve.es/',review:'Confirmar ordenanza, tarifa actual y acceso público'}
 };
+const evidence=JSON.parse(await readFile('data/station-evidence.json','utf8'));
+const normalize=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
 const confirmed=JSON.parse(await readFile('data/verified-station-prices.json','utf8'));
 const confirmedById=new Map(confirmed.prices.map(row=>[row.id,row]));
 const valid=confirmed.prices.filter(row=>Date.now()-Date.parse(row.checkedAt)>=0&&Date.now()-Date.parse(row.checkedAt)<=7*86400000);
@@ -25,6 +27,7 @@ for(const group of groups){
  report.groups.push({name:group.name,source:group.source,conditions:group.conditions,status:group.status,verificationRequirements:conditionsByOperator[group.name],count:stations.length,stations});
  console.log(group.name+': '+stations.length+' candidates, zero verified free by this audit');
 }
+report.locationEvidence=evidence.records.map(row=>({...row,matchingCatalogStations:catalog.chargers.filter(c=>normalize(c.city)===normalize(row.city)&&normalize(c.address).includes(normalize(row.address).slice(0,12))).map(c=>({id:c.id,name:c.name,address:c.address})),eligibleForZeroEuroRouting:false}));
 report.verifiedPriceCount=valid.length;
 report.verifiedFreeCount=valid.filter(row=>row.price===0).length;
 await mkdir('public/data',{recursive:true});

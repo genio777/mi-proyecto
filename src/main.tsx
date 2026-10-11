@@ -43,7 +43,7 @@ function App(){
  const powerFiltered=(items:Charger[])=>items.filter(c=>{
   if(maximumPower>0&&c.power>maximumPower)return false;
   if(routeMode==='fast')return c.power>=100;
-  if(routeMode==='cheap')return c.power>=50;
+  if(routeMode==='cheap')return c.power>0;
   if(routeMode==='free')return c.power>0&&c.price===0;
   return true;
  });

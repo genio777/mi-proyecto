@@ -104,7 +104,7 @@ summary.stationReviewQueue=catalog.chargers
   priceStatus:'UNKNOWN_NOT_FREE',
   checksRequired:['current_station_tariff','connector_identity','taxes_and_session_fees','public_access','verification_date_and_source']
  }))
- .sort((a,b)=>a.operator.localeCompare(b.operator,'es')||a.city.localeCompare(b.city,'es')||a.id.localeCompare(b.id))
+ .sort((a,b)=>((operatorMap.get(b.operator)?.unknownPrices||0)-(operatorMap.get(a.operator)?.unknownPrices||0))||a.operator.localeCompare(b.operator,'es')||a.city.localeCompare(b.city,'es')||a.id.localeCompare(b.id))
  .slice(0,100);
 summary.stationReviewQueueLimit=100;
 await writeFile('public/data/price-verification-status.json',JSON.stringify(summary,null,2));

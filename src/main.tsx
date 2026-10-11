@@ -101,6 +101,8 @@ function App(){
   let energy=battery*soc/100,current=start,kmTotal=0,driveTotal=0,chargeTotal=0,cost=0,unknownPrices=0,complete=true;
   const allStops:Charger[]=[],allCoords:[number,number][]=[],stageLines:string[]=[],stageArrivals:{name:string,soc:number}[]=[],used=new Set<string>();let failureDetail='';
   // Compartir consultas entre ida y vuelta y evitar duplicados simultáneos.
+  const stageChargers=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
+   .filter(c=>routeMode!=='free'||c.price===0);
   const routeCache=new Map<string,Promise<any>>();
   const route=async(points:[number,number][],geometry=true)=>{
    const key=points.map(p=>p.map(v=>v.toFixed(5)).join(',')).join(';')+'|'+geometry;
@@ -119,7 +121,7 @@ function App(){
    // llegar a una estación de avance; limitar las consultas de carretera.
    if(stage>0&&energy<battery*.55){
     const availableAtStart=(energy-minimum)*100/consumption;
-    const nearby=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
+    const nearby=stageChargers
      .filter(c=>(routeMode!=='free'||c.price===0)&&hav(current,[c.lat,c.lng])<=Math.min(availableAtStart,45))
      .sort((a,b)=>hav(current,[a.lat,a.lng])-hav(current,[b.lat,b.lng])).slice(0,8);
     for(const c of nearby){
@@ -152,7 +154,7 @@ function App(){
     if(allStops.length>=40){failureDetail='Límite de seguridad de 40 paradas alcanzado en etapa '+(stage+1);complete=false;break}
     const points:[number,number][]=direct.geometry?.coordinates?.map((p:number[])=>[p[1],p[0]] as [number,number])||[];
     const availableKm=(energy-minimum)*100/consumption;
-    const eligible=powerFiltered(routeOperatorFilter(filterConnectors(chargers))).filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
+    const eligible=stageChargers.filter(c=>(stage>0||!used.has(c.id))&&(routeMode!=='free'||c.price===0)).map(c=>{
      let nearest=Infinity,idx=0;const stride=Math.max(1,Math.floor(points.length/110));
      for(let i=0;i<points.length;i+=stride){const d=hav(points[i],[c.lat,c.lng]);if(d<nearest){nearest=d;idx=i}}
      return{c,nearest,progress:idx/Math.max(1,points.length-1)};
@@ -213,7 +215,7 @@ function App(){
      const fromStation:[number,number]=[best.c.lat,best.c.lng];
      const directToTarget=hav(fromStation,target);
      const maxNextKm=(battery*.95-minimum-battery*.03)*100/consumption;
-     const nextOptions=powerFiltered(routeOperatorFilter(filterConnectors(chargers)))
+     const nextOptions=stageChargers
       .filter(c=>c.id!==best.c.id&&!used.has(c.id)&&(routeMode!=='free'||c.price===0))
       .map(c=>({c,d:hav(fromStation,[c.lat,c.lng]),left:hav([c.lat,c.lng],target)}))
       .filter(x=>x.d>=25&&x.d<=maxNextKm&&x.left<directToTarget-20)

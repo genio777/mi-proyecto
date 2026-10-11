@@ -1,0 +1,4 @@
+{
+  "description": "Only station-specific verified public pay-as-you-go EUR/kWh prices with no additional fees; records expire after 7 days. Never infer free from missing prices.",
+  "prices": []
+}

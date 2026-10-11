@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T16:42:52.257Z",
+  "generatedAt": "2026-10-11T16:46:57.926Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
@@ -1165,5 +1165,127 @@
     "individuallyVerifiedPercent": 0,
     "unknownPricePercent": 100,
     "operatorsReviewed": 144
-  }
+  },
+  "priorityOperators": [
+    {
+      "operator": "ENDESA X WAY, S.L.",
+      "stationsToVerify": 2820,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "IBERDROLA CLIENTES S.A.U",
+      "stationsToVerify": 2736,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
+      "stationsToVerify": 1860,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "CHARGING TOGETHER SL",
+      "stationsToVerify": 526,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "Etecnic Movilidad Electrica, SRL",
+      "stationsToVerify": 469,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "EDP CLIENTES SAU",
+      "stationsToVerify": 328,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "ERANOVUM E-MOBILITY, S.L.",
+      "stationsToVerify": 234,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "TotalEnergies Charging Services España, SLU",
+      "stationsToVerify": 214,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "Wenea Services Spain, S.L.",
+      "stationsToVerify": 200,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "FENIE ENERGIA, SA",
+      "stationsToVerify": 185,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "PLENOIL, S.L.",
+      "stationsToVerify": 184,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "WENEA EMOBILITY SERVICES S.L.",
+      "stationsToVerify": 140,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "Punto Recargas SL",
+      "stationsToVerify": 130,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "BARCELONA DE SERVEIS MUNICIPALS, SA",
+      "stationsToVerify": 129,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "ACCIONA Recarga",
+      "stationsToVerify": 127,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "EMAYA, S.A.",
+      "stationsToVerify": 115,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "Galp Energía España, S.A.U.",
+      "stationsToVerify": 101,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "MAKSU ESPAÑA SL",
+      "stationsToVerify": 92,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "(ZUNDER) Grupo Easychargar SA",
+      "stationsToVerify": 86,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "Tesla Spain SLU",
+      "stationsToVerify": 80,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    }
+  ]
 }

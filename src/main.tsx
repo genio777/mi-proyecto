@@ -1,4 +1,4 @@
-import React,{useEffect,useRef,useState}from'react';import{createRoot}from'react-dom/client';import L from'leaflet';import'leaflet/dist/leaflet.css';import'./style.css';
+import React,{useEffect,useRef,useState}from'react';import{createRoot}from'react-dom/client';import L from'leaflet';import{Capacitor}from'@capacitor/core';import{Geolocation}from'@capacitor/geolocation';import'leaflet/dist/leaflet.css';import'./style.css';
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.map(r=>r.unregister()))).catch(()=>{}));
 
 type Charger={id:string,name:string,city:string,lat:number,lng:number,power:number,connector:string,price:number|null,condition?:string,source:string,verified:string,operator?:string,availability?:string,address?:string,province?:string};
@@ -78,7 +78,24 @@ function App(){
  const[vehicleName,setVehicleName]=useState(()=>{try{return localStorage.getItem('cg_vehicle_name')||'Tesla Model Y Standard Range'}catch{return 'Tesla Model Y Standard Range'}}),[batteryKwh,setBatteryKwh]=useState(()=>storedVehicle(vehicleName).battery),[consumptionKwh,setConsumptionKwh]=useState(()=>storedVehicle(vehicleName).consumption);const[maxChargeKw,setMaxChargeKw]=useState(()=>storedVehicle(vehicleName).maxCharge);useEffect(()=>{try{localStorage.setItem('cg_max_charge_kw',String(maxChargeKw))}catch{}},[maxChargeKw]);const[origin,setOrigin]=useState('Mi ubicación'),[destination,setDestination]=useState(''),[tripType,setTripType]=useState<'one'|'two'|'three'>('one'),[destination2,setDestination2]=useState(''),[destination3,setDestination3]=useState(''),[soc,setSoc]=useState(()=>{try{return Number(localStorage.getItem('cg_soc')||90)}catch{return 90}}),[reserve,setReserve]=useState(()=>{try{return Number(localStorage.getItem('cg_reserve')||15)}catch{return 15}}),[routeResult,setRouteResult]=useState(''),[routing,setRouting]=useState(false),[routeMode,setRouteMode]=useState<'free'|'cheap'|'fast'>('cheap'),[tariffs,setTariffs]=useState<any>(null),[vehicleSource,setVehicleSource]=useState<'manual'|'obd'>('manual'),[liveStatus,setLiveStatus]=useState('Modo local · sin conexión al vehículo'),[routeCoords,setRouteCoords]=useState<[number,number][]>([]),[routeStops,setRouteStops]=useState<Charger[]>([]),[routeMeta,setRouteMeta]=useState<any>(null);
  useEffect(()=>{try{const saved=JSON.parse(localStorage.getItem('cg_vehicle_connectors')||'{}');saved[vehicleName]=connectorFilters;localStorage.setItem('cg_vehicle_connectors',JSON.stringify(saved))}catch{}},[connectorFilters,vehicleName]);
  useEffect(()=>{fetch('./data/operator-tariffs.json?d='+new Date().toISOString().slice(0,10)).then(r=>r.json()).then(setTariffs).catch(()=>{});fetch('./data/chargers-spain.json?d='+new Date().toISOString().slice(0,10)).then(r=>{if(!r.ok)throw new Error();return r.json()}).then(j=>{if(Array.isArray(j.chargers)&&j.chargers.length){setChargers(j.chargers);setChargerInfo(()=>{const imported=new Date(j.updated);const valid=Number.isFinite(imported.getTime());const ageHours=valid?(Date.now()-imported.getTime())/3600000:Infinity;const freshness=!valid?' · fecha de importación desconocida':ageHours>48?' · ATENCIÓN: catálogo sin actualizar hace más de 48 horas':ageHours>24?' · catálogo importado hace más de 24 horas':'';return j.chargers.length.toLocaleString('es-ES')+' puntos oficiales · DGT/MITERD (REVE) · importados '+(valid?imported.toLocaleString('es-ES'):'fecha desconocida')+freshness+' · la importación NO verifica precios, gratuidad ni ocupación'})}}).catch(()=>setChargerInfo('No hay catálogo nacional disponible. Comprueba el estado de la importación en GitHub Actions'))},[]);useEffect(()=>{try{localStorage.setItem('cg_soc',String(soc));localStorage.setItem('cg_reserve',String(reserve))}catch{}},[soc,reserve]);
- const locate=()=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>{const q:[number,number]=[p.coords.latitude,p.coords.longitude];setPos(q);setMsg(q[0].toFixed(4)+', '+q[1].toFixed(4))},()=>setMsg('Permiso de ubicación no concedido'),{enableHighAccuracy:true,timeout:12000}):setMsg('GPS no disponible');
+ const locate=async()=>{
+  setMsg('Localizando…');
+  try{
+   let latitude:number,longitude:number;
+   if(Capacitor.isNativePlatform()){
+    const permission=await Geolocation.requestPermissions();
+    if(permission.location!=='granted'&&permission.coarseLocation!=='granted')throw new Error('Permiso de ubicación denegado. Actívalo en Ajustes > Aplicaciones > Carga Gratis España Jpaz > Permisos.');
+    const p=await Geolocation.getCurrentPosition({enableHighAccuracy:true,timeout:15000,maximumAge:0});
+    latitude=p.coords.latitude;longitude=p.coords.longitude;
+   }else{
+    if(!navigator.geolocation)throw new Error('Este navegador no ofrece geolocalización');
+    const p=await new Promise<GeolocationPosition>((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:15000,maximumAge:0}));
+    latitude=p.coords.latitude;longitude=p.coords.longitude;
+   }
+   if(!Number.isFinite(latitude)||!Number.isFinite(longitude))throw new Error('El GPS devolvió coordenadas no válidas');
+   const q:[number,number]=[latitude,longitude];setPos(q);setMsg(q[0].toFixed(4)+', '+q[1].toFixed(4));
+  }catch(e){setMsg('Ubicación no disponible: '+(e instanceof Error?e.message:String(e))+'. Comprueba que el GPS esté activado.')}
+ };
  const nav=(c:Charger)=>window.open('https://www.google.com/maps/dir/?api=1&destination='+c.lat+','+c.lng,'_blank');
  const priceForPower=(operatorId:string,powerKw:number)=>{if(!tariffs)return null;const op=tariffs.operators.find((o:any)=>o.id===operatorId);if(!op?.tiers?.length)return null;const tiers=op.tiers;
  if(operatorId==='repsol'){const t=powerKw>100?tiers.find((x:any)=>x.label==='Ultrarrápida'):powerKw>22?tiers.find((x:any)=>x.label==='Rápida'):tiers.find((x:any)=>x.label==='Normal');return t?{price:t.price,label:t.label}:null}

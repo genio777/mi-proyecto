@@ -18,9 +18,47 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: npm install
+      - name: Importar catálogo oficial para incluirlo dentro del APK
+        run: node scripts/import-national.mjs
+      - name: Importar Superchargers y precios individuales verificados
+        run: |
+          node scripts/import-tesla.mjs
+          node scripts/audit-price-candidates.mjs
+          node scripts/merge-verified-prices.mjs
+      - name: Validar catálogo que se empaquetará
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const d=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));
+          if(!Array.isArray(d.chargers)||d.chargers.length<5000)throw Error('APK bloqueado: catálogo nacional ausente o incompleto');
+          if(d.chargers.some(c=>!Number.isFinite(c.lat)||!Number.isFinite(c.lng)||!(c.price===null||(Number.isFinite(c.price)&&c.price>=0))))throw Error('APK bloqueado: cargadores inválidos');
+          console.log('APK incluirá',d.chargers.length,'cargadores reales');
+          JS
       - run: npm run build
+      - name: Verificar datos compilados
+        run: |
+          test -s dist/data/chargers-spain.json
+          test -s dist/data/operator-tariffs.json
+          node -e "const d=require('./dist/data/chargers-spain.json');if(d.chargers.length<5000)process.exit(1)"
       - run: npx cap add android
+      - name: Autorizar GPS en Android
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('android/app/src/main/AndroidManifest.xml')
+          s=p.read_text()
+          permissions=('android.permission.ACCESS_COARSE_LOCATION','android.permission.ACCESS_FINE_LOCATION')
+          for permission in permissions:
+              if permission not in s:
+                  s=s.replace('<application',f'<uses-permission android:name="{permission}" />\n    <application',1)
+          p.write_text(s)
+          PY
       - run: npx cap sync android
+      - name: Verificar catálogo y permisos dentro del proyecto Android
+        run: |
+          test -s android/app/src/main/assets/public/data/chargers-spain.json
+          grep -q 'android.permission.ACCESS_FINE_LOCATION' android/app/src/main/AndroidManifest.xml
+          grep -q 'android.permission.ACCESS_COARSE_LOCATION' android/app/src/main/AndroidManifest.xml
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:

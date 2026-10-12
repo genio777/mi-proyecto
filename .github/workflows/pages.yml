@@ -109,6 +109,10 @@ jobs:
           assert(manifest.name==='Carga Gratis España Jpaz','Nombre de PWA incorrecto');
           assert(manifest.short_name&&manifest.start_url&&manifest.scope&&manifest.display==='standalone','Manifest de instalación incompleto');
           assert(html.includes('Carga Gratis España Jpaz'),'Título de la versión compilada incorrecto');
+          assert(!html.includes('Cargando CargaGratis'),'Diagnóstico de inicio desactualizado');
+          assert(html.includes('Cargando Carga Gratis España Jpaz'),'Falta marcador de arranque de la PWA');
+          assert(html.includes('No se ha podido iniciarse')||html.includes('no ha podido iniciarse'),'Falta diagnóstico de fallo de inicio');
+
           assert(src.includes('Carga Gratis España Jpaz'),'Nombre visible incorrecto');
           assert(src.includes("tab==='costes'")&&src.includes('exportCost')&&src.includes('restoreCost'),'Faltan funciones del módulo de costes');
           assert(src.includes('calculateRoute=async')&&src.includes('tripTypeSelector'),'Falta el planificador validado');

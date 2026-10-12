@@ -96,6 +96,30 @@ jobs:
           for(const label of ['SOC de llegada','Tipo de viaje','Coste de recarga'])if(!compiled.includes(label))throw Error('No se encuentra en la compilación: '+label);
           console.log('Comprobaciones estáticas de publicación superadas');
           JS
+      - name: Comprobaciones de cierre de Carga Gratis España Jpaz
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const assert=(condition,message)=>{if(!condition)throw Error(message)};
+          const src=fs.readFileSync('src/main.tsx','utf8');
+          const html=fs.readFileSync('dist/index.html','utf8');
+          const manifest=JSON.parse(fs.readFileSync('dist/manifest.webmanifest','utf8'));
+          const tariffs=JSON.parse(fs.readFileSync('public/data/operator-tariffs.json','utf8'));
+          const catalog=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));
+          assert(manifest.name==='Carga Gratis España Jpaz','Nombre de PWA incorrecto');
+          assert(manifest.short_name&&manifest.start_url&&manifest.scope&&manifest.display==='standalone','Manifest de instalación incompleto');
+          assert(html.includes('Carga Gratis España Jpaz'),'Título de la versión compilada incorrecto');
+          assert(src.includes('Carga Gratis España Jpaz'),'Nombre visible incorrecto');
+          assert(src.includes("tab==='costes'")&&src.includes('exportCost')&&src.includes('restoreCost'),'Faltan funciones del módulo de costes');
+          assert(src.includes('calculateRoute=async')&&src.includes('tripTypeSelector'),'Falta el planificador validado');
+          assert(Array.isArray(tariffs.operators)&&tariffs.operators.length>0,'Catálogo de tarifas ausente');
+          assert(Array.isArray(catalog.chargers)&&catalog.chargers.length>=5000,'Catálogo nacional insuficiente');
+          const prices=tariffs.operators.flatMap(o=>o.tiers||[]);
+          assert(prices.every(t=>typeof t.price==='number'&&Number.isFinite(t.price)&&t.price>=0),'Tarifas inválidas');
+          assert(catalog.chargers.every(c=>c.price===null||(typeof c.price==='number'&&Number.isFinite(c.price)&&c.price>=0)),'Precio desconocido mal representado');
+          assert(fs.existsSync('dist/sw.js'),'Falta service worker');
+          console.log('Cierre validado: identidad, PWA, rutas, costes, tarifas y catálogo nacional');
+          JS
       - name: Verificar archivos compilados
         shell: bash
         run: |

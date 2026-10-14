@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-14T00:00:00Z",
+  "updated": "2026-10-14T21:25:00+02:00",
   "currency": "EUR",
   "unit": "kWh",
-  "note": "Tarifas públicas de referencia consultadas el 14/10/2026; precios variables por estación y condiciones. Las cuotas de suscripción NO están incluidas en el comparador.",
+  "note": "Precios publicados por operadores para España, consultados el 14/10/2026. Los planes de suscripción tienen cuotas NO incluidas en el coste de sesión; no comparar directamente planes sin sumar cuotas. Tarifas dinámicas no se sustituyen por estimaciones.",
   "operators": [
     {
       "id": "free",
@@ -73,17 +73,25 @@
       "name": "Zunder",
       "tiers": [
         {
-          "label": "AC hasta 50 kW",
+          "label": "AC hasta 50 kW (sin plan)",
           "price": 0.42
         },
         {
-          "label": "Rápida >50 kW",
+          "label": "DC más de 50 kW (sin plan)",
           "price": 0.59
+        },
+        {
+          "label": "Easy (1,99 €/mes)",
+          "price": 0.51
+        },
+        {
+          "label": "Pro (11,99 €/mes)",
+          "price": 0.39
         }
       ],
       "source": "https://www.zunder.com/usuario-ve/",
       "status": "official",
-      "note": "Puede variar por ubicación; convenios y suscripciones tienen otros precios.",
+      "note": "Precios España IVA incluido. Easy y Pro requieren suscripción; cuota no incluida en la simulación. Existen ubicaciones y franjas especiales; comprobar app.",
       "lastCheck": "2026-10-14T09:34:45.998Z",
       "sourceReachable": true
     },
@@ -262,10 +270,49 @@
     {
       "id": "electra",
       "name": "Electra",
-      "tiers": [],
-      "source": "https://intercom.help/go-electra/es/articles/7987274-nuestras-tarifas",
-      "status": "station_price_required",
-      "note": "Precio dinámico por estación y hora. Consultar aplicación Electra; no se asigna precio fijo."
+      "tiers": [
+        {
+          "label": "Electra+ Smart en ChargeLeague España (4,99 €/mes)",
+          "price": 0.54
+        }
+      ],
+      "source": "https://intercom.help/go-electra/es/articles/10749707-tarifas-electra",
+      "status": "official",
+      "note": "Precio Electra propio dinámico por estación y hora: NO se presupone un precio base. Essential 1,99 €/mes descuenta 0,10 €/kWh; Smart 4,99 €/mes descuenta 0,20 €/kWh del precio mostrado en la app. 0,54 €/kWh SOLO en ChargeLeague con Smart en España; cuota excluida."
+    },
+    {
+      "id": "atlante",
+      "name": "myAtlante / Atlante",
+      "tiers": [
+        {
+          "label": "Atlante Go España (9,99 €/mes)",
+          "price": 0.29
+        },
+        {
+          "label": "Atlante Go ChargeLeague España (9,99 €/mes)",
+          "price": 0.49
+        }
+      ],
+      "source": "https://atlante.energy/es/myatlante-app/",
+      "status": "official",
+      "note": "Precios con Atlante Go, suscripción 9,99 €/mes excluida del cálculo. Sin suscripción: variable por estación, consultar myAtlante. ChargeLeague incluye Electra, Fastned e IONITY. ChargeBack no descontado."
+    },
+    {
+      "id": "acciona",
+      "name": "ACCIONA Recarga",
+      "tiers": [
+        {
+          "label": "Hasta 22 kW",
+          "price": 0.35
+        },
+        {
+          "label": "Más de 22 kW",
+          "price": 0.55
+        }
+      ],
+      "source": "https://recarga.acciona.com/",
+      "status": "official",
+      "note": "Precios de energía con IVA incluido según web oficial. Verificar precio del punto en la app."
     }
   ]
 }

@@ -165,7 +165,7 @@ function App(){
       const leg=await route([current,[c.lat,c.lng]]);
       const d=leg.distance/1000,arrival=energy-d*consumption/100;
       if(d>0.5&&arrival>=minimum&&d<=availableAtStart){
-       const chargeKwh=battery-arrival,avgKw=Math.min(maxChargeKw,c.power)*.55;
+       const chargeKwh=battery-arrival,avgKw=Math.min(c.power,c.power<=43?maxAcKw:maxChargeKw)*.55;
        if(avgKw<=0)continue;
        const minutes=chargeKwh/avgKw*60;
        const line=leg.geometry.coordinates.map((p:number[])=>[p[1],p[0]] as [number,number]);

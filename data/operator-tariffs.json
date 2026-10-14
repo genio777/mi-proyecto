@@ -182,12 +182,25 @@
       "id": "tesla",
       "name": "Tesla Supercharger",
       "tiers": [],
-      "source": "https://www.tesla.com/es_es/support/charging/supercharger/fees",
+      "source": "https://www.tesla.com/es_es/support/charging/supercharging",
       "status": "station_price_required",
-      "note": "Precio variable por estación/horario; usar precio específico cuando esté disponible.",
+      "note": "Tesla no publica tarifa nacional fija: depende de Supercharger, hora y condición Tesla/miembro/no miembro. Ejemplo oficial: Tordesillas 0,46 €/kWh para vehículos no Tesla (no extrapolable). Tarifa típica de congestión en España: 0,50 €/min si aplica. Consultar app Tesla antes de cargar.",
       "lastCheck": "2026-10-14T09:34:45.998Z",
       "sourceReachable": false,
-      "lastError": "HTTP 403"
+      "lastError": "HTTP 403",
+      "stationExamples": [
+        {
+          "station": "Tordesillas, Valladolid",
+          "audience": "Vehículos no Tesla",
+          "price": 0.46,
+          "currency": "EUR",
+          "unit": "kWh",
+          "source": "https://www.tesla.com/charging/guest/site/3417",
+          "verifiedOn": "2026-10-14"
+        }
+      ],
+      "congestionFeeTypicalEurPerMinute": 0.5,
+      "congestionSource": "https://www.tesla.com/es_es/support/charging/supercharger/fees"
     },
     {
       "id": "ionity",

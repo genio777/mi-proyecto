@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-14T09:34:45.998Z",
+  "updated": "2026-10-14T00:00:00Z",
   "currency": "EUR",
   "unit": "kWh",
-  "note": "Tarifas de referencia. El precio del conector/estación prevalece siempre.",
+  "note": "Tarifas públicas de referencia consultadas el 14/10/2026; precios variables por estación y condiciones. Las cuotas de suscripción NO están incluidas en el comparador.",
   "operators": [
     {
       "id": "free",
@@ -90,10 +90,83 @@
     {
       "id": "endesa",
       "name": "Endesa",
-      "tiers": [],
-      "source": "https://www.endesaxway.com/es/es/productos-y-servicios/app-endesaxway-servicio-recarga/tarifas",
-      "status": "station_price_required",
-      "note": "Usar precio del conector mostrado por Endesa On Your Way.",
+      "tiers": [
+        {
+          "label": "e-Flex AC día 07-23",
+          "price": 0.35
+        },
+        {
+          "label": "e-Flex AC noche 23-07",
+          "price": 0.3
+        },
+        {
+          "label": "e-Flex DC <100 día",
+          "price": 0.43
+        },
+        {
+          "label": "e-Flex DC <100 noche",
+          "price": 0.37
+        },
+        {
+          "label": "e-Flex DC ≥100 día",
+          "price": 0.55
+        },
+        {
+          "label": "e-Flex DC ≥100 noche",
+          "price": 0.47
+        },
+        {
+          "label": "e-Smart AC día (2,99 €/mes)",
+          "price": 0.28
+        },
+        {
+          "label": "e-Smart AC noche (2,99 €/mes)",
+          "price": 0.24
+        },
+        {
+          "label": "e-Smart DC <100 día (2,99 €/mes)",
+          "price": 0.34
+        },
+        {
+          "label": "e-Smart DC <100 noche (2,99 €/mes)",
+          "price": 0.3
+        },
+        {
+          "label": "e-Smart DC ≥100 día (2,99 €/mes)",
+          "price": 0.44
+        },
+        {
+          "label": "e-Smart DC ≥100 noche (2,99 €/mes)",
+          "price": 0.37
+        },
+        {
+          "label": "e-Smart Plus AC día (13,89 €/mes)",
+          "price": 0.18
+        },
+        {
+          "label": "e-Smart Plus AC noche (13,89 €/mes)",
+          "price": 0.15
+        },
+        {
+          "label": "e-Smart Plus DC <100 día (13,89 €/mes)",
+          "price": 0.22
+        },
+        {
+          "label": "e-Smart Plus DC <100 noche (13,89 €/mes)",
+          "price": 0.18
+        },
+        {
+          "label": "e-Smart Plus DC ≥100 día (13,89 €/mes)",
+          "price": 0.28
+        },
+        {
+          "label": "e-Smart Plus DC ≥100 noche (13,89 €/mes)",
+          "price": 0.23
+        }
+      ],
+      "source": "https://www.endesaxway.com/content/dam/endesa-x-way/pdfs/TarifarioEE_2026_04.01.pdf",
+      "status": "official",
+      "note": "Precios publicados vigentes desde 01/04/2026, IVA incluido; suscripciones con cuota mensual no incluida en simulación. Precio final de estación prevalece.",
       "lastCheck": "2026-10-14T09:34:45.998Z",
       "sourceReachable": true
     },
@@ -111,10 +184,35 @@
     {
       "id": "ionity",
       "name": "IONITY",
-      "tiers": [],
-      "source": "https://www.ionity.eu/es/red/acceso-pagos",
-      "status": "station_price_required",
-      "note": "Precio depende de ubicación/tarifa/suscripción.",
+      "tiers": [
+        {
+          "label": "Direct sin suscripción",
+          "price": 0.66
+        },
+        {
+          "label": "Go con app",
+          "price": 0.62
+        },
+        {
+          "label": "Motion mensual (5,99 €/mes)",
+          "price": 0.48
+        },
+        {
+          "label": "Motion anual (59,99 €/año)",
+          "price": 0.47
+        },
+        {
+          "label": "Power mensual (11,99 €/mes)",
+          "price": 0.38
+        },
+        {
+          "label": "Power anual (119,99 €/año)",
+          "price": 0.37
+        }
+      ],
+      "source": "https://www.ionity.eu/es/suscripciones",
+      "status": "official",
+      "note": "Precios publicados para España; cuotas de suscripción excluidas. Pueden variar por estación.",
       "lastCheck": "2026-10-14T09:34:45.998Z",
       "sourceReachable": true
     },
@@ -127,6 +225,47 @@
       "note": "Powerdot ofrece integración OCPI para precio y disponibilidad en tiempo real.",
       "lastCheck": "2026-10-14T09:34:45.998Z",
       "sourceReachable": true
+    },
+    {
+      "id": "wenea",
+      "name": "Wenea",
+      "tiers": [
+        {
+          "label": "AC 7,4–22 kW",
+          "price": 0.39
+        },
+        {
+          "label": "DC 50–150 kW",
+          "price": 0.49
+        },
+        {
+          "label": "HPC 151–400 kW",
+          "price": 0.59
+        },
+        {
+          "label": "Everyday AC (suscripción)",
+          "price": 0.29
+        },
+        {
+          "label": "Everyday DC (suscripción)",
+          "price": 0.37
+        },
+        {
+          "label": "Everyday HPC (suscripción)",
+          "price": 0.44
+        }
+      ],
+      "source": "https://wenea.com/carga-con-wenea/tarifas-de-carga/",
+      "status": "official",
+      "note": "Precios estaciones propias; terceros pueden variar. Cuota de suscripción no incluida."
+    },
+    {
+      "id": "electra",
+      "name": "Electra",
+      "tiers": [],
+      "source": "https://intercom.help/go-electra/es/articles/7987274-nuestras-tarifas",
+      "status": "station_price_required",
+      "note": "Precio dinámico por estación y hora. Consultar aplicación Electra; no se asigna precio fijo."
     }
   ]
 }

@@ -68,9 +68,6 @@ jobs:
           console.log('Catálogo validado:',d.chargers.length,'registros; precios desconocidos:',d.chargers.filter(c=>c.price===null).length);
           JS
       - name: Compilar CargaGratis
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
       - name: Comprobar funcionalidades críticas antes de publicar
         run: |

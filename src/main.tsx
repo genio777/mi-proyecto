@@ -223,7 +223,7 @@ function App(){
       // En modo rápido comparar minutos estimados de conducción y recarga,
       // no una bonificación arbitraria por potencia que favorecía 22 kW.
       const estimatedChargeKwh=battery-remaining;
-      const estimatedChargeMinutes=estimatedChargeKwh/Math.max(1,Math.min(maxChargeKw,x.c.power)*.55)*60;
+      const estimatedChargeMinutes=estimatedChargeKwh/Math.max(1,Math.min(x.c.power,x.c.power<=43?maxAcKw:maxChargeKw)*.55)*60;
       // Evitar encadenar estaciones a pocos kilómetros con cargas de 2-3 kWh.
       // Una parada implica tiempo fijo de conexión además de los minutos de carga.
       const shortHopPenalty=remaining>battery*.75?45+(remaining/battery-.75)*100:0;
@@ -273,7 +273,7 @@ function App(){
      }
     }
     const chargeKwh=Math.max(0,chargeTarget-arrivalEnergy);
-    const avgKw=Math.min(maxChargeKw,best.c.power)*.55;
+    const avgKw=Math.min(best.c.power,best.c.power<=43?maxAcKw:maxChargeKw)*.55;
     const minutes=avgKw>0?chargeKwh/avgKw*60:Infinity;
     if(!Number.isFinite(minutes)){complete=false;break}
     stageCharge+=minutes;
@@ -313,14 +313,14 @@ else{
   const rangeKm=(available-minEnergy)*100/consumption;
   // Probar estaciones hacia adelante. Las distancias sobre la ruta solo preseleccionan; la distancia real la calcula OSRM.
   const eligible=along.filter(x=>!used.has(x.c.id)&&x.approxKm>positionKm+8&&x.approxKm<positionKm+rangeKm*1.12+12);
-  const ordered=eligible.sort((x,y)=>{const reachX=Math.abs(x.approxKm-(positionKm+rangeKm*.75)),reachY=Math.abs(y.approxKm-(positionKm+rangeKm*.75));const weight=(v:typeof x)=>routeMode==='fast'?(Math.max(0,maxChargeKw-Math.min(maxChargeKw,v.c.power))*.9+(/tesla/i.test(v.c.operator+' '+v.c.name)&&/tesla/i.test(vehicleName)?-30:0)):routeMode==='cheap'?(v.c.price??10)*5:0;return reachX+weight(x)+x.corridor*2-(reachY+weight(y)+y.corridor*2)}).slice(0,14);
+  const ordered=eligible.sort((x,y)=>{const reachX=Math.abs(x.approxKm-(positionKm+rangeKm*.75)),reachY=Math.abs(y.approxKm-(positionKm+rangeKm*.75));const weight=(v:typeof x)=>routeMode==='fast'?(Math.max(0,maxChargeKw-Math.min(v.c.power,v.c.power<=43?maxAcKw:maxChargeKw))*.9+(/tesla/i.test(v.c.operator+' '+v.c.name)&&/tesla/i.test(vehicleName)?-30:0)):routeMode==='cheap'?(v.c.price??10)*5:0;return reachX+weight(x)+x.corridor*2-(reachY+weight(y)+y.corridor*2)}).slice(0,14);
   let chosen:{c:Charger,distance:number,progress:number,remaining:number}|null=null;
   for(const x of ordered){try{const distance=await road(current,[x.c.lat,x.c.lng]);const remaining=available-distance*consumption/100;if(remaining<minEnergy||distance<5)continue;chosen={c:x.c,distance,progress:x.approxKm,remaining};break}catch{}}
   if(!chosen)break;
   stops.push(chosen.c);used.add(chosen.c.id);totalLegKm+=chosen.distance;segmentKm.push(chosen.distance);
   const arrivalSoc=chosen.remaining/battery*100;
   // Estimación: se carga hasta el 100 % para permitir el siguiente tramo; no se asume tiempo de carga.
-  const charge=battery-chosen.remaining;const effectiveKw=Math.min(maxChargeKw,chosen.c.power);const avgKw=effectiveKw*.55;const chargeMin=charge/avgKw*60;chargingMinutes+=chargeMin;chargingStops.push({name:displayStation(chosen.c),kwh:charge,minutes:chargeMin});
+  const charge=battery-chosen.remaining;const effectiveKw=Math.min(chosen.c.power,chosen.c.power<=43?maxAcKw:maxChargeKw);const avgKw=effectiveKw*.55;const chargeMin=charge/avgKw*60;chargingMinutes+=chargeMin;chargingStops.push({name:displayStation(chosen.c),kwh:charge,minutes:chargeMin});
   legs.push('Parada '+stops.length+': '+displayStation(chosen.c)+' ('+chosen.c.city+') · '+chosen.distance.toFixed(0)+' km · SOC llegada '+arrivalSoc.toFixed(0)+'% · cargar hasta 100% (aprox. '+charge.toFixed(1)+' kWh) · carga estimada '+Math.round(chargeMin)+' min (potencia media supuesta 55% del limite de '+effectiveKw.toFixed(0)+' kW) · '+(chosen.c.price===0?'0 € identificado':chosen.c.price==null?'precio desconocido':chosen.c.price.toFixed(2)+' €/kWh'));
   current=[chosen.c.lat,chosen.c.lng];positionKm=chosen.progress;available=battery;
  }
@@ -331,7 +331,7 @@ else{
    const station=stops[i],distance=segmentKm[i];const arrivalEnergy=actualEnergy-distance*consumption/100;
    const nextDistance=segmentKm[i+1];const requiredEnergy=Math.min(battery,nextDistance*consumption/100+minEnergy+battery*.05);
    const departureEnergy=Math.max(arrivalEnergy,requiredEnergy);const chargeKwh=Math.max(0,departureEnergy-arrivalEnergy);
-   const effectiveKw=Math.min(maxChargeKw,station.power),averageKw=effectiveKw*.55;const chargeMin=averageKw>0?chargeKwh/averageKw*60:0;
+   const effectiveKw=Math.min(station.power,station.power<=43?maxAcKw:maxChargeKw),averageKw=effectiveKw*.55;const chargeMin=averageKw>0?chargeKwh/averageKw*60:0;
    chargingMinutes+=chargeMin;chargingStops[i]={name:displayStation(station),kwh:chargeKwh,minutes:chargeMin};actualEnergy=departureEnergy;
    legs.push('Parada '+(i+1)+': '+displayStation(station)+' · '+distance.toFixed(0)+' km · SOC llegada '+Math.round(arrivalEnergy/battery*100)+'% · cargar hasta '+Math.round(departureEnergy/battery*100)+'% ('+chargeKwh.toFixed(1)+' kWh) · carga estimada '+Math.round(chargeMin)+' min · '+(station.price===0?'0 € identificado':station.price==null?'precio desconocido':station.price.toFixed(2)+' €/kWh'));
   }

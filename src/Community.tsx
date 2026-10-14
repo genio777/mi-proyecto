@@ -6,7 +6,7 @@ const key=import.meta.env.VITE_SUPABASE_ANON_KEY||'';
 const ready=Boolean(base&&key);
 const tokenKey='cg_community_token';
 async function request(path:string,method='GET',body?:unknown,auth?:string){
- const res=await fetch(base+path,{method,headers:{apikey:key,'Content-Type':'application/json',...(auth?{Authorization:'Bearer '+auth}:{Authorization:'Bearer '+key}),...(method==='POST'?{Prefer:'return=representation'}:{})},body:body?JSON.stringify(body):undefined});
+ const res=await fetch(base+path,{method,headers:{apikey:key,'Content-Type':'application/json',...(auth?{Authorization:'Bearer '+auth}:{Authorization:'Bearer '+key}),...(method==='POST'?{Prefer:path.includes('on_conflict=')?'resolution=merge-duplicates,return=representation':'return=representation'}:{})},body:body?JSON.stringify(body):undefined});
  if(!res.ok)throw new Error('Servicio comunitario: '+res.status+' '+(await res.text()).slice(0,180));
  return res.status===204?null:res.json();
 }

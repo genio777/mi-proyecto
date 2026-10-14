@@ -113,26 +113,46 @@ function App(){
   const q=raw.trim();if(!q)throw new Error('Introduce una ubicación');
   const coordinate=q.match(/^(-?\d{1,2}(?:[.,]\d+)?)\s*[,; ]\s*(-?\d{1,3}(?:[.,]\d+)?)$/);
   if(coordinate){const lat=Number(coordinate[1].replace(',','.')),lng=Number(coordinate[2].replace(',','.'));if(Math.abs(lat)<=90&&Math.abs(lng)<=180)return [lat,lng];throw new Error('Coordenadas fuera de rango');}
-  const cacheKey='cg_geo_v3_'+q.toLocaleLowerCase('es');
-  try{const cached=JSON.parse(localStorage.getItem(cacheKey)||'null');if(Array.isArray(cached)&&cached.length===2&&cached.every((n:unknown)=>typeof n==='number'&&Number.isFinite(n)))return cached as [number,number]}catch{}
-  let lookup=q;
-  if(/^\d{5}$/.test(q)){
-   const postal=await fetch('https://api.zippopotam.us/es/'+q);
-   if(!postal.ok)throw new Error('Código postal '+q+' no encontrado');
-   const info=await postal.json(),places=Array.isArray(info.places)?info.places:[];
-   if(!places.length)throw new Error('No hay localidades asociadas al CP '+q);
-   const town=String(places[0]['place name']||'').trim(),province=String(places[0]['state']||'').trim();
-   if(!town)throw new Error('No se puede identificar la localidad del CP '+q);
-   lookup=[town,province,'España'].filter(Boolean).join(', ');
-  }
   const road=/\b(?:A|AP|N|E|SE|H|HU|CA|MA|CO|EX|CM|CL|CV|M)-?\d+[\w-]*\b.*\b(?:km|kil[oó]metro|p\.?k\.?)\s*\d+/i.test(q);
-  if(road)throw new Error('La referencia '+q+' no tiene coordenadas verificables. Introduce latitud, longitud (por ejemplo 37.4000, -6.0000).');
-  const params=new URLSearchParams({format:'json',limit:'1',q:lookup,addressdetails:'1','accept-language':'es'});
+  if(road)throw new Error('No hay coordenadas verificadas para '+q+'. Introduce latitud, longitud.');
+  const postal=/^\d{5}$/.test(q);
+  // La correspondencia 21880 está contrastada con el Ayuntamiento de Paterna del Campo.
+  const verifiedPostal:Record<string,{town:string;province:string}>={'21880':{town:'Paterna del Campo',province:'Huelva'}};
+  const cacheKey='cg_geo_v4_'+q.toLocaleLowerCase('es');
+  try{const cached=JSON.parse(localStorage.getItem(cacheKey)||'null');if(Array.isArray(cached)&&cached.length===2&&cached.every((n:unknown)=>typeof n==='number'&&Number.isFinite(n)))return cached as [number,number]}catch{}
+  let lookup=q,postalPlaces:{town:string;province:string;lat:number;lng:number}[]=[];
+  if(postal){
+   const known=verifiedPostal[q];
+   if(known)lookup=[known.town,known.province,'España'].join(', ');
+   else {
+    try{
+     const response=await fetch('https://api.zippopotam.us/es/'+q);
+     if(response.ok){
+      const data=await response.json();
+      postalPlaces=(Array.isArray(data.places)?data.places:[]).map((p:any)=>({town:String(p['place name']||'').trim(),province:String(p.state||'').trim(),lat:Number(p.latitude),lng:Number(p.longitude)})).filter(p=>p.town);
+      const expectedProvince=q.slice(0,2);
+      const provinceCodes:Record<string,string>={'21':'Huelva'};
+      const selected=postalPlaces.find(p=>!provinceCodes[expectedProvince]||p.province.toLocaleLowerCase('es')===provinceCodes[expectedProvince].toLocaleLowerCase('es'))||postalPlaces[0];
+      if(selected)lookup=[selected.town,selected.province,'España'].filter(Boolean).join(', ');
+     }
+    }catch{}
+    if(lookup===q)throw new Error('No se ha podido verificar el código postal '+q+'. Prueba con el nombre de la localidad.');
+   }
+  }
+  const params=new URLSearchParams({format:'json',limit:'5',q:lookup,addressdetails:'1','accept-language':'es'});
   if(!/\b(portugal|france|francia|italia|italy|andorra|germany|alemania)\b/i.test(lookup))params.set('countrycodes','es');
-  const response=await fetch('https://nominatim.openstreetmap.org/search?'+params.toString());
-  if(!response.ok)throw new Error('Servicio de ubicaciones no disponible ('+response.status+')');
-  const matches=await response.json();if(!Array.isArray(matches)||!matches.length)throw new Error(road?'No se pudo localizar ese punto kilométrico. Introduce coordenadas GPS o un enlace con coordenadas.':'No se encuentra el lugar: '+q);
-  const lat=Number(matches[0].lat),lng=Number(matches[0].lon);if(!Number.isFinite(lat)||!Number.isFinite(lng))throw new Error('Coordenadas no válidas');
+  let matches:any[]=[];
+  try{const response=await fetch('https://nominatim.openstreetmap.org/search?'+params.toString());if(response.ok){const data=await response.json();if(Array.isArray(data))matches=data}}catch{}
+  const target=postal?verifiedPostal[q]?.town||postalPlaces[0]?.town:null;
+  const normalize=(x:string)=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const match=target?matches.find(m=>normalize(String(m.display_name||'')).includes(normalize(target))):matches[0];
+  let lat=Number(match?.lat),lng=Number(match?.lon);
+  if(!Number.isFinite(lat)||!Number.isFinite(lng)){
+   // Para CP no verificados, solo usar las coordenadas de la localidad que devuelve la base postal.
+   const fallback=postalPlaces.find(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lng)&&Math.abs(p.lat)<=90&&Math.abs(p.lng)<=180);
+   if(fallback){lat=fallback.lat;lng=fallback.lng}
+  }
+  if(!Number.isFinite(lat)||!Number.isFinite(lng))throw new Error('No se ha podido localizar '+q+' con fiabilidad. Introduce el nombre de la localidad.');
   const coords:[number,number]=[lat,lng];try{localStorage.setItem(cacheKey,JSON.stringify(coords))}catch{}return coords;
  };
  const allChargers=[...localChargers,...chargers];

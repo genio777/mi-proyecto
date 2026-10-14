@@ -115,7 +115,7 @@ function App(){
   const name=normalizeSearch([c.operator,c.name].filter(Boolean).join(' '));
   const operatorId=/zunder/.test(name)?'zunder':/repsol/.test(name)?'repsol':/iberdrola|bp pulse/.test(name)?'iberdrola-bp':/acciona/.test(name)?'acciona':/wenea/.test(name)?'wenea':null;
   const op=tariffs?.operators?.find((x:any)=>x.id===operatorId);
-  if(!op||!Number.isFinite(c.power)||c.power<=0)return null;
+  if(!op||!Number.isFinite(c.power)||c.power<=0)return Number.isFinite(unknownRate)&&unknownRate>0&&unknownRate<=5?{price:unknownRate,label:'Precio manual estimado (sin verificar)',source:'manual'}:null;
   const tiers=op.tiers||[];
   let label:string|null=null;
   if(operatorId==='repsol')label=c.power>100?'Ultrarrápida':c.power>22?'Rápida':'Normal';

@@ -1,13 +1,18 @@
-# Activar comunidad de cargadores gratuitos
+# Comunidad de cargadores gratuitos: coste 0 €
 
-La aplicación contiene la interfaz de publicación, lectura y confirmación por otros usuarios. Para que funcione entre móviles hace falta un proyecto Supabase real; GitHub Pages por sí solo no ofrece base de datos de escritura.
+La aplicación usa **GitHub Issues** en el repositorio público genio777/mi-proyecto. No requiere Supabase ni base de datos externa.
 
-1. Crear un proyecto en https://supabase.com y ejecutar `supabase/community.sql` en SQL Editor.
-2. En Authentication > Providers, activar **Anonymous Sign-Ins**. Esto crea una identidad anónima por instalación, no es una protección robusta contra votos falsos. Activar protección contra abuso (CAPTCHA/rate limits) antes de lanzamiento público.
-3. En GitHub > Settings > Secrets and variables > Actions, crear los secretos `VITE_SUPABASE_URL` (URL del proyecto) y `VITE_SUPABASE_ANON_KEY` (clave pública anon/publishable compatible). **Nunca usar service_role**.
-4. Relanzar los workflows de compilación web y Android. Los valores VITE se incluyen en el JavaScript público; la seguridad depende de RLS.
-5. Probar en dos teléfonos distintos: alta, lectura compartida, confirmación, voto negativo, cambio de voto, y ausencia de duplicación de votos de la misma identidad.
+## Activación
+1. En GitHub, Settings > General > Features, comprobar que **Issues** esté activado.
+2. Los usuarios abren la pestaña **Añadir gratis**, completan nombre, coordenadas GPS, potencia, conector e instrucciones y pulsan **Publicar cargador para toda la comunidad**.
+3. Se abre GitHub con un Issue pre-rellenado. El usuario debe iniciar sesión y pulsar **Submit new issue**. Sin ese paso, el cargador **no está publicado**.
+4. La pestaña consulta Issues públicos y muestra aportaciones con el bloque de datos `CARGAGRATIS_POINT`.
+5. Para confirmar un punto, abrir su Issue y usar reacción 👍. Para avisar de datos incorrectos, usar 👎 o comentar. Tres 👍 y ningún 👎 se muestran como **confirmado por usuarios**; no implica auditoría oficial.
 
-Estado: aportaciones comunitarias visibles en pestaña Añadir gratis, 3 confirmaciones y 0 avisos muestran estado «Confirmado por la comunidad». Los cargadores no entran en el planificador hasta una validación adicional. La reputación no sustituye la comprobación de condiciones reales.
-
-Limitaciones actuales: sin moderación administrativa, sin denuncia/ocultación automatizada, sin historial de cambios ni fotos, sin comentarios de votos mostrados. La anonimidad permite recrear identidades, así que no es un sistema antifraude sólido; antes de una publicación abierta debe añadirse control de abuso y moderación.
+## Limitaciones y seguridad
+- El flujo exige una cuenta GitHub; no se publica directamente desde la aplicación sin autenticación.
+- La lectura pública usa la API de GitHub, sujeta a límites y paginación de 100 resultados; la app no muestra automáticamente más de 100 Issues abiertos.
+- Los Issues pueden contener datos incorrectos o maliciosos. Moderar, cerrar Issues falsos y no publicar datos personales.
+- No se incluyen automáticamente las aportaciones en el planificador: la validación comunitaria no confirma precio, conectores ni disponibilidad en tiempo real.
+- Las reacciones pueden provenir de cuentas falsas; son indicadores comunitarios, no pruebas de funcionamiento.
+- Si el repositorio es privado o Issues está desactivado, no funcionará la consulta pública.

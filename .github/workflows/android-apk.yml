@@ -35,9 +35,6 @@ jobs:
           console.log('APK incluirá',d.chargers.length,'cargadores reales');
           JS
       - name: Compilar APK con servicio comunitario
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
       - name: Verificar datos compilados
         run: |

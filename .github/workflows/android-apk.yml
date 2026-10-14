@@ -34,7 +34,11 @@ jobs:
           if(d.chargers.some(c=>!Number.isFinite(c.lat)||!Number.isFinite(c.lng)||!(c.price===null||(Number.isFinite(c.price)&&c.price>=0))))throw Error('APK bloqueado: cargadores inválidos');
           console.log('APK incluirá',d.chargers.length,'cargadores reales');
           JS
-      - run: npm run build
+      - name: Compilar APK con servicio comunitario
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
       - name: Verificar datos compilados
         run: |
           test -s dist/data/chargers-spain.json

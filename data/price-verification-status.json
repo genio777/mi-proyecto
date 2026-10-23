@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-14T20:06:35.204Z",
+  "generatedAt": "2026-10-23T16:42:37.582Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 11954,
+  "stationsWithUnknownPrice": 11995,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 11954,
+  "catalogStations": 11995,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -33,10 +33,10 @@
     },
     {
       "operator": "CHARGING TOGETHER SL",
-      "total": 526,
+      "total": 540,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 526,
+      "unknownPrices": 540,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -73,10 +73,10 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "total": 200,
+      "total": 210,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 200,
+      "unknownPrices": 210,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -176,6 +176,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "QWELLO España SL",
+      "total": 77,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 77,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "APK ELECTRIC, S.L.",
       "total": 71,
       "verifiedPrices": 0,
@@ -189,14 +197,6 @@
       "verifiedPrices": 0,
       "verifiedFree": 0,
       "unknownPrices": 68,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "QWELLO España SL",
-      "total": 63,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 63,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -257,10 +257,10 @@
     },
     {
       "operator": "Prio Recharge Sl.",
-      "total": 42,
+      "total": 43,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 42,
+      "unknownPrices": 43,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -728,6 +728,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "SISTEMAS DE RIEGO SOLAR S.L.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "ESTACION DE SERVICIO VILLAROSA S.A.",
       "total": 1,
       "verifiedPrices": 0,
@@ -1164,7 +1172,7 @@
   "coverage": {
     "individuallyVerifiedPercent": 0,
     "unknownPricePercent": 100,
-    "operatorsReviewed": 144
+    "operatorsReviewed": 145
   },
   "priorityOperators": [
     {
@@ -1187,7 +1195,7 @@
     },
     {
       "operator": "CHARGING TOGETHER SL",
-      "stationsToVerify": 526,
+      "stationsToVerify": 540,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1217,7 +1225,7 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "stationsToVerify": 200,
+      "stationsToVerify": 210,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3293,8 +3301,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 11954,
-    "remainingOutsideQueue": 11854,
+    "totalUnknown": 11995,
+    "remainingOutsideQueue": 11895,
     "operatorsInQueue": 1
   }
 }

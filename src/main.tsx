@@ -238,7 +238,7 @@ function App(){
        stageKm+=d;stageDrive+=leg.duration/60;stageCharge+=minutes;stageStops++;
        {const quote=chargingCost(c,chargeKwh);if(!quote)stageUnknown++;else stageCost+=quote.total;}
        allStops.push(c);used.add(c.id);
-       stageLines.push('Etapa '+(stage+1)+' · Recarga al inicio: '+displayStation(c)+' · '+c.power+' kW · llegada '+Math.round(arrival/battery*100)+'% · carga '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min');
+       stageLines.push('Etapa '+(stage+1)+' · Recarga al inicio: '+displayStation(c)+' · '+c.power+' kW · llegada '+Math.round(arrival/battery*100)+'% · carga '+chargeKwh.toFixed(1)+' kWh hasta 100% · '+Math.round(minutes)+' min · '+(chargingCost(c,chargeKwh)?chargingCost(c,chargeKwh)!.total.toFixed(2)+' € ('+chargingCost(c,chargeKwh)!.label+')':'precio no disponible'));
        current=[c.lat,c.lng];energy=battery;break;
       }
      }catch{}
@@ -342,7 +342,7 @@ function App(){
     const minutes=avgKw>0?chargeKwh/avgKw*60:Infinity;
     if(!Number.isFinite(minutes)){complete=false;break}
     stageCharge+=minutes;
-    if(best.c.price===null)stageUnknown++;else stageCost+=chargeKwh*best.c.price;
+    {const quote=chargingCost(best.c,chargeKwh);if(!quote)stageUnknown++;else stageCost+=quote.total;}
     allStops.push(best.c);used.add(best.c.id);
     stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · SOC llegada '+Math.round(arrivalEnergy/battery*100)+'% · distancia restante '+Math.round(remainingRoadKm)+' km por carretera · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta '+Math.round(chargeTarget/battery*100)+'% · '+Math.round(minutes)+' min'+(best.c.price===null?' · precio desconocido':' · '+(chargeKwh*best.c.price).toFixed(2)+' €'));
     energy=chargeTarget;current=[best.c.lat,best.c.lng];

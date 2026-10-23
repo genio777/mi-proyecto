@@ -80,14 +80,18 @@ jobs:
             ['tres destinos', "tripType==='three'"],
             ['SOC por etapas', 'stageArrivals'],
             ['resumen de SOC', 'tripSocMetric'],
-            ['tarifa desconocida', 'Precio no disponible'],
+            ['tarifa desconocida diferenciada', 'unknownPriceStops'],
             ['cálculo de carga conservador', 'chargingMinutes'],
             ['paradas y coste', 'chargingStops'],
             ['perfiles separados Tesla y Zoe', 'cg_vehicle_profiles_v2'],
             ['recuperación del perfil al cambiar de coche', 'const profile=storedVehicle(name)'],
             ['guardado individual de potencia de carga', 'maxCharge:maxChargeKw'],
             ['consulta concurrente de cargadores', 'Promise.all(eligible.map'],
-            ['precio desconocido separado de gratuito', "unknownPrices?'Precio no disponible'"]
+            ['precio desconocido separado de gratuito', 'unknownPrices?'],
+            ['coste un destino', 'knownChargeCost'],
+            ['coste varios destinos', 'stageCost+=quote.total'],
+            ['tarifas integradas en planificador', 'chargingCost(c,'],
+            ['tarifas de respaldo Tesla', 'cg_unknown_rate']
           ];
           for(const [name,token] of required){if(!src.includes(token))throw Error('Falta funcionalidad crítica: '+name)}
           const js=fs.readdirSync('dist/assets').filter(f=>f.endsWith('.js'));

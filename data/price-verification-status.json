@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-26T06:32:12.247Z",
+  "generatedAt": "2026-10-26T13:33:06.652Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 11995,
+  "stationsWithUnknownPrice": 11996,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 11995,
+  "catalogStations": 11996,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -1166,13 +1166,21 @@
       "verifiedFree": 0,
       "unknownPrices": 1,
       "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "HERSAN S.L.U.",
+      "total": 1,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 1,
+      "unverifiedCatalogPrices": 0
     }
   ],
   "caution": "Un precio en el catálogo sin fecha y fuente individual verificadas no equivale a una tarifa confirmada.",
   "coverage": {
     "individuallyVerifiedPercent": 0,
     "unknownPricePercent": 100,
-    "operatorsReviewed": 145
+    "operatorsReviewed": 146
   },
   "priorityOperators": [
     {
@@ -3301,8 +3309,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 11995,
-    "remainingOutsideQueue": 11895,
+    "totalUnknown": 11996,
+    "remainingOutsideQueue": 11896,
     "operatorsInQueue": 1
   }
 }

@@ -113,10 +113,11 @@ function App(){
  const [unknownRate,setUnknownRate]=useState<number>(()=>{try{return Number(localStorage.getItem('cg_unknown_rate')||0)}catch{return 0}});
  useEffect(()=>{try{localStorage.setItem('cg_unknown_rate',String(unknownRate))}catch{}},[unknownRate]);
   const tariffFor=(c:Charger):{price:number;label:string;source:string}|null=>{
-  if(typeof c.price==='number'&&Number.isFinite(c.price)&&c.price>=0)return {price:c.price,label:'Precio registrado en el punto',source:'station'};
+  if(typeof c.price==='number'&&Number.isFinite(c.price)&&c.price>=0)return {price:c.price,label:'Precio registrado en el punto · confirmar en la app del operador',source:'station'};
   const name=normalizeSearch([c.operator,c.name].filter(Boolean).join(' '));
-  const operatorId=/zunder/.test(name)?'zunder':/repsol/.test(name)?'repsol':/iberdrola|bp pulse/.test(name)?'iberdrola-bp':/acciona/.test(name)?'acciona':/wenea/.test(name)?'wenea':null;
-  if(/tesla|supercharger/.test(name)&&Number.isFinite(teslaRate)&&teslaRate>0&&teslaRate<=5)return {price:teslaRate,label:'Estimación Tesla propietario, referencia alta orientativa (no máximo oficial)',source:'manual'};
+  const operatorId=/tesla|supercharger/.test(name)?'tesla':/zunder/.test(name)?'zunder':/repsol|ibil/.test(name)?'repsol':/iberdrola|bp pulse/.test(name)?'iberdrola-bp':/endesa|x way/.test(name)?'endesa':/ionity/.test(name)?'ionity':/acciona/.test(name)?'acciona':/wenea/.test(name)?'wenea':null;
+  // La referencia Tesla es editable por el usuario, NO una tarifa máxima oficial.
+  if(operatorId==='tesla'&&Number.isFinite(teslaRate)&&teslaRate>0&&teslaRate<=5)return {price:teslaRate,label:'Tesla · referencia alta orientativa para propietario; puede ser más barato según hora y estación (no máximo oficial)',source:'manual'};
   const op=tariffs?.operators?.find((x:any)=>x.id===operatorId);
   if(!op||!Number.isFinite(c.power)||c.power<=0)return Number.isFinite(unknownRate)&&unknownRate>0&&unknownRate<=5?{price:unknownRate,label:'Precio manual estimado (sin verificar)',source:'manual'}:null;
   const tiers=op.tiers||[];
@@ -126,8 +127,13 @@ function App(){
   if(operatorId==='acciona')label=c.power<=22?'Hasta 22 kW':'Más de 22 kW';
   if(operatorId==='wenea')label=c.power<=22?'AC 7,4–22 kW':c.power<=150?'DC 50–150 kW':'HPC 151–400 kW';
   if(operatorId==='zunder')label=c.power<=50?'AC hasta 50 kW (sin plan)':'DC más de 50 kW (sin plan)';
+  if(operatorId==='ionity')label='Direct sin suscripción';
+  if(operatorId==='endesa'){
+   // Sin hora prevista fiable de llegada, utilizar el precio diurno e-Flex sin suscripción.
+   label=c.power<=22?'e-Flex AC día 07-23':c.power<100?'e-Flex DC <100 día':'e-Flex DC ≥100 día';
+  }
   const tier=tiers.find((x:any)=>x.label===label);
-  if(tier&&Number.isFinite(tier.price)&&tier.price>=0)return {price:tier.price,label:'Referencia '+op.name+' · '+tier.label,source:'reference'};
+  if(tier&&Number.isFinite(tier.price)&&tier.price>=0)return {price:tier.price,label:'Referencia '+op.name+' · '+tier.label+(operatorId==='endesa'?' · estimación diurna; noche puede ser más barata':'')+' · verificar estación',source:'reference'};
   return Number.isFinite(unknownRate)&&unknownRate>0&&unknownRate<=5?{price:unknownRate,label:'Precio manual estimado (sin verificar)',source:'manual'}:null;
  };
  const chargingCost=(c:Charger,kwh:number)=>{const t=tariffFor(c);return t&&Number.isFinite(kwh)&&kwh>=0?{total:kwh*t.price,rate:t.price,label:t.label,source:t.source}:null};

@@ -57,6 +57,11 @@ jobs:
       - name: Avisar si no está disponible la fuente europea
         if: steps.ocm_source.outcome != 'success'
         run: echo '::warning::Fuente OCM no accesible; no se inventan puntos gratuitos.'
+      - name: Recuperar cursor REVE de la última publicación
+        run: |
+          if test -s data/reve-cache.json; then
+            cp data/reve-cache.json public/data/reve-cache.json
+          fi
       - name: Integrar REVE API oficial (máximo 4 consultas/hora)
         env:
           REVE_API_KEY: ${{ secrets.REVE_API_KEY }}

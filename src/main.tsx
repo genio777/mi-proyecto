@@ -46,17 +46,32 @@ function App(){
  const[maximumPower,setMaximumPower]=useState(()=>{try{return Number(localStorage.getItem('cg_max_power')||0)}catch{return 0}});
  useEffect(()=>{try{localStorage.setItem('cg_max_power',String(maximumPower))}catch{}},[maximumPower]);
  const powerLevels=[0,22,50,100,150,200,250,300,350];
- // Compatibilidad obligatoria del perfil activo, independiente de filtros manuales guardados.
+ // Potencia de cada toma: nunca atribuir al Tipo2 la potencia del CCS de la misma estación.
  const vehicleConnectors=vehiclePresets.find(v=>v.name===vehicleName)?.connectors||[];
- const compatibleVehicleCharger=(c:Charger)=>vehicleConnectors.length>0&&
-  (c.connector||'').split(',').some(x=>vehicleConnectors.some(v=>normalizeSearch(x.trim())===normalizeSearch(v)));
+ const stationCompatiblePower=(c:Charger)=>{
+  const allowed=new Set(vehicleConnectors.map(normalizeSearch));
+  const raw=(c as Charger&{connectors?:Array<{type:string,powerKw:number}>}).connectors;
+  const matches=Array.isArray(raw)?raw.filter(x=>allowed.has(normalizeSearch(x.type))&&Number.isFinite(x.powerKw)&&x.powerKw>0):[];
+  if(matches.length){
+   return Math.max(...matches.map(x=>Math.min(x.powerKw,normalizeSearch(x.type)==='tipo2'?maxAcKw:maxChargeKw)));
+  }
+  // Los datos agregados sin potencia por toma no permiten atribuir el máximo de la estación a una toma AC.
+  const types=(c.connector||'').split(',').map(x=>normalizeSearch(x.trim())).filter(Boolean);
+  const supported=types.filter(t=>allowed.has(t));
+  if(!supported.length)return 0;
+  const mixed=types.some(t=>!allowed.has(t));
+  if(mixed)return 0; // Requiere potencia documentada por conector.
+  return Math.min(c.power,supported.includes('tipo2')?maxAcKw:maxChargeKw);
+ };
+ const compatibleVehicleCharger=(c:Charger)=>stationCompatiblePower(c)>0;
  const routeCompatibleChargers=(items:Charger[])=>items.filter(compatibleVehicleCharger);
  const powerFiltered=(items:Charger[])=>items.filter(c=>{
-  if(!Number.isFinite(c.power)||c.power<=0)return false;
-  if(maximumPower>0&&c.power>maximumPower)return false;
-  if(routeMode==='fast')return c.power>=100;
-  if(routeMode==='cheap')return c.power>0;
-  if(routeMode==='free')return c.power>0&&c.price===0;
+  const power=stationCompatiblePower(c);
+  if(power<=0)return false;
+  if(maximumPower>0&&power>maximumPower)return false;
+  if(routeMode==='fast')return power>=100;
+  if(routeMode==='cheap')return true;
+  if(routeMode==='free')return c.price===0;
   return true;
  });
  const operatorPowers=(op:string)=>Array.from(new Set(chargers.filter(c=>operatorLabel(c)===op).map(c=>c.power).filter(p=>Number.isFinite(p)&&p>0))).sort((a,b)=>a-b);
@@ -244,7 +259,7 @@ function App(){
       const leg=await route([current,[c.lat,c.lng]]);
       const d=leg.distance/1000,arrival=energy-d*consumption/100;
       if(d>0.5&&arrival>=minimum&&d<=availableAtStart){
-       const chargeKwh=battery-arrival,avgKw=Math.min(c.power,c.power<=43?maxAcKw:maxChargeKw)*.55;
+       const chargeKwh=battery-arrival,avgKw=stationCompatiblePower(c)*.55;
        if(avgKw<=0)continue;
        const minutes=chargeKwh/avgKw*60;
        const line=leg.geometry.coordinates.map((p:number[])=>[p[1],p[0]] as [number,number]);
@@ -302,7 +317,7 @@ function App(){
       // En modo rápido comparar minutos estimados de conducción y recarga,
       // no una bonificación arbitraria por potencia que favorecía 22 kW.
       const estimatedChargeKwh=battery-remaining;
-      const estimatedChargeMinutes=estimatedChargeKwh/Math.max(1,Math.min(x.c.power,x.c.power<=43?maxAcKw:maxChargeKw)*.55)*60;
+      const estimatedChargeMinutes=estimatedChargeKwh/Math.max(1,stationCompatiblePower(x.c)*.55)*60;
       // Evitar encadenar estaciones a pocos kilómetros con cargas de 2-3 kWh.
       // Una parada implica tiempo fijo de conexión además de los minutos de carga.
       const shortHopPenalty=remaining>battery*.75?45+(remaining/battery-.75)*100:0;
@@ -352,13 +367,13 @@ function App(){
      }
     }
     const chargeKwh=Math.max(0,chargeTarget-arrivalEnergy);
-    const avgKw=Math.min(best.c.power,best.c.power<=43?maxAcKw:maxChargeKw)*.55;
+    const avgKw=stationCompatiblePower(best.c)*.55;
     const minutes=avgKw>0?chargeKwh/avgKw*60:Infinity;
     if(!Number.isFinite(minutes)){complete=false;break}
     stageCharge+=minutes;
     {const quote=chargingCost(best.c,chargeKwh);if(!quote)stageUnknown++;else stageCost+=quote.total;}
     allStops.push(best.c);used.add(best.c.id);
-    stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+best.c.power+' kW · SOC llegada '+Math.round(arrivalEnergy/battery*100)+'% · distancia restante '+Math.round(remainingRoadKm)+' km por carretera · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta '+Math.round(chargeTarget/battery*100)+'% · '+Math.round(minutes)+' min'+(chargingCost(best.c,chargeKwh)?' · '+chargingCost(best.c,chargeKwh)!.total.toFixed(2)+' € ('+chargingCost(best.c,chargeKwh)!.label+')':' · precio desconocido'));
+    stageLines.push('Etapa '+(stage+1)+' · Parada '+stageStops+': '+displayStation(best.c)+' · '+stationCompatiblePower(best.c)+' kW compatibles · SOC llegada '+Math.round(arrivalEnergy/battery*100)+'% · distancia restante '+Math.round(remainingRoadKm)+' km por carretera · carga estimada '+chargeKwh.toFixed(1)+' kWh hasta '+Math.round(chargeTarget/battery*100)+'% · '+Math.round(minutes)+' min'+(chargingCost(best.c,chargeKwh)?' · '+chargingCost(best.c,chargeKwh)!.total.toFixed(2)+' € ('+chargingCost(best.c,chargeKwh)!.label+')':' · precio desconocido'));
     energy=chargeTarget;current=[best.c.lat,best.c.lng];
     if(step===23){failureDetail='Etapa '+(stage+1)+' ('+name+'): se agotaron 24 paradas en esta etapa sin llegar al destino; faltan aproximadamente '+Math.round(directKm)+' km desde la posición anterior.';complete=false;}
    }
@@ -392,14 +407,14 @@ else{
   const rangeKm=(available-minEnergy)*100/consumption;
   // Probar estaciones hacia adelante. Las distancias sobre la ruta solo preseleccionan; la distancia real la calcula OSRM.
   const eligible=along.filter(x=>!used.has(x.c.id)&&x.approxKm>positionKm+8&&x.approxKm<positionKm+rangeKm*1.12+12);
-  const ordered=eligible.sort((x,y)=>{const reachX=Math.abs(x.approxKm-(positionKm+rangeKm*.75)),reachY=Math.abs(y.approxKm-(positionKm+rangeKm*.75));const weight=(v:typeof x)=>routeMode==='fast'?(Math.max(0,maxChargeKw-Math.min(v.c.power,v.c.power<=43?maxAcKw:maxChargeKw))*.9+(/tesla/i.test(v.c.operator+' '+v.c.name)&&/tesla/i.test(vehicleName)?-30:0)):routeMode==='cheap'?(tariffFor(v.c)?.price??10)*5:0;return reachX+weight(x)+x.corridor*2-(reachY+weight(y)+y.corridor*2)}).slice(0,14);
+  const ordered=eligible.sort((x,y)=>{const reachX=Math.abs(x.approxKm-(positionKm+rangeKm*.75)),reachY=Math.abs(y.approxKm-(positionKm+rangeKm*.75));const weight=(v:typeof x)=>routeMode==='fast'?(Math.max(0,maxChargeKw-stationCompatiblePower(v.c))*.9+(/tesla/i.test(v.c.operator+' '+v.c.name)&&/tesla/i.test(vehicleName)?-30:0)):routeMode==='cheap'?(tariffFor(v.c)?.price??10)*5:0;return reachX+weight(x)+x.corridor*2-(reachY+weight(y)+y.corridor*2)}).slice(0,14);
   let chosen:{c:Charger,distance:number,progress:number,remaining:number}|null=null;
   for(const x of ordered){try{const distance=await road(current,[x.c.lat,x.c.lng]);const remaining=available-distance*consumption/100;if(remaining<minEnergy||distance<5)continue;chosen={c:x.c,distance,progress:x.approxKm,remaining};break}catch{}}
   if(!chosen)break;
   stops.push(chosen.c);used.add(chosen.c.id);totalLegKm+=chosen.distance;segmentKm.push(chosen.distance);
   const arrivalSoc=chosen.remaining/battery*100;
   // Estimación: se carga hasta el 100 % para permitir el siguiente tramo; no se asume tiempo de carga.
-  const charge=battery-chosen.remaining;const effectiveKw=Math.min(chosen.c.power,chosen.c.power<=43?maxAcKw:maxChargeKw);const avgKw=effectiveKw*.55;const chargeMin=charge/avgKw*60;chargingMinutes+=chargeMin;chargingStops.push({name:displayStation(chosen.c),kwh:charge,minutes:chargeMin});
+  const charge=battery-chosen.remaining;const effectiveKw=stationCompatiblePower(chosen.c);const avgKw=effectiveKw*.55;const chargeMin=charge/avgKw*60;chargingMinutes+=chargeMin;chargingStops.push({name:displayStation(chosen.c),kwh:charge,minutes:chargeMin});
   legs.push('Parada '+stops.length+': '+displayStation(chosen.c)+' ('+chosen.c.city+') · '+chosen.distance.toFixed(0)+' km · SOC llegada '+arrivalSoc.toFixed(0)+'% · cargar hasta 100% (aprox. '+charge.toFixed(1)+' kWh) · carga estimada '+Math.round(chargeMin)+' min (potencia media supuesta 55% del limite de '+effectiveKw.toFixed(0)+' kW) · '+(chosen.c.price===0?'0 € identificado':!tariffFor(chosen.c)?'precio desconocido':tariffFor(chosen.c)!.price.toFixed(2)+' €/kWh ('+tariffFor(chosen.c)!.label+')'));
   current=[chosen.c.lat,chosen.c.lng];positionKm=chosen.progress;available=battery;
  }
@@ -410,7 +425,7 @@ else{
    const station=stops[i],distance=segmentKm[i];const arrivalEnergy=actualEnergy-distance*consumption/100;
    const nextDistance=segmentKm[i+1];const requiredEnergy=Math.min(battery,nextDistance*consumption/100+minEnergy+battery*.05);
    const departureEnergy=Math.max(arrivalEnergy,requiredEnergy);const chargeKwh=Math.max(0,departureEnergy-arrivalEnergy);
-   const effectiveKw=Math.min(station.power,station.power<=43?maxAcKw:maxChargeKw),averageKw=effectiveKw*.55;const chargeMin=averageKw>0?chargeKwh/averageKw*60:0;
+   const effectiveKw=stationCompatiblePower(station),averageKw=effectiveKw*.55;const chargeMin=averageKw>0?chargeKwh/averageKw*60:0;
    chargingMinutes+=chargeMin;chargingStops[i]={name:displayStation(station),kwh:chargeKwh,minutes:chargeMin};actualEnergy=departureEnergy;
    legs.push('Parada '+(i+1)+': '+displayStation(station)+' · '+distance.toFixed(0)+' km · SOC llegada '+Math.round(arrivalEnergy/battery*100)+'% · cargar hasta '+Math.round(departureEnergy/battery*100)+'% ('+chargeKwh.toFixed(1)+' kWh) · carga estimada '+Math.round(chargeMin)+' min · '+(station.price===0?'0 € identificado':!tariffFor(station)?'precio desconocido':tariffFor(station)!.price.toFixed(2)+' €/kWh ('+tariffFor(station)!.label+')'));
   }

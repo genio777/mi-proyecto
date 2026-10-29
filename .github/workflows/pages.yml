@@ -30,6 +30,13 @@ jobs:
       - name: Informar estado del catálogo
         if: steps.import_dgt.outcome == 'failure'
         run: echo '::warning::Falló la importación DGT. Se publica la aplicación sin inventar cargadores; el mapa informará que no hay catálogo disponible.'
+      - name: Integrar registro público MITECO RIPREE (CSV)
+        id: import_ripree
+        continue-on-error: true
+        run: python3 scripts/import-miteco-ripree.py
+      - name: Advertir si el registro RIPREE no está accesible o cambia su formato
+        if: steps.import_ripree.outcome == 'failure'
+        run: echo '::warning::No se pudo importar RIPREE; se conserva el catálogo DGT sin inventar datos.'
       - name: Importar y verificar Superchargers Tesla
         run: |
           node scripts/import-tesla.mjs

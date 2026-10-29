@@ -38,6 +38,18 @@ jobs:
         run: node scripts/audit-price-candidates.mjs
       - name: Integrar únicamente tarifas individuales verificadas
         run: node scripts/merge-verified-prices.mjs
+      - name: Obtener fuente europea Open Charge Map (España)
+        id: ocm_source
+        continue-on-error: true
+        run: |
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/openchargemap/ocm-export.git /tmp/ocm-export
+          git -C /tmp/ocm-export sparse-checkout set data/ES
+      - name: Integrar puntos gratuitos declarados en Open Charge Map
+        if: steps.ocm_source.outcome == 'success'
+        run: node scripts/import-europe-free.mjs
+      - name: Avisar si no está disponible la fuente europea
+        if: steps.ocm_source.outcome != 'success'
+        run: echo '::warning::Fuente OCM no accesible; no se inventan puntos gratuitos.'
       - name: Validar informe de precios y prioridades de revisión
         run: |
           node --input-type=module <<'JS'

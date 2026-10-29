@@ -50,6 +50,32 @@ for(const filename of fs.readdirSync(sourceDir)){
  });
  existing.add(id);existingFreeCoords.add(coord);added++;
 }
+// Punto omitido por OCM: tres plazas gratuitas confirmadas por Lidl y usuario.
+// Geocodificar la tienda exacta, nunca utilizar coordenadas de Costco ni del centro del barrio.
+const lidlId='official-lidl-sevilla-luna';
+if(!existing.has(lidlId)){
+ try{
+  const url='https://nominatim.openstreetmap.org/search?street='+encodeURIComponent('Calle Luna')+'&city=Sevilla&postalcode=41015&country=Spain&format=json&limit=5';
+  const response=await fetch(url,{headers:{'User-Agent':'CargaGratisEspanaJpaz/1.0 (github.com/genio777/mi-proyecto)','Accept':'application/json'},signal:AbortSignal.timeout(12000)});
+  if(!response.ok)throw Error('geocodificación HTTP '+response.status);
+  const results=await response.json();
+  const match=results.find(x=>/luna/i.test(x.display_name)&&/sevilla|seville/i.test(x.display_name)&&Number(x.lat)>37.38&&Number(x.lat)<37.47&&Number(x.lon)>-6.04&&Number(x.lon)<-5.92);
+  if(!match)throw Error('No se ha verificado geolocalización de Calle Luna, Sevilla');
+  const lat=Number(match.lat),lng=Number(match.lon);
+  const existingAtSite=catalog.chargers.some(c=>/lidl/i.test(c.name+' '+c.operator)&&/luna|higueron/i.test(c.name+' '+c.address)&&/sevilla/i.test(c.city));
+  if(!existingAtSite){
+   catalog.chargers.push({
+    id:lidlId,name:'Lidl Higuerón Sur · Calle Luna · 3 plazas gratis',city:'Sevilla',
+    lat,lng,power:11,connector:'Tipo2',price:0,operator:'Lidl',
+    source:'Lidl España, nota oficial 15/05/2025: https://empresa.lidl.es/sala-de-prensa/lidl-mas-cerca-de-ti/lidl-amplia-su-presencia-en-sevilla',
+    verified:'2026-10-29',address:'Calle Luna s/n, 41015 Sevilla',province:'Sevilla',
+    quantity:3,freeMinutes:30,
+    condition:'3 puntos gratuitos de 11 kW según comprobación del usuario. Límite 30 minutos por sesión mientras compras (Lidl España). Máximo teórico 5,5 kWh por sesión; la potencia real depende del vehículo. Coordenadas aproximadas de la calle, no del poste.'
+   });
+   added++;console.log('Lidl Calle Luna añadido con geolocalización de calle (no poste)');
+  }
+ }catch(e){console.warn('Lidl Calle Luna pendiente de geolocalización segura:',e.message)}
+}
 catalog.freeEuropeanSource={
  name:'Open Charge Map',url:'https://github.com/openchargemap/ocm-export',
  checkedAt:new Date().toISOString(),recordsReviewed:files,explicitFree:explicit,

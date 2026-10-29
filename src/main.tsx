@@ -47,9 +47,9 @@ function App(){
  useEffect(()=>{try{localStorage.setItem('cg_max_power',String(maximumPower))}catch{}},[maximumPower]);
  const powerLevels=[0,22,50,100,150,200,250,300,350];
  // Potencia de cada toma: nunca atribuir al Tipo2 la potencia del CCS de la misma estación.
- const vehicleConnectors=vehiclePresets.find(v=>v.name===vehicleName)?.connectors||[];
+ const getVehicleConnectors=()=>vehiclePresets.find(v=>v.name===vehicleName)?.connectors||[];
  const stationCompatiblePower=(c:Charger)=>{
-  const allowed=new Set(vehicleConnectors.map(normalizeSearch));
+  const allowed=new Set(getVehicleConnectors().map(normalizeSearch));
   const raw=(c as Charger&{connectors?:Array<{type:string,powerKw:number}>}).connectors;
   const matches=Array.isArray(raw)?raw.filter(x=>allowed.has(normalizeSearch(x.type))&&Number.isFinite(x.powerKw)&&x.powerKw>0):[];
   if(matches.length){

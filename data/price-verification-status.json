@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-29T06:16:49.999Z",
+  "generatedAt": "2026-10-29T09:23:58.896Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 11996,
+  "stationsWithUnknownPrice": 12000,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 11996,
+  "catalogStations": 12000,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -513,6 +513,14 @@
     },
     {
       "operator": "INSTAVOLT SL",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "AENA S.M.E., S.A.",
       "total": 4,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1180,7 +1188,7 @@
   "coverage": {
     "individuallyVerifiedPercent": 0,
     "unknownPricePercent": 100,
-    "operatorsReviewed": 146
+    "operatorsReviewed": 147
   },
   "priorityOperators": [
     {
@@ -3309,8 +3317,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 11996,
-    "remainingOutsideQueue": 11896,
+    "totalUnknown": 12000,
+    "remainingOutsideQueue": 11900,
     "operatorsInQueue": 1
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-04T03:19:29.124Z",
+  "generatedAt": "2026-11-04T18:43:33.199Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
@@ -1184,7 +1184,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Autoconsumo Sostenible SL",
+      "operator": "ABB E-MOBILITY, S.L.U.",
       "total": 1,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1192,7 +1192,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "ABB E-MOBILITY, S.L.U.",
+      "operator": "Greenvalis Energy SL",
       "total": 1,
       "verifiedPrices": 0,
       "verifiedFree": 0,

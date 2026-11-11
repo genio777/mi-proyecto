@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-11T03:12:35.035Z",
+  "generatedAt": "2026-11-11T11:12:16.932Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 12002,
+  "stationsWithUnknownPrice": 12030,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 12002,
+  "catalogStations": 12030,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -17,10 +17,10 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "total": 2736,
+      "total": 2769,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 2736,
+      "unknownPrices": 2769,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -73,10 +73,10 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "total": 210,
+      "total": 204,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 210,
+      "unknownPrices": 204,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1198,13 +1198,21 @@
       "verifiedFree": 0,
       "unknownPrices": 1,
       "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "BEROIL,S.L",
+      "total": 1,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 1,
+      "unverifiedCatalogPrices": 0
     }
   ],
   "caution": "Un precio en el catálogo sin fecha y fuente individual verificadas no equivale a una tarifa confirmada.",
   "coverage": {
     "individuallyVerifiedPercent": 0,
     "unknownPricePercent": 100,
-    "operatorsReviewed": 149
+    "operatorsReviewed": 150
   },
   "priorityOperators": [
     {
@@ -1215,7 +1223,7 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "stationsToVerify": 2736,
+      "stationsToVerify": 2769,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1257,7 +1265,7 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "stationsToVerify": 210,
+      "stationsToVerify": 204,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3333,8 +3341,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 12002,
-    "remainingOutsideQueue": 11902,
+    "totalUnknown": 12030,
+    "remainingOutsideQueue": 11930,
     "operatorsInQueue": 1
   }
 }

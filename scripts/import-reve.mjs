@@ -1,64 +1,81 @@
-// REVE official API: server-side only. Never publish the API key.
-// Runs in GitHub Actions; 4 requests/hour maximum, with persistent cursor.
+// Authenticated REVE inventory is fetched only by GitHub Actions. The workflow
+// supplies REVE_API_KEY from secrets, never VITE_*, HTML, query strings or files.
 import fs from 'node:fs';
-const catalogPath='public/data/chargers-spain.json';
-const cachePath='public/data/reve-cache.json';
-const key=process.env.REVE_API_KEY;
-if(!key){console.log('REVE: configure repository Actions secret REVE_API_KEY to enable sync');process.exit(0)}
-const now=Date.now(),hour=3600000;
-const read=(p,defaultValue)=>{try{return JSON.parse(fs.readFileSync(p,'utf8'))}catch{return defaultValue}};
-const cache=read(cachePath,{cursor:1,totalPages:0,lastAttempt:0,locations:{},lastSuccess:null});
-if(now-Number(cache.lastAttempt||0)<hour){console.log('REVE: hourly request budget reserved; skipping');process.exit(0)}
-cache.lastAttempt=now; // persist attempts, including HTTP errors, to avoid 429 loops
-const save=()=>fs.writeFileSync(cachePath,JSON.stringify(cache));
-const normalized=(s)=>String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-function connectorType(raw){
- const t=normalized(raw);
- if(['IEC62196T2COMBO','CCS','CCS2'].includes(t))return 'CCS';
- if(t.includes('CHADEMO'))return 'CHAdeMO';
- if(['IEC62196T2','TYPE2','TIPO2','MENNEKES'].includes(t))return 'Tipo2';
- return null;
-}
-function parseLocation(loc){
- if(!loc||typeof loc.id!=='string')return null;
- const lat=Number(loc.coordinates?.latitude),lng=Number(loc.coordinates?.longitude);
- if(!Number.isFinite(lat)||!Number.isFinite(lng)||lat<27||lat>44.6||lng< -18.5||lng>4.6)return null;
- const connectors=[];
- for(const evse of Array.isArray(loc.evses)?loc.evses:[]){
-  for(const con of Array.isArray(evse.connectors)?evse.connectors:[]){
-   const type=connectorType(con.standard||con.type||con.connector_type);
-   const watts=Number(con.max_electric_power),powerKw=watts/1000;
-   if(type&&Number.isFinite(powerKw)&&powerKw>0&&powerKw<=1000)connectors.push({type,powerKw:Math.round(powerKw*10)/10,officialConnectorId:con.id||null,price:null});
-  }
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {parseReveLocation,sanitizeReveCache} from './lib/reve.mjs';
+const read=(file,fallback)=>{try{return JSON.parse(fs.readFileSync(file,'utf8'))}catch{return fallback}};
+export async function importReve({catalogPath='public/data/chargers-spain.json',cachePath='public/data/reve-cache.json',key=process.env.REVE_API_KEY,actions=process.env.GITHUB_ACTIONS==='true',skipNetwork=process.env.REVE_SKIP_NETWORK==='true',fetcher=fetch,now=Date.now(),log=console.log}={}) {
+ const catalog=read(catalogPath,null);
+ if(!Array.isArray(catalog?.chargers))throw Error('DGT catalog missing');
+ const cache=sanitizeReveCache(read(cachePath,{}));
+ const hour=3600000,importedAt=new Date(now).toISOString();
+ let status='cached',requests=0,reconciled=false,removed=0;
+ if(!key){status='not_configured';log('REVE: Actions secret REVE_API_KEY is absent; restoring cached inventory only');}
+ else if(!actions)throw Error('REVE sync requires GitHub Actions and repository secret REVE_API_KEY');
+ else if(skipNetwork||now-cache.lastAttempt<hour||cache.retryAfter>now){status='rate_budget_wait';log('REVE: request budget reserved; restoring cached inventory');}
+ else {
+  // Reserve the whole four-request budget before any request. A crash/error
+  // cannot cause the next ten-minute publication to retry the same hour.
+  cache.lastAttempt=now;
+  // Only a cycle known to have started at page 1 can prove an absence. An old
+  // cursor without cycle state is resumed safely but never used to prune.
+  const beginCycle=()=>{cache.cursor=1;cache.totalPages=0;cache.cycle={version:1,startedAt:importedAt,expectedPage:1,seenIds:[]};};
+  if(cache.cursor===1||cache.totalPages&&cache.cursor>cache.totalPages)beginCycle();
+  const persist=()=>{const json=JSON.stringify(cache);if(key&&json.includes(key))throw Error('REVE secret detected in public cache');fs.mkdirSync(path.dirname(cachePath),{recursive:true});fs.writeFileSync(cachePath,json);};
+  persist();
+  status='sync_failed';
+  try {
+   for(let i=0;i<4;i++){
+    const url=new URL('https://www.mapareve.es/api/external/v1/locations');
+    url.searchParams.set('page',String(cache.cursor));url.searchParams.set('limit','100');url.searchParams.set('only_dynamic_info','false');
+    requests++;
+    const response=await fetcher(url,{headers:{'x-api-key':key,Accept:'application/json'},signal:AbortSignal.timeout(45000)});
+    if(response.status===429){
+     const retry=response.headers.get('retry-after'),seconds=Number(retry);
+     cache.retryAfter=Math.max(now+hour,Number.isFinite(seconds)&&seconds>0?now+seconds*1000:Date.parse(retry)||0);
+     status='rate_limited';log('REVE: HTTP 429; retry deferred');break;
+    }
+    if(!response.ok){status=cache.lastSuccess===importedAt?'partial':'sync_failed';log('REVE: HTTP '+response.status+'; cached inventory retained');break;}
+    const rows=await response.json();
+    if(!Array.isArray(rows))throw Error('Unexpected REVE locations schema');
+    let accepted=0;
+    const seen=new Set(cache.cycle?.seenIds||[]);
+    for(const row of rows){
+     const station=parseReveLocation(row,importedAt);
+     if(station){cache.locations[station.id]=station;seen.add(station.id);accepted++;}
+     else if(typeof row?.id==='string')delete cache.locations['reve:'+row.id.trim().slice(0,500)];
+    }
+    if(cache.cycle)cache.cycle.seenIds=[...seen];
+    const pages=Number(response.headers.get('total-pages'));
+    if(Number.isSafeInteger(pages)&&pages>0)cache.totalPages=pages;
+    if(cache.totalPages&&cache.cursor<cache.totalPages&&rows.length<100)throw Error('REVE pagination is incomplete');
+    log('REVE page '+cache.cursor+': '+rows.length+' locations, '+accepted+' explicit connector ratings');
+    cache.cursor++;cache.lastSuccess=importedAt;cache.retryAfter=0;status='synced';
+    if(cache.cycle)cache.cycle.expectedPage=cache.cursor;
+    // A short final page (including an empty sentinel page) or a declared
+    // total proves completion. Partial runs and failed pages never remove IDs
+    // merely because they have not yet been seen.
+    if(rows.length<100||cache.totalPages&&cache.cursor>cache.totalPages){
+     if(cache.cycle){
+      for(const id of Object.keys(cache.locations))if(!seen.has(id)){delete cache.locations[id];removed++;}
+      cache.lastCompletedCycle=importedAt;reconciled=true;
+     }
+     cache.cursor=1;cache.totalPages=0;cache.cycle=null;break;
+    }
+    persist();
+   }
+  }catch{status=cache.lastSuccess===importedAt?'partial':'sync_failed';log('REVE: network or schema error; cached inventory retained');}
+  persist();
  }
- if(!connectors.length)return null; // do not invent connector types or power
- const operator=String(loc.owner||loc.cpo_name||'').split(' - ')[0].trim();
- return {id:'reve:'+loc.id,name:String(loc.name||operator||'Punto REVE'),city:String(loc.city||''),province:String(loc.region||''),address:String(loc.address||''),operator,lat,lng,power:Math.max(...connectors.map(c=>c.powerKw)),connector:[...new Set(connectors.map(c=>c.type))].join(', '),connectors,price:null,priceSource:null,priceVerifiedAt:null,source:'REVE API · Red Eléctrica de España',verified:'Datos declarados por operador; no comprobados presencialmente',availability:'Desconocida',reveUpdated:loc.last_updated||null};
+ const cacheJson=JSON.stringify(cache);if(key&&cacheJson.includes(key))throw Error('REVE secret detected in public cache');
+ fs.mkdirSync(path.dirname(cachePath),{recursive:true});fs.writeFileSync(cachePath,cacheJson);
+ const byId=new Map(catalog.chargers.filter(c=>!String(c.id).startsWith('reve:')).map(c=>[String(c.id),c]));
+ for(const station of Object.values(cache.locations))byId.set(station.id,station);
+ catalog.chargers=[...byId.values()];
+ catalog.reveApi={source:'Red Eléctrica de España · mapa REVE',sourceUrl:'https://www.mapareve.es/',licenseUrl:'https://www.ree.es/es/aviso-legal',status,lastSuccess:cache.lastSuccess,lastCompletedCycle:cache.lastCompletedCycle,reconciled,removed,cycleInProgress:!!cache.cycle,records:Object.keys(cache.locations).length,requests,notice:'Inventario estático declarado por operadores. No acredita plazas libres ni precio; uso sujeto a condiciones REVE.'};
+ const json=JSON.stringify(catalog);if(key&&json.includes(key))throw Error('REVE secret detected in public catalog');
+ fs.writeFileSync(catalogPath,json);
+ return catalog.reveApi;
 }
-try{
- let page=Math.max(1,Number(cache.cursor)||1),pages=Number(cache.totalPages)||0;
- for(let i=0;i<4;i++){
-  if(pages>0&&page>pages)page=1;
-  const url='https://www.mapareve.es/api/external/v1/locations?page='+page+'&limit=100';
-  const res=await fetch(url,{headers:{'x-api-key':key,'Accept':'application/json'},signal:AbortSignal.timeout(45000)});
-  if(res.status===429){console.warn('REVE rate limit: wait until next hour');break}
-  if(!res.ok){console.warn('REVE HTTP '+res.status+' on page '+page);break}
-  const data=await res.json();
-  if(!Array.isArray(data))throw Error('REVE returned non-array locations response');
-  pages=Number(res.headers.get('total-pages'))||pages;
-  let accepted=0;
-  for(const loc of data){const station=parseLocation(loc);if(station){cache.locations[station.id]=station;accepted++}}
-  console.log('REVE page',page,'received',data.length,'valid connectors',accepted,'total pages',pages);
-  page++;cache.lastSuccess=new Date().toISOString();
-  if(data.length<100&&pages===0)break;
- }
- cache.cursor=page;cache.totalPages=pages;
-}catch(e){console.warn('REVE sync failed:',e instanceof Error?e.message:String(e))}
-save();
-const catalog=read(catalogPath,null);
-if(!catalog||!Array.isArray(catalog.chargers))throw Error('DGT catalog missing');
-const existing=new Set(catalog.chargers.map(c=>c.id));
-for(const station of Object.values(cache.locations))if(!existing.has(station.id))catalog.chargers.push(station);
-catalog.reveApi={source:'Red Eléctrica de España · mapa REVE',lastSuccess:cache.lastSuccess,records:Object.keys(cache.locations).length,notice:'Datos REVE sujetos a licencia no comercial; disponibilidad y precios no garantizados'};
-fs.writeFileSync(catalogPath,JSON.stringify(catalog));
-console.log('REVE merged:',catalog.reveApi.records,'locations; last success:',cache.lastSuccess);
+if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1]))console.log('REVE:',JSON.stringify(await importReve()));

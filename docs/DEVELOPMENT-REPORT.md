@@ -96,3 +96,13 @@ Tras comunicar el titular la fecha de caducidad del 29/10/2027, se añadieron co
 Se verificaron 126 pruebas automáticas, TypeScript, Vite y la validación completa del catálogo. La sonda se prueba con fixtures; una autenticación real requiere que el secreto esté guardado en GitHub. La conexión disponible para esta sesión devuelve HTTP 403 al acceder a la gestión de secretos, por lo que no ha permitido guardar la clave desde la sesión. Ningún valor de clave se ha incorporado al código o a este informe.
 
 La documentación oficial no publica renovación de credenciales. Los avisos anticipados y la sincronización no se presentan como renovación automática. Procedimiento y estados en [REVE-AUTONOMY.md](REVE-AUTONOMY.md).
+
+## Fase aprobada: aviso y confianza de las paradas
+
+El titular aprobó el texto y su ubicación antes del mapa. Se ha implementado el mismo texto en el inicio y en una vista local «Aviso legal» con enlace permanente en el pie de página. No hay modal ni aceptación obligatoria, y el texto se conserva en la compilación web y en los recursos que se empaquetan en Android. Se corrigió la promesa de replanificación automática: el usuario debe actualizar SOC/origen y volver a calcular.
+
+Las fichas de paradas usan el conector y la potencia elegidos en el cálculo, diferencian precios confirmados, estimados y desconocidos y muestran fuente, licencia y fecha real de la fuente. «Confirmado» requiere una tarifa del punto con importe coincidente, fuente y comprobación no futura de hasta siete días. Los datos importados y las declaraciones de gratuidad no se convierten en confirmación; la disponibilidad sigue sin confirmar en tiempo real.
+
+Pruebas de esta fase: 162 pruebas automáticas aprobadas, TypeScript, compilación Vite y validación del catálogo. Doce flujos de navegador comprueban también el aviso antes del mapa, acceso desde seis pestañas sin conexión, foco y lectura a 360 px, y una parada con precio desconocido que pasa a estimación manual de 0,45 €/kWh. Capturas móviles y de escritorio revisadas sin recortes ni desbordamientos.
+
+La autenticación REVE se verificó realmente en [Actions, intento 2](https://github.com/genio777/mi-proyecto/actions/runs/43506582454/attempts/2): HTTP 200, 100 ubicaciones recibidas, 98 normalizables con 305 tomas de potencia explícita. El secreto fue guardado por el titular y utilizado exclusivamente por Actions, sin revelar su valor. Esta prueba verifica acceso e inventario, no precios ni plazas libres en directo.

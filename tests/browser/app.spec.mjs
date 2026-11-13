@@ -222,3 +222,34 @@ test('three international destinations show each arrival and road-service failur
   await expect(page.locator('.routeMapWrap')).toHaveCount(0);
   await expect(summary).toHaveCount(0);
 });
+
+test('a planned stop distinguishes unknown data from a manual price estimate', async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
+  await page.route('https://router.project-osrm.org/**', route => json(route, routeResponse(route.request().url())));
+  await tab(page, 'viaje');
+  await page.getByRole('button', { name: 'Más rápido', exact: true }).click();
+  await page.getByLabel('Origen', { exact: true }).fill('48.8, 2.3');
+  await page.getByLabel('Destino 1', { exact: true }).fill('49.3, 2.3');
+  await page.getByLabel('SOC salida (%)', { exact: true }).fill('20');
+  await page.getByLabel('Reserva mínima (%)', { exact: true }).fill('15');
+  await page.getByRole('button', { name: 'Calcular ruta', exact: true }).click();
+  const card = page.locator('.routeStopCard');
+  await expect(card).toHaveCount(1);
+  await expect(card.getByRole('heading')).toContainText('Fixture Paris CCS');
+  await expect(card).toContainText('170 kW compatibles · toma CCS');
+  const evidence = card.getByLabel('Confianza de los datos de esta parada', { exact: true });
+  await expect(evidence.locator('.evidenceBadge')).toHaveText('Desconocido');
+  await expect(evidence.locator('.evidenceRate')).toHaveCount(0);
+  await expect(evidence).toContainText('Fecha no indicada por la fuente');
+  await expect(evidence).toContainText('Sin confirmar en tiempo real');
+  await expect(evidence.getByRole('link', { name: 'Synthetic browser fixture', exact: true })).toHaveAttribute('href', chargers[0].sourceUrl);
+  await expect(evidence.getByRole('link', { name: 'CC BY 4.0', exact: true })).toHaveAttribute('href', chargers[0].dataProvider.licenseUrl);
+  await page.getByLabel('Precio estimado para cargadores sin tarifa publicada (€/kWh)', { exact: true }).fill('0.45');
+  await page.getByRole('button', { name: 'Calcular ruta', exact: true }).click();
+  await expect(evidence.locator('.evidenceBadge')).toHaveText('Estimado');
+  await expect(evidence.locator('.evidenceRate')).toHaveText('· 0,45 €/kWh');
+  await expect(evidence.getByText('Confirmado', { exact: true })).toHaveCount(0);
+  await expect(evidence).toContainText('Importe introducido por el usuario');
+  await expect(evidence).toContainText('Sin confirmar en tiempo real');
+  await card.screenshot({ path: testInfo.outputPath('planned-stop-manual-estimate.png') });
+});

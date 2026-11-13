@@ -8,6 +8,12 @@ PWA y aplicación Android para consultar cargadores, comparar costes orientativo
 
 La rama `OPI` es la versión estable de recuperación. Este desarrollo parte de `main` en una rama independiente y no escribe en OPI.
 
+## Aviso de uso y responsabilidad
+
+El inicio muestra el aviso aprobado por el titular antes del mapa. El enlace permanente «Aviso legal» abre el mismo texto dentro de la aplicación, también sin conexión una vez cargada y en el APK. Explica el carácter gratuito e informativo, los posibles errores y la responsabilidad del autor en la medida permitida por la legislación aplicable. No exige aceptar una renuncia ni sustituye la comprobación de datos con el operador.
+
+Las paradas del viaje distinguen precio confirmado, estimado o desconocido, fecha indicada por la fuente y disponibilidad sin confirmar en tiempo real. Una fecha de importación no se presenta como fecha de verificación. La replanificación requiere actualizar los datos y volver a pulsar «Calcular ruta».
+
 ## Planificador y vehículos
 
 - **Más rápido** exige una toma compatible de al menos 100 kW y omite el máximo opcional de otros modos. Una estación de 350 o 400 kW sigue siendo candidata; la carga efectiva se limita por el coche y su curva de carga estimada.

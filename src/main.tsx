@@ -169,16 +169,16 @@ function App(){
   const nlPostal=/^([1-9][0-9]{3})\s?([A-Za-z]{2})$/i.exec(q);
   const esPostal=/^\d{5}$/.test(q);
   const bareFour=/^\d{4}$/.test(q);
-  const cacheKey='cg_geo_v5_'+q.toLocaleLowerCase('es');
+  const cacheKey='cg_geo_v6_'+q.toLocaleLowerCase('es');
   try{const cached=JSON.parse(localStorage.getItem(cacheKey)||'null');if(Array.isArray(cached)&&cached.length===2&&cached.every((n:unknown)=>typeof n==='number'&&Number.isFinite(n)))return cached as [number,number]}catch{}
-  const countryAliases:Record<string,string>={holanda:'nl',paisesbajos:'nl',nederland:'nl',netherlands:'nl',belgica:'be',belgium:'be',belgique:'be',alemania:'de',germany:'de',deutschland:'de',francia:'fr',france:'fr',portugal:'pt',italia:'it',italy:'it',espana:'es',spain:'es',luxemburgo:'lu',luxembourg:'lu',suiza:'ch',switzerland:'ch',austria:'at',dinamarca:'dk',denmark:'dk'};
-  const normalized=q.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z]/g,'');
-  const namedCountry=Object.entries(countryAliases).find(([name])=>normalized.includes(name))?.[1];
-  const country=nlPostal?'nl':esPostal?'es':namedCountry||'';
+  const countryAliases:Record<string,string>={holanda:'nl',paisesbajos:'nl',nederland:'nl',netherlands:'nl',belgica:'be',belgium:'be',belgique:'be',alemania:'de',germany:'de',deutschland:'de',francia:'fr',france:'fr',portugal:'pt',italia:'it',italy:'it',espana:'es',spain:'es',luxemburgo:'lu',luxembourg:'lu',suiza:'ch',switzerland:'ch',austria:'at',dinamarca:'dk',denmark:'dk',rusia:'ru',russia:'ru',rossiya:'ru',turquia:'tr',turkey:'tr',turkiye:'tr',polonia:'pl',poland:'pl',paisesbalticos:'',estonia:'ee',letonia:'lv',lituania:'lt',ucrania:'ua',ukraine:'ua',chequia:'cz',czechia:'cz',eslovaquia:'sk',slovakia:'sk',hungria:'hu',hungary:'hu',rumania:'ro',romania:'ro',bulgaria:'bg',grecia:'gr',greece:'gr',croacia:'hr',croatia:'hr',serbia:'rs',eslovenia:'si',slovenia:'si',noruega:'no',norway:'no',suecia:'se',sweden:'se',finlandia:'fi',finland:'fi',irlanda:'ie',ireland:'ie',reinounido:'gb',unitedkingdom:'gb',inglaterra:'gb',china:'cn',japon:'jp',japan:'jp',coreadelsur:'kr',southkorea:'kr',india:'in',kazajistan:'kz',kazakhstan:'kz',uzbekistan:'uz',mongolia:'mn',tailandia:'th',thailand:'th',vietnam:'vn',malasia:'my',malaysia:'my',singapur:'sg',singapore:'sg',indonesia:'id',filipinas:'ph',philippines:'ph',emiratosarabesunidos:'ae',unitedarabemirates:'ae',arabiasaudita:'sa',saudiarabia:'sa',israel:'il',georgia:'ge',armenia:'am',azerbaiyan:'az',azerbaijan:'az'};
+  const normalizeCountry=(v:string)=>v.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z]/g,'');
+  const segments=q.split(',').map(x=>normalizeCountry(x.trim()));
+  const namedCountry=countryAliases[segments[segments.length-1]]||'';
+  const country=nlPostal?'nl':esPostal?'es':namedCountry;
   const lookup=nlPostal?nlPostal[1]+' '+nlPostal[2].toUpperCase()+', Netherlands':esPostal?q+', España':q;
   if(bareFour&&!namedCountry)throw new Error('El código postal de cuatro cifras necesita país y localidad (ejemplo: 1012 AB, Amsterdam, Países Bajos).');
   const queries=[lookup];
-  if(!country&&!/[,]/.test(q)&&!/^\d/.test(q))queries.push(q+', Netherlands');
   let matches:any[]=[];
   for(const query of queries){
    const params=new URLSearchParams({format:'json',limit:'8',q:query,addressdetails:'1','accept-language':'es'});

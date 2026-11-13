@@ -210,3 +210,42 @@ test('a short REVE page that contradicts declared remaining pages cannot prove a
  assert.equal(result.reconciled,false);assert.equal(result.status,'sync_failed');
  const cache=JSON.parse(fs.readFileSync(opts.cachePath));assert(cache.locations[old.id]);assert.equal(cache.cursor,1);
 });
+
+test('expired or invalid REVE expiry blocks authentication and preserves cached inventory',async t=>{
+ for(const [expiresOn,now,status]of [
+  ['2027-10-29',Date.parse('2027-10-29T22:00:00Z'),'credential_expired'],
+  ['2027-02-29',Date.parse('2026-11-13T00:00:00Z'),'credential_expiry_invalid']
+ ]){
+  const opts=files(t),station=parseReveLocation(location('cached'));
+  fs.writeFileSync(opts.cachePath,JSON.stringify({lastSuccess:'2026-11-01T00:00:00Z',locations:{[station.id]:station}}));
+  let requests=0;const logs=[];
+  const report=await importReve({...opts,key:'fixture-secret-only',actions:true,expiresOn,now,fetcher:async()=>{requests++;throw Error('must not authenticate');},log:message=>logs.push(message)});
+  assert.equal(requests,0);assert.equal(report.requests,0);assert.equal(report.status,status);assert.equal(report.records,1);
+  assert.equal(report.lastSuccess,'2026-11-01T00:00:00Z');assert.equal(JSON.parse(fs.readFileSync(opts.catalogPath)).chargers.length,2);
+  assert(!JSON.stringify(logs).includes('fixture-secret-only'));
+ }
+});
+
+test('REVE 401 and 403 remain explicit unauthorized states and preserve cached records',async t=>{
+ for(const status of [401,403]){
+  const opts=files(t),station=parseReveLocation(location('cached'));
+  fs.writeFileSync(opts.cachePath,JSON.stringify({locations:{[station.id]:station}}));
+  let calls=0;const logs=[];
+  const report=await importReve({...opts,key:'fixture-secret-only',actions:true,now:Date.parse('2026-11-13T00:00:00Z'),expiresOn:'2027-10-29',fetcher:async()=>{calls++;return new Response('untrusted response text must never be logged',{status});},log:message=>logs.push(message)});
+  assert.equal(calls,1);assert.equal(report.status,'unauthorized');assert.equal(report.records,1);assert.equal(report.reconciled,false);
+  assert.equal(report.credentialExpiresOn,'2027-10-29');assert.equal(report.credentialExpiresAt,'2027-10-29T22:00:00.000Z');
+  assert(!JSON.stringify(logs).includes('untrusted response'));assert(!JSON.stringify(logs).includes('fixture-secret-only'));
+  assert(!fs.readFileSync(opts.catalogPath,'utf8').includes('fixture-secret-only'));
+ }
+});
+
+test('REVE authorization failure after a successful page cannot be mistaken for partial success',async t=>{
+ const opts=files(t),station=parseReveLocation(location('old'));
+ fs.writeFileSync(opts.cachePath,JSON.stringify({locations:{[station.id]:station}}));
+ let calls=0;
+ const report=await importReve({...opts,key:'fixture-secret-only',actions:true,now:Date.parse('2026-11-13T00:00:00Z'),fetcher:async()=>{
+  calls++;return calls===1?new Response(JSON.stringify(Array.from({length:100},(_,i)=>location('new-'+i)))):new Response('',{status:401});
+ },log:()=>{}});
+ assert.equal(calls,2);assert.equal(report.status,'unauthorized');assert.equal(report.reconciled,false);assert.equal(report.records,101);
+ assert(JSON.parse(fs.readFileSync(opts.cachePath)).locations[station.id]);
+});

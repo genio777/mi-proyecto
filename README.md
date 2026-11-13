@@ -30,6 +30,8 @@ La búsqueda explícita de ciudades, direcciones y códigos postales usa Photon/
 
 La sincronización autenticada de REVE se ejecuta exclusivamente en GitHub Actions. Configura la clave oficial como secreto de repositorio `REVE_API_KEY` en **Settings → Secrets and variables → Actions**. Nunca debe ser una variable `VITE_*`, un archivo público o un dato introducido en el chat.
 
+La fecha de caducidad comunicada es **29/10/2027**, inclusive en Madrid; puede configurarse con la variable de Actions `REVE_API_KEY_EXPIRES_ON`. Hay control diario y avisos de caducidad, conservando la caché si la clave falta, caduca o REVE rechaza el acceso. La API pública no documenta renovación automática de credenciales. Instrucciones y límites: [REVE-AUTONOMY.md](docs/REVE-AUTONOMY.md).
+
 Contrato oficial: https://www.mapareve.es/api/external/v1/docs/api-docs.json . La integración mantiene inventario estático y cursor, reserva un presupuesto conservador de cuatro consultas por hora antes de contactar con REVE, conserva la reserva aunque falle la compilación y respeta respuestas 429. La caché solo contiene datos normalizados públicos. Sin clave o sin reserva duradera confirmada, conserva los datos anteriores y declara el estado.
 
 - Precio desconocido se almacena como `null`; no significa cero.

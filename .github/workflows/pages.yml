@@ -75,10 +75,16 @@ jobs:
           if test -s .state/reve-cache.json; then
             cp .state/reve-cache.json public/data/reve-cache.json
           fi
+      - name: Comprobar caducidad REVE y conservar datos anteriores si hace falta
+        env:
+          REVE_API_KEY: ${{ secrets.REVE_API_KEY }}
+          REVE_API_KEY_EXPIRES_ON: ${{ vars.REVE_API_KEY_EXPIRES_ON || '2027-10-29' }}
+        run: node scripts/check-reve-credential.mjs
       - name: Integrar REVE con secreto exclusivo de Actions
         id: reve
         env:
           REVE_API_KEY: ${{ secrets.REVE_API_KEY }}
+          REVE_API_KEY_EXPIRES_ON: ${{ vars.REVE_API_KEY_EXPIRES_ON || '2027-10-29' }}
           REVE_SKIP_NETWORK: ${{ steps.reve_budget.outputs.allowed != 'true' || steps.reve_budget_confirm.outputs.cache-hit != 'true' }}
         run: node scripts/import-reve.mjs
       - name: Conservar cursor normalizado sin credenciales

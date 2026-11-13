@@ -2,6 +2,8 @@
 
 Verificado el 13 de noviembre de 2026. Cambios en la rama `codex/international-planner-verification`, basada en `main`. OPI conserva el commit `87dc5113a816939ef259203235f53de066871359`; no se ha escrito en esa rama.
 
+La fase inicial y sus pruebas se verificaron en `c139bea5b573c98cfcce40539832b6dbc143f24d`. La fase posterior de autonomía REVE se detalla al final de este informe.
+
 ## Cambios y comportamiento
 
 El modo Más rápido admite tomas compatibles de 100 kW o más sin aplicar el máximo opcional de otros modos. La potencia nominal del poste puede superar la del vehículo: la carga estimada respeta el límite del coche. El perfil europeo Model Y Standard Range admite CCS2/Tipo 2, hasta 170 kW DC y 11 kW AC; Zoe R90 solo Tipo 2 AC hasta 22 kW. La potencia de un CCS de 350 kW no se atribuye a una toma AC de la misma estación ni determina su tarifa orientativa.
@@ -86,3 +88,11 @@ La firma de depuración puede cambiar en otro entorno; el artefacto de Actions t
 4. Sustituir los servicios públicos Photon/OSRM por servicios con capacidad y condiciones adecuadas para producción. El límite por cliente no controla tráfico agregado. La optimización usa un corredor y selección de alternativas, por lo que no garantiza el óptimo global.
 5. Chromium del entorno rechaza la CA del proxy al descargar mosaicos OSM (`ERR_CERT_AUTHORITY_INVALID`). Los marcadores, catálogo y fichas reales se verificaron; el fondo cartográfico externo no se da por comprobado. Una descarga identificada con curl y TLS verificado sí respondió con PNG. No se desactivó TLS para hacer pasar la prueba.
 6. No hay precios individuales verificados en la lista actual. Se mantienen estimaciones diferenciadas y datos desconocidos; no se afirma gratuidad ni plaza libre por defecto.
+
+## Fase posterior: acceso, caducidad y autonomía REVE
+
+Tras comunicar el titular la fecha de caducidad del 29/10/2027, se añadieron controles de fecha en Madrid, avisos 60/30/7 días, bloqueo de consultas caducadas conservando caché, estado explícito para HTTP 401/403 y presentación de estos estados en la aplicación. Se incorporó una sonda de una consulta autenticada que se ejecuta exclusivamente desde Actions y un control diario sin consultar REVE.
+
+Se verificaron 126 pruebas automáticas, TypeScript, Vite y la validación completa del catálogo. La sonda se prueba con fixtures; una autenticación real requiere que el secreto esté guardado en GitHub. La conexión disponible para esta sesión devuelve HTTP 403 al acceder a la gestión de secretos, por lo que no ha permitido guardar la clave desde la sesión. Ningún valor de clave se ha incorporado al código o a este informe.
+
+La documentación oficial no publica renovación de credenciales. Los avisos anticipados y la sincronización no se presentan como renovación automática. Procedimiento y estados en [REVE-AUTONOMY.md](REVE-AUTONOMY.md).

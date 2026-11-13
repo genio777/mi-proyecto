@@ -4,15 +4,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseReveLocation,sanitizeReveCache} from './lib/reve.mjs';
+import {assessReveCredential,DEFAULT_REVE_API_KEY_EXPIRES_ON} from './lib/reve-credential.mjs';
 const read=(file,fallback)=>{try{return JSON.parse(fs.readFileSync(file,'utf8'))}catch{return fallback}};
-export async function importReve({catalogPath='public/data/chargers-spain.json',cachePath='public/data/reve-cache.json',key=process.env.REVE_API_KEY,actions=process.env.GITHUB_ACTIONS==='true',skipNetwork=process.env.REVE_SKIP_NETWORK==='true',fetcher=fetch,now=Date.now(),log=console.log}={}) {
+export async function importReve({catalogPath='public/data/chargers-spain.json',cachePath='public/data/reve-cache.json',key=process.env.REVE_API_KEY,actions=process.env.GITHUB_ACTIONS==='true',skipNetwork=process.env.REVE_SKIP_NETWORK==='true',expiresOn=process.env.REVE_API_KEY_EXPIRES_ON??DEFAULT_REVE_API_KEY_EXPIRES_ON,fetcher=fetch,now=Date.now(),log=console.log}={}) {
  const catalog=read(catalogPath,null);
  if(!Array.isArray(catalog?.chargers))throw Error('DGT catalog missing');
  const cache=sanitizeReveCache(read(cachePath,{}));
  const hour=3600000,importedAt=new Date(now).toISOString();
+ const credential=assessReveCredential({configured:!!key,expiresOn,now});
  let status='cached',requests=0,reconciled=false,removed=0;
  if(!key){status='not_configured';log('REVE: Actions secret REVE_API_KEY is absent; restoring cached inventory only');}
  else if(!actions)throw Error('REVE sync requires GitHub Actions and repository secret REVE_API_KEY');
+ else if(credential.status==='expired'){status='credential_expired';log('REVE: configured credential expiry has passed; authenticated requests blocked, cached inventory retained');}
+ else if(credential.status==='invalid_expiry'){status='credential_expiry_invalid';log('REVE: credential expiry is invalid; authenticated requests blocked, cached inventory retained');}
  else if(skipNetwork||now-cache.lastAttempt<hour||cache.retryAfter>now){status='rate_budget_wait';log('REVE: request budget reserved; restoring cached inventory');}
  else {
   // Reserve the whole four-request budget before any request. A crash/error
@@ -31,6 +35,7 @@ export async function importReve({catalogPath='public/data/chargers-spain.json',
     url.searchParams.set('page',String(cache.cursor));url.searchParams.set('limit','100');url.searchParams.set('only_dynamic_info','false');
     requests++;
     const response=await fetcher(url,{headers:{'x-api-key':key,Accept:'application/json'},signal:AbortSignal.timeout(45000)});
+    if(response.status===401||response.status===403){status='unauthorized';log('REVE: HTTP '+response.status+'; credential rejected or access forbidden, cached inventory retained');break;}
     if(response.status===429){
      const retry=response.headers.get('retry-after'),seconds=Number(retry);
      cache.retryAfter=Math.max(now+hour,Number.isFinite(seconds)&&seconds>0?now+seconds*1000:Date.parse(retry)||0);
@@ -73,7 +78,7 @@ export async function importReve({catalogPath='public/data/chargers-spain.json',
  const byId=new Map(catalog.chargers.filter(c=>!String(c.id).startsWith('reve:')).map(c=>[String(c.id),c]));
  for(const station of Object.values(cache.locations))byId.set(station.id,station);
  catalog.chargers=[...byId.values()];
- catalog.reveApi={source:'Red Eléctrica de España · mapa REVE',sourceUrl:'https://www.mapareve.es/',licenseUrl:'https://www.ree.es/es/aviso-legal',status,lastSuccess:cache.lastSuccess,lastCompletedCycle:cache.lastCompletedCycle,reconciled,removed,cycleInProgress:!!cache.cycle,records:Object.keys(cache.locations).length,requests,notice:'Inventario estático declarado por operadores. No acredita plazas libres ni precio; uso sujeto a condiciones REVE.'};
+ catalog.reveApi={source:'Red Eléctrica de España · mapa REVE',sourceUrl:'https://www.mapareve.es/',licenseUrl:'https://www.ree.es/es/aviso-legal',status,credentialExpiresOn:credential.expiresOn,credentialExpiresAt:credential.expiresAt,credentialTimezone:credential.timeZone,lastSuccess:cache.lastSuccess,lastCompletedCycle:cache.lastCompletedCycle,reconciled,removed,cycleInProgress:!!cache.cycle,records:Object.keys(cache.locations).length,requests,notice:'Inventario estático declarado por operadores. No acredita plazas libres ni precio; uso sujeto a condiciones REVE.'};
  const json=JSON.stringify(catalog);if(key&&json.includes(key))throw Error('REVE secret detected in public catalog');
  fs.writeFileSync(catalogPath,json);
  return catalog.reveApi;

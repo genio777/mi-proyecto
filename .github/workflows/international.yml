@@ -1,0 +1,76 @@
+name: Actualizar cobertura internacional con licencia
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      countries:
+        description: 'ISO separados por comas; vacío usa el siguiente lote diario'
+        required: false
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: cargagratis-catalog-publish
+  cancel-in-progress: false
+jobs:
+  catalog:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Seleccionar países sin depender de la hora real de ejecución
+        id: countries
+        env:
+          REQUESTED_COUNTRIES: ${{ inputs.countries }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import {SUPPORTED_COUNTRIES} from './scripts/import-international.mjs';
+          const requested=(process.env.REQUESTED_COUNTRIES||'').split(',').map(c=>c.trim().toUpperCase()).filter(Boolean);
+          if(requested.some(c=>!SUPPORTED_COUNTRIES.includes(c)))throw Error('País ISO no admitido');
+          const day=Math.floor(Date.now()/86400000);
+          const selected=requested.length?requested:Array.from({length:6},(_,i)=>SUPPORTED_COUNTRIES[(day*6+i)%SUPPORTED_COUNTRIES.length]);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,'codes='+selected.join(',')+'\n');
+          console.log('Lote internacional:',selected.join(', '));
+          JS
+      - name: Descargar exportación oficial OCM y metadatos de licencia
+        env:
+          OCM_COUNTRIES: ${{ steps.countries.outputs.codes }}
+        run: |
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/openchargemap/ocm-export.git /tmp/ocm-export
+          node --input-type=module <<'JS'
+          import {execFileSync} from 'node:child_process';
+          const countries=process.env.OCM_COUNTRIES.split(',');
+          execFileSync('git',['-C','/tmp/ocm-export','sparse-checkout','set','--no-cone','/data/referencedata.json',...countries.map(c=>'/data/'+c+'/')],{stdio:'inherit'});
+          JS
+      - name: Importar sin inferir precio ni disponibilidad
+        env:
+          OCM_COUNTRIES: ${{ steps.countries.outputs.codes }}
+          OCM_DATA_DIR: /tmp/ocm-export/data
+        run: |
+          node scripts/prepare-catalog.mjs
+          OCM_SOURCE_COMMIT="$(git -C /tmp/ocm-export rev-parse HEAD)" node scripts/import-international.mjs
+          node scripts/audit-price-candidates.mjs
+          node scripts/merge-verified-prices.mjs
+      - name: Conservar instantánea para las siguientes publicaciones web y Android
+        run: |
+          cp public/data/chargers-spain.json data/chargers-spain.json
+          cp -a public/data/international data/
+          git config user.name 'cargagratis-deploy-bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::main cambió durante la importación; no se publica una instantánea antigua."
+            exit 1
+          fi
+          git add data/chargers-spain.json data/international
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh licensed international charging data [skip ci]'
+            git push origin HEAD:main
+          fi

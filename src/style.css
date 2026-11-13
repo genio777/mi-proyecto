@@ -54,3 +54,16 @@
  .connectionChoice{min-width:0;overflow-wrap:anywhere}
 }
 @media(max-width:370px){.connectionChoices{grid-template-columns:1fr}header button{max-width:42%}}
+
+.routeStopCard{background:#fbfdfb;min-width:0}.routeStopCard h3{margin:0 0 8px;overflow-wrap:anywhere}.routeStopCard>p{font-size:14px;color:#3e5146}.stationEvidence{font-size:14px;line-height:1.5;overflow-wrap:anywhere}.stationEvidenceGrid{display:grid;gap:10px}.stationEvidenceGrid p{margin:4px 0}.evidenceBadge--confirmed,.evidenceBadge--estimated,.evidenceBadge--unknown{display:inline-block;border-radius:6px;padding:3px 8px;font-weight:700}.evidenceBadge--confirmed{background:#e1f3e8;color:#07582e}.evidenceBadge--estimated{background:#fff2cf;color:#664500}.evidenceBadge--unknown{background:#edf0f3;color:#374552}.stationEvidenceLinks{display:flex;gap:8px 16px;flex-wrap:wrap}.stationEvidence a{color:#075d38;text-decoration:underline;text-underline-offset:3px}.stationEvidence a:focus-visible{outline:3px solid #075d38;outline-offset:3px}.routeStopCard button{min-height:44px}.stationEvidence dl{margin:10px 0}.stationEvidence dt{font-weight:700}.stationEvidence dd{margin:0 0 8px}.stationEvidence small{color:#536458}
+
+/* Aviso de uso local: visible, legible y sin bloquear la aplicación. */
+.legalNotice{margin:16px 20px;padding:16px;border:1px solid #c8d8ce;border-left:4px solid #08783d;border-radius:12px;background:#f3f8f5;color:#233d2d;font-size:16px;line-height:1.5;min-width:0;overflow-wrap:anywhere}
+.legalNotice h2{margin:0 0 10px;font-size:16px;line-height:1.45;color:#173e2b}
+.legalNotice p{margin:10px 0 0}
+.legalNoticePage{min-width:0}
+.legalNoticePage .legalNotice{margin:16px 0}
+.legalNoticeLink{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;color:#075d31;font-size:16px;text-decoration:underline;text-underline-offset:3px}
+.legalNoticeBack{min-height:44px;background:#e2ede7;color:#064f29;font-size:16px}
+.legalNoticeLink:focus-visible,.legalNoticeBack:focus-visible,#aviso-legal:focus{outline:3px solid #1764d1;outline-offset:3px;border-radius:4px}
+@media(max-width:700px){.legalNotice{margin:14px 12px;padding:14px}.legalNoticePage .legalNotice{margin:14px 0}}

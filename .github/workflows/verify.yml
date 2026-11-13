@@ -1,0 +1,32 @@
+name: Verificar web y regresiones
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run prepare:catalog
+      - run: cp source-index.html index.html
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm run validate:build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-test-report
+          path: |
+            playwright-report/
+            test-results/

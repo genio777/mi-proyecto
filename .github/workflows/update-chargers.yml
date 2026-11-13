@@ -1,10 +1,24 @@
-name: Comprobar catálogo oficial DGT REVE
+name: Comprobar catálogo DGT y acceso REVE
 on:
   workflow_dispatch:
+    inputs:
+      scope:
+        description: 'Comprobación que se ejecutará (sin publicar)'
+        required: true
+        default: national
+        type: choice
+        options:
+          - national
+          - reve
+          - both
 permissions:
   contents: read
+concurrency:
+  group: cargagratis-manual-source-check
+  cancel-in-progress: false
 jobs:
   validate:
+    if: inputs.scope != 'reve'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,3 +30,21 @@ jobs:
       - name: Comprobar cantidad y origen
         run: |
           node --input-type=module -e "import fs from 'node:fs';const d=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));if(d.chargers.length<5000||!d.source.includes('DGT'))process.exit(1);console.log('Estaciones verificadas en archivo:',d.chargers.length)"
+  reve:
+    if: inputs.scope != 'national' && github.ref != 'refs/heads/OPI'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Comprobar presencia y caducidad de la credencial
+        env:
+          REVE_API_KEY: ${{ secrets.REVE_API_KEY }}
+          REVE_API_KEY_EXPIRES_ON: ${{ vars.REVE_API_KEY_EXPIRES_ON || '2027-10-29' }}
+        run: node scripts/check-reve-credential.mjs --strict
+      - name: Una consulta autenticada sin publicar ubicaciones ni clave
+        env:
+          REVE_API_KEY: ${{ secrets.REVE_API_KEY }}
+          REVE_API_KEY_EXPIRES_ON: ${{ vars.REVE_API_KEY_EXPIRES_ON || '2027-10-29' }}
+        run: node scripts/verify-reve.mjs

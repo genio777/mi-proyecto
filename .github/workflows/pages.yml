@@ -8,215 +8,122 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: cargagratis-branch-publish
+  group: cargagratis-catalog-publish
   cancel-in-progress: false
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Configurar Node
-        uses: actions/setup-node@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Instalar dependencias
-        run: npm install
-      - name: Restaurar HTML fuente de Vite
-        run: cp source-index.html index.html
-      - name: Importar cargadores oficiales DGT
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - name: Recuperar catálogo publicado y HTML fuente
+        run: |
+          npm run prepare:catalog
+          cp source-index.html index.html
+      - name: Actualizar catálogo oficial DGT
         id: import_dgt
         continue-on-error: true
         run: node scripts/import-national.mjs
-      - name: Informar estado del catálogo
+      - name: Conservar último catálogo si falla DGT
         if: steps.import_dgt.outcome == 'failure'
-        run: echo '::warning::Falló la importación DGT. Se publica la aplicación sin inventar cargadores; el mapa informará que no hay catálogo disponible.'
-      - name: Integrar registro público MITECO RIPREE (CSV)
-        id: import_ripree
+        run: echo '::warning::DGT no accesible. Se conserva la última importación con su fecha original.'
+      - name: Integrar registro MITECO si ofrece un CSV válido
         continue-on-error: true
         run: python3 scripts/import-miteco-ripree.py
-      - name: Advertir si el registro RIPREE no está accesible o cambia su formato
-        if: steps.import_ripree.outcome == 'failure'
-        run: echo '::warning::No se pudo importar RIPREE; se conserva el catálogo DGT sin inventar datos.'
-      - name: Importar y verificar Superchargers Tesla
+      - name: Conservar cobertura internacional y atribuciones
+        run: node scripts/import-international.mjs
+      - name: Recuperar presupuesto REVE duradero
+        uses: actions/cache/restore@v4
+        with:
+          path: .state/reve-budget.json
+          key: reve-budget-main-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: reve-budget-main-
+      - name: Reservar consultas antes de contactar con REVE
+        id: reve_budget
+        run: node scripts/reserve-reve-budget.mjs
+      - name: Persistir la reserva incluso si falla la compilación posterior
+        if: steps.reve_budget.outputs.allowed == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .state/reve-budget.json
+          key: reve-budget-main-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Confirmar que la reserva quedó guardada
+        if: steps.reve_budget.outputs.allowed == 'true'
+        id: reve_budget_confirm
+        uses: actions/cache/restore@v4
+        with:
+          path: .state/reve-budget.json
+          key: reve-budget-main-${{ github.run_id }}-${{ github.run_attempt }}
+          lookup-only: true
+      - name: Recuperar cursor REVE incluso tras una publicación fallida
+        uses: actions/cache/restore@v4
+        with:
+          path: .state/reve-cache.json
+          key: reve-cursor-main-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: reve-cursor-main-
+      - name: Restaurar inventario REVE de la última consulta
         run: |
-          node scripts/import-tesla.mjs
-          node -e "const d=require('./public/data/chargers-spain.json');const t=d.chargers.filter(c=>/tesla/i.test((c.operator||'')+' '+c.name));console.log('Superchargers Tesla identificados:',t.length);if(!t.length)process.exit(1)"
-      - name: Auditar candidatos a tarifas gratuitas sin asignar precios
-        run: node scripts/audit-price-candidates.mjs
-      - name: Integrar únicamente tarifas individuales verificadas
-        run: node scripts/merge-verified-prices.mjs
-      - name: Obtener fuente europea Open Charge Map (España)
-        id: ocm_source
-        continue-on-error: true
-        run: |
-          git clone --depth 1 --filter=blob:none --sparse https://github.com/openchargemap/ocm-export.git /tmp/ocm-export
-          git -C /tmp/ocm-export sparse-checkout set data/ES
-      - name: Integrar puntos gratuitos declarados en Open Charge Map
-        if: steps.ocm_source.outcome == 'success'
-        run: node scripts/import-europe-free.mjs
-      - name: Importar progresivamente Europa Asia y Rusia desde OCM
-        if: steps.ocm_source.outcome == 'success'
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -euo pipefail
-          # Ejecutar una vez al día, no en cada actualización de diez minutos.
-          if [ "$(date -u +%H)" != "03" ] || [ "$(date -u +%M)" -ge "10" ]; then
-            echo 'Importación internacional diaria: no corresponde a esta ejecución'
-            exit 0
+          if test -s .state/reve-cache.json; then
+            cp .state/reve-cache.json public/data/reve-cache.json
           fi
-          COUNTRIES="AD AE AL AM AT AZ BA BD BE BG BH BN BT BY CH CN CY CZ DE DK EE FI FR GB GE GR HK HR HU ID IE IL IN IQ IR IS IT JO JP KG KH KR KW KZ LA LB LI LK LT LU LV MD ME MK MM MN MO MT MY NL NO NP OM PH PK PL PT QA RO RS RU SA SE SG SI SK TH TJ TM TR TW UA UZ VN"
-          read -ra CODES <<< "$COUNTRIES"
-          COUNT=${#CODES[@]}
-          DAY=$(( $(date -u +%s) / 86400 ))
-          SELECTED=()
-          for OFFSET in 0 1 2 3; do
-            INDEX=$(( (DAY * 4 + OFFSET) % COUNT ))
-            SELECTED+=("${CODES[$INDEX]}")
-          done
-          printf 'Importación internacional de: %s\n' "${SELECTED[*]}"
-          git -C /tmp/ocm-export sparse-checkout add "${SELECTED[@]/#/data/}"
-          OCM_COUNTRIES="$(IFS=,; echo "${SELECTED[*]}")" node scripts/import-international.mjs
-      - name: Avisar si no está disponible la fuente europea
-        if: steps.ocm_source.outcome != 'success'
-        run: echo '::warning::Fuente OCM no accesible; no se inventan puntos gratuitos.'
-      - name: Recuperar cursor REVE de la última publicación
-        run: |
-          if test -s data/reve-cache.json; then
-            cp data/reve-cache.json public/data/reve-cache.json
-          fi
-      - name: Integrar REVE API oficial (máximo 4 consultas/hora)
+      - name: Comprobar caducidad REVE y conservar datos anteriores si hace falta
         env:
           REVE_API_KEY: ${{ secrets.REVE_API_KEY }}
+          REVE_API_KEY_EXPIRES_ON: ${{ vars.REVE_API_KEY_EXPIRES_ON || '2027-10-29' }}
+        run: node scripts/check-reve-credential.mjs
+      - name: Integrar REVE con secreto exclusivo de Actions
+        id: reve
+        env:
+          REVE_API_KEY: ${{ secrets.REVE_API_KEY }}
+          REVE_API_KEY_EXPIRES_ON: ${{ vars.REVE_API_KEY_EXPIRES_ON || '2027-10-29' }}
+          REVE_SKIP_NETWORK: ${{ steps.reve_budget.outputs.allowed != 'true' || steps.reve_budget_confirm.outputs.cache-hit != 'true' }}
         run: node scripts/import-reve.mjs
-      - name: Comprobar que la clave REVE nunca se publica
+      - name: Conservar cursor normalizado sin credenciales
+        if: steps.reve.outcome == 'success'
+        run: cp public/data/reve-cache.json .state/reve-cache.json
+      - name: Guardar cursor REVE
+        if: steps.reve.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: .state/reve-cache.json
+          key: reve-cursor-main-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Integrar únicamente precios individuales con evidencia
         run: |
-          if grep -r -l 'REVE_API_KEY' public/data/ dist/data/ 2>/dev/null; then
-            echo '::error::Se ha detectado un nombre de secreto en datos públicos'
-            exit 1
-          fi
-      - name: Validar informe de precios y prioridades de revisión
-        run: |
-          node --input-type=module <<'JS'
-          import fs from 'node:fs';
-          const d=JSON.parse(fs.readFileSync('public/data/price-verification-status.json','utf8'));
-          if(!Array.isArray(d.operatorReview)||!Array.isArray(d.priorityOperators))throw Error('Falta desglose económico por operador');
-          if(d.priorityOperators.length>20)throw Error('Lista de revisión demasiado larga');
-          if(!Array.isArray(d.stationReviewQueue)||d.stationReviewQueue.length>100)throw Error('Cola de estaciones sin precio inválida');
-          const unknownIds=new Set(d.stationReviewQueue.map(c=>c.id));
-          if(unknownIds.size!==d.stationReviewQueue.length)throw Error('IDs duplicados en cola de revisión');
-          if(d.stationReviewQueue.some(c=>c.priceStatus!=='UNKNOWN_NOT_FREE'||!Array.isArray(c.checksRequired)||c.checksRequired.length<5))throw Error('La cola contiene una tarifa no comprobada o sin controles');
-
-          if(d.operatorReview.reduce((sum,o)=>sum+o.total,0)!==d.catalogStations)throw Error('Totales de operadores no coinciden');
-          if(d.verifiedFreeStations>d.appliedVerifiedStationPrices)throw Error('Más estaciones gratis verificadas que tarifas verificadas');
-          console.log('Informe económico validado:',d.catalogStations,'estaciones;',d.priorityOperators.length,'operadores prioritarios');
-          JS
-      - name: Validar catálogo nacional antes de publicar
-        run: |
-          node --input-type=module <<'JS'
-          import fs from 'node:fs';
-          const d=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));
-          if(!Array.isArray(d.chargers)||d.chargers.length<5000)throw Error('Catálogo incompleto');
-          const ids=new Set();
-          for(const c of d.chargers){
-            if(!c.id||ids.has(c.id)||!c.source||!Number.isFinite(c.lat)||!Number.isFinite(c.lng)||!Number.isFinite(c.power)||c.power<=0||!(c.price===null||(Number.isFinite(c.price)&&c.price>=0)))throw Error('Registro inválido: '+c.id);
-            ids.add(c.id);
-          }
-          console.log('Catálogo validado:',d.chargers.length,'registros; precios desconocidos:',d.chargers.filter(c=>c.price===null).length);
-          JS
-      - name: Compilar CargaGratis
-        run: npm run build
-      - name: Comprobar funcionalidades críticas antes de publicar
-        run: |
-          node --input-type=module <<'JS'
-          import fs from 'node:fs';
-          const src=fs.readFileSync('src/main.tsx','utf8');
-          const required=[
-            ['selector de viajes', "tripTypeSelector"],
-            ['cálculo de dos destinos', "tripType==='two'"],
-            ['tres destinos', "tripType==='three'"],
-            ['SOC por etapas', 'stageArrivals'],
-            ['resumen de SOC', 'tripSocMetric'],
-            ['tarifa desconocida diferenciada', 'unknownPriceStops'],
-            ['cálculo de carga conservador', 'chargingMinutes'],
-            ['paradas y coste', 'chargingStops'],
-            ['perfiles separados Tesla y Zoe', 'cg_vehicle_profiles_v2'],
-            ['recuperación del perfil al cambiar de coche', 'const profile=storedVehicle(name)'],
-            ['guardado individual de potencia de carga', 'maxCharge:maxChargeKw'],
-            ['consulta concurrente de cargadores', 'Promise.all(eligible.map'],
-            ['precio desconocido separado de gratuito', 'unknownPrices?'],
-            ['coste un destino', 'knownChargeCost'],
-            ['coste varios destinos', 'stageCost+=quote.total'],
-            ['tarifas integradas en planificador', 'chargingCost(c,'],
-            ['tarifas de respaldo Tesla', 'cg_unknown_rate']
-          ];
-          for(const [name,token] of required){if(!src.includes(token))throw Error('Falta funcionalidad crítica: '+name)}
-          const js=fs.readdirSync('dist/assets').filter(f=>f.endsWith('.js'));
-          if(!js.length)throw Error('No se ha generado JavaScript');
-          const compiled=js.map(f=>fs.readFileSync('dist/assets/'+f,'utf8')).join('');
-          for(const label of ['SOC de llegada','Tipo de viaje','Coste de recarga'])if(!compiled.includes(label))throw Error('No se encuentra en la compilación: '+label);
-          console.log('Comprobaciones estáticas de publicación superadas');
-          JS
-      - name: Comprobaciones de cierre de Carga Gratis España Jpaz
-        run: |
-          node --input-type=module <<'JS'
-          import fs from 'node:fs';
-          const assert=(condition,message)=>{if(!condition)throw Error(message)};
-          const src=fs.readFileSync('src/main.tsx','utf8');
-          const html=fs.readFileSync('dist/index.html','utf8');
-          const manifest=JSON.parse(fs.readFileSync('dist/manifest.webmanifest','utf8'));
-          const tariffs=JSON.parse(fs.readFileSync('public/data/operator-tariffs.json','utf8'));
-          const catalog=JSON.parse(fs.readFileSync('public/data/chargers-spain.json','utf8'));
-          assert(manifest.name==='Carga Gratis España Jpaz','Nombre de PWA incorrecto');
-          assert(manifest.short_name&&manifest.start_url&&manifest.scope&&manifest.display==='standalone','Manifest de instalación incompleto');
-          assert(html.includes('Carga Gratis España Jpaz'),'Título de la versión compilada incorrecto');
-          assert(!html.includes('Cargando CargaGratis'),'Diagnóstico de inicio desactualizado');
-          assert(html.includes('Cargando Carga Gratis España Jpaz'),'Falta marcador de arranque de la PWA');
-          assert(html.includes('No se ha podido iniciarse')||html.includes('no ha podido iniciarse'),'Falta diagnóstico de fallo de inicio');
-
-          assert(src.includes('Carga Gratis España Jpaz'),'Nombre visible incorrecto');
-          assert(src.includes("tab==='costes'")&&src.includes('exportCost')&&src.includes('restoreCost'),'Faltan funciones del módulo de costes');
-          assert(src.includes('calculateRoute=async')&&src.includes('tripTypeSelector'),'Falta el planificador validado');
-          assert(Array.isArray(tariffs.operators)&&tariffs.operators.length>0,'Catálogo de tarifas ausente');
-          assert(Array.isArray(catalog.chargers)&&catalog.chargers.length>=5000,'Catálogo nacional insuficiente');
-          const prices=tariffs.operators.flatMap(o=>o.tiers||[]);
-          assert(prices.every(t=>typeof t.price==='number'&&Number.isFinite(t.price)&&t.price>=0),'Tarifas inválidas');
-          assert(catalog.chargers.every(c=>c.price===null||(typeof c.price==='number'&&Number.isFinite(c.price)&&c.price>=0)),'Precio desconocido mal representado');
-          assert(fs.existsSync('dist/sw.js'),'Falta service worker');
-          console.log('Cierre validado: identidad, PWA, rutas, costes, tarifas y catálogo nacional');
-          JS
-      - name: Verificar archivos compilados
-        shell: bash
-        run: |
-          test -s dist/index.html
-          test -d dist/assets
-          grep -q '/assets/' dist/index.html || grep -q './assets/' dist/index.html
-          if grep -q 'src/main.tsx' dist/index.html; then echo 'ERROR: HTML sin compilar'; exit 1; fi
-      - name: Publicar compilación también en la raíz de main
+          node scripts/audit-price-candidates.mjs
+          node scripts/merge-verified-prices.mjs
+      - run: npm run build
+      - run: npm run validate:build
+      - name: Impedir la publicación de credenciales REVE
+        env:
+          REVE_API_KEY: ${{ secrets.REVE_API_KEY }}
+        run: node scripts/assert-no-secrets.mjs
+      - name: Publicar compilación en main
         shell: bash
         run: |
           set -euo pipefail
-          # Evita conflictos cuando otra compilación publica antes que esta.
-          # Guardamos dist fuera del árbol Git antes de sincronizar main.
           mkdir -p /tmp/cargagratis-dist
           cp -a dist/. /tmp/cargagratis-dist/
-          # Versionar la referencia al JS/CSS en cada publicación para evitar HTML/recursos antiguos en móviles.
           BUILD_REV="$(git rev-parse --short HEAD)"
           sed -i -E "s@(src|href)=\"(\\./assets/[^\"]+)\"@\\1=\"\\2?v=${BUILD_REV}\"@g" /tmp/cargagratis-dist/index.html
           git fetch origin main
-          git reset --hard origin/main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::main cambió durante la compilación; se evita sobrescribir datos más recientes. La siguiente ejecución recalculará."
+            exit 1
+          fi
           cp -a /tmp/cargagratis-dist/. ./
           git config user.name 'cargagratis-deploy-bot'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A -- index.html assets data manifest.webmanifest sw.js 2>/dev/null || true
+          git add -A -- index.html assets data manifest.webmanifest sw.js geocoding-config.json
           if ! git diff --cached --quiet; then
             git commit -m 'Publish compiled CargaGratis site [skip ci]'
             git push origin HEAD:main
           fi
-      - name: Verificar HTML publicado en la rama
-        run: |
-          test -s index.html
-          test -d assets
-          if grep -q 'src/main.tsx' index.html; then echo 'ERROR: se está publicando código fuente sin compilar'; exit 1; fi
-          echo 'OK: aplicación compilada y preparada para GitHub Pages desde main'
-

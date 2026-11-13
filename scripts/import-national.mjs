@@ -11,7 +11,7 @@ const sites=[];for(const raw of xml.split('<egi:energyInfrastructureSite ').slic
  if(!id||!Number.isFinite(lat)||!Number.isFinite(lng)||lat<27||lat>44.6||lng< -18.5||lng>4.6)continue;
  const conn=[];for(const c of s.split('<egi:connector>').slice(1)){
   const type=names[get(c,'egi:connectorType')];const power=Number(get(c,'egi:maxPowerAtSocket'))/1000;
-  if(type&&power>0&&power<=1000)conn.push([type,Math.round(power*10)/10]);
+  if(type&&Number.isFinite(power)&&power>0)conn.push([type,Math.round(power*10)/10]);
  }
  if(!conn.length)continue;
  const n=s.indexOf('<fac:name>');const name=n>=0?clean(get(s.slice(n),'com:value')):'Punto de recarga';

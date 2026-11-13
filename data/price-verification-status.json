@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-13T20:00:42.152Z",
+  "generatedAt": "2026-11-13T20:23:33.635Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 12030,
+  "stationsWithUnknownPrice": 12001,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 12030,
+  "catalogStations": 12001,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -269,14 +269,6 @@
       "verifiedPrices": 0,
       "verifiedFree": 0,
       "unknownPrices": 33,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Tesla",
-      "total": 29,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 29,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1212,7 +1204,7 @@
   "coverage": {
     "individuallyVerifiedPercent": 0,
     "unknownPricePercent": 100,
-    "operatorsReviewed": 150
+    "operatorsReviewed": 149
   },
   "priorityOperators": [
     {
@@ -3341,8 +3333,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 12030,
-    "remainingOutsideQueue": 11930,
+    "totalUnknown": 12001,
+    "remainingOutsideQueue": 11901,
     "operatorsInQueue": 1
   }
 }

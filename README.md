@@ -1,57 +1,73 @@
 # Carga Gratis España Jpaz
 
-Aplicación web progresiva (PWA) para consultar puntos de recarga de vehículos eléctricos en España, comparar costes orientativos y planificar viajes.
+PWA y aplicación Android para consultar cargadores, comparar costes orientativos y planificar viajes con uno, dos o tres destinos.
 
-**Aplicación:** https://genio777.github.io/mi-proyecto/  
-**Compilaciones:** https://github.com/genio777/mi-proyecto/actions
+**Aplicación publicada:** https://genio777.github.io/mi-proyecto/
 
-## Datos y transparencia
+**Compilaciones y APK:** https://github.com/genio777/mi-proyecto/actions
 
-- Estaciones importadas desde el conjunto público DGT/MITERD (REVE): https://nap.dgt.es/dataset/puntos-de-recarga-electrica-para-vehiculos
-- El catálogo nacional se importa durante el flujo de publicación y se valida antes de compilar.
-- La fecha de importación no confirma el estado operativo, la ocupación ni el precio actual de una estación.
-- Precio desconocido no significa precio cero; las tarifas por operador son orientativas y deben confirmarse antes de cargar.
-- El comparador de costes permite simular importes fijos y por minuto. Esos parámetros son hipótesis introducidas por el usuario.
-- Las rutas y estimaciones de consumo no sustituyen la comprobación de autonomía real, acceso y funcionamiento de la estación.
+La rama `OPI` es la versión estable de recuperación. Este desarrollo parte de `main` en una rama independiente y no escribe en OPI.
 
-## Publicación y control de calidad
+## Aviso de uso y responsabilidad
 
-El flujo `.github/workflows/pages.yml` se ejecuta con cada cambio en `main`, manualmente y mediante una programación de **cada 10 minutos**. GitHub Actions puede retrasar o saltarse ejecuciones programadas; no es una garantía de actualización en tiempo real.
+El inicio muestra el aviso aprobado por el titular antes del mapa. El enlace permanente «Aviso legal» abre el mismo texto dentro de la aplicación, también sin conexión una vez cargada y en el APK. Explica el carácter gratuito e informativo, los posibles errores y la responsabilidad del autor en la medida permitida por la legislación aplicable. No exige aceptar una renuncia ni sustituye la comprobación de datos con el operador.
 
-La publicación comprueba: catálogo nacional, estructura de precios, compilación Vite, archivos publicados, funciones críticas de ruta, identidad «Carga Gratis España Jpaz» y metadatos de instalación PWA. **Un cambio guardado no equivale a una compilación correcta:** verificar siempre el resultado en Actions.
+Las paradas del viaje distinguen precio confirmado, estimado o desconocido, fecha indicada por la fuente y disponibilidad sin confirmar en tiempo real. Una fecha de importación no se presenta como fecha de verificación. La replanificación requiere actualizar los datos y volver a pulsar «Calcular ruta».
 
-La rama `OPI` es la referencia de recuperación y no debe sobrescribirse sin validación expresa.
+## Planificador y vehículos
 
-## Instalación
+- **Más rápido** exige una toma compatible de al menos 100 kW y omite el máximo opcional de otros modos. Una estación de 350 o 400 kW sigue siendo candidata; la carga efectiva se limita por el coche y su curva de carga estimada.
+- Compara tiempo de carretera, desvíos, carga parcial y conexión. Mantiene batería y reserva entre hasta tres destinos, permite regresar por la misma estación y valida los tramos finales.
+- Tesla Model Y Standard Range europeo: CCS2 y Tipo 2, perfil hasta 170 kW DC y 11 kW AC. Renault Zoe R90: Tipo 2 hasta 22 kW AC, sin DC. Son límites del perfil, no potencias garantizadas ni especificaciones de otras variantes.
+- La búsqueda usa un corredor y alternativas seleccionadas por tramo, con pasos conservadores de energía. No garantiza el óptimo global. No incluye tráfico, esperas, clima ni restricciones de frontera.
+- OSRM público es un servicio de demostración, limitado aquí a una solicitud por segundo. Para producción/configurar otro servidor compatible: `VITE_ROUTING_BASE_URL` al compilar.
 
-**Android (PWA):** abrir la aplicación en Chrome y elegir «Instalar aplicación» o «Añadir a pantalla de inicio», cuando el navegador lo ofrezca.
+## Fuentes y cobertura
 
-**Desarrollo local:**
+España se importa desde [DGT/MITERD](https://nap.dgt.es/dataset/puntos-de-recarga-electrica-para-vehiculos). La cobertura internacional procede de la [exportación oficial de Open Charge Map](https://github.com/openchargemap/ocm-export), separada por países y cargada bajo demanda. La importación examina los códigos de Europa, Asia y Rusia admitidos por el proyecto; un país sin registros utilizables no se presenta como cubierto.
+
+Cada registro OCM conserva fuente, proveedor, licencia, potencia por toma y fecha declarada. Solo se admiten licencias revisadas. El manifiesto `data/international/index.json` detalla países, recuentos y ausencias; la importación conserva también el commit de origen. El control geográfico aproximado usa componentes de [Natural Earth, dominio público](https://www.naturalearthdata.com/about/terms-of-use/), con margen amplio para descartar errores evidentes de país/coordenadas; no valida fronteras exactas ni ubicaciones presenciales.
+
+Los datos de conectores GB/T, NACS o CCS1 pueden conservarse como inventario, pero no se consideran compatibles con los dos perfiles europeos. Los registros con acceso privado o membresía se excluyen conservadoramente de las rutas. La disponibilidad nunca se deduce de la importación.
+
+La búsqueda explícita de ciudades, direcciones y códigos postales usa Photon/OSM. Un código postal numérico ambiguo requiere país o localidad. Endpoint público configurable en `public/geocoding-config.json`; condiciones y límites en [GEOCODING.md](docs/GEOCODING.md).
+
+## REVE y precios
+
+La sincronización autenticada de REVE se ejecuta exclusivamente en GitHub Actions. Configura la clave oficial como secreto de repositorio `REVE_API_KEY` en **Settings → Secrets and variables → Actions**. Nunca debe ser una variable `VITE_*`, un archivo público o un dato introducido en el chat.
+
+La fecha de caducidad comunicada es **29/10/2027**, inclusive en Madrid; puede configurarse con la variable de Actions `REVE_API_KEY_EXPIRES_ON`. Hay control diario y avisos de caducidad, conservando la caché si la clave falta, caduca o REVE rechaza el acceso. La API pública no documenta renovación automática de credenciales. Instrucciones y límites: [REVE-AUTONOMY.md](docs/REVE-AUTONOMY.md).
+
+Contrato oficial: https://www.mapareve.es/api/external/v1/docs/api-docs.json . La integración mantiene inventario estático y cursor, reserva un presupuesto conservador de cuatro consultas por hora antes de contactar con REVE, conserva la reserva aunque falle la compilación y respeta respuestas 429. La caché solo contiene datos normalizados públicos. Sin clave o sin reserva duradera confirmada, conserva los datos anteriores y declara el estado.
+
+- Precio desconocido se almacena como `null`; no significa cero.
+- Una declaración comunitaria «Free» se muestra como texto de la fuente, sin convertirla automáticamente en gratuidad verificada.
+- Los precios individuales requieren evidencia de estación, toma, impuestos, condiciones y vigencia. La lista actual de precios verificados está vacía.
+- Las referencias españolas por operador y los valores manuales son hipótesis identificadas. No se aplican automáticamente tarifas españolas a estaciones extranjeras; el precio manual internacional se expresa como hipótesis en EUR/kWh.
+- Los precios y plazas disponibles de REVE no se presentan como recibidos en directo. Los endpoints dinámicos requieren integración y verificación adicionales.
+
+## Desarrollo y comprobaciones
+
+Node 22 o posterior y Java 21 para Android. Instala Android SDK 35 para compilar el APK.
 
 ```bash
-npm install
-npm run build
+npm ci
+npm run prepare:catalog
 npm run dev
-```
-
-**Android nativo (Capacitor, requiere entorno Android configurado):**
-
-```bash
+npm test
+npm run typecheck
 npm run build
-npx cap add android
-npx cap sync android
-npx cap open android
+npm run validate:build
+npx playwright install chromium
+npm run test:browser
+node scripts/prepare-android.mjs
+cd android && ./gradlew assembleDebug
 ```
 
-Identificador técnico Android: `es.cargagratis.app`. El nombre visible es «Carga Gratis España Jpaz».
+`prebuild` y `predev` restauran el HTML fuente: el `index.html` de la raíz de `main` es un artefacto publicado. El script Android crea/sincroniza Capacitor y declara permisos GPS de forma idempotente. El APK de depuración se genera en `android/app/build/outputs/apk/debug/app-debug.apk`.
 
-## Verificación manual previa al cierre
+Las pruebas usan datos sintéticos solo en fixtures. Existe además una prueba de navegador con el catálogo publicado real. Los workflows de PR verifican web y compilan Android sin recibir secretos. Pages se actualiza cada diez minutos cuando Actions puede ejecutarlo; el catálogo OCM se refresca en un flujo diario independiente con lotes rotativos de seis países. Estas frecuencias no garantizan datos en tiempo real.
 
-1. Abrir y recargar la PWA en Android y escritorio, también tras actualizar la versión.
-2. Comprobar GPS, búsqueda, mapa y filtros de conectores.
-3. Probar los perfiles Tesla y Zoe con los itinerarios ya validados; no cambiar la lógica de cálculo.
-4. Verificar el comparador de costes, la recuperación de simulaciones y la exportación CSV.
-5. Comprobar el funcionamiento sin conexión y al recuperar internet; la información de estaciones requiere red.
-6. Confirmar el resultado de la última compilación y la instalación de la PWA.
+Los flujos que actualizan `main` comparten exclusión mutua, recuperan su cabecera actual y rechazan sobrescribir un cambio posterior. Una publicación fallida conserva la última versión disponible.
 
-**Estado:** versión candidata a cierre; pendiente de completar las pruebas manuales y confirmar una compilación correcta de la última revisión.
+Los resultados concretos y pendientes de esta revisión se recogen en [DEVELOPMENT-REPORT.md](docs/DEVELOPMENT-REPORT.md).

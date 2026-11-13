@@ -16,5 +16,6 @@ for(const [id,url] of checks){
  try{const r=await fetch(url,{headers:{'user-agent':'CargaGratis-Espana/0.2 tariff-monitor'}});op.lastCheck=now;op.sourceReachable=r.ok;if(!r.ok)op.lastError='HTTP '+r.status;else delete op.lastError}
  catch(e){op.lastCheck=now;op.sourceReachable=false;op.lastError=String(e)}
 }
-data.updated=now;
+// Checking that a URL responds does not reverify its prices.
+data.lastSourceCheck=now;
 await fs.writeFile(path,JSON.stringify(data,null,2)+'\n');

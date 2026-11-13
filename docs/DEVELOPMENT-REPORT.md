@@ -8,7 +8,7 @@ El modo Más rápido admite tomas compatibles de 100 kW o más sin aplicar el m�
 
 El motor común mantiene SOC y reserva entre uno, dos o tres destinos, permite carga parcial, estaciones repetidas e itinerarios con más de 40 paradas. Usa distancias y duraciones por carretera, incluye desvíos y conexión, y vuelve a validar consumo y geometría elegidos. Los errores, límites de búsqueda y falta de conexión por carretera se muestran como tales. No se dibujan rutas inventadas tras un fallo.
 
-Se conserva el simulador de costes, guardado/restauración, CSV, favoritos, filtros, mapa, GPS y perfiles individuales. Las aportaciones personales se mantienen locales y no se promueven a precios oficiales. Las referencias españolas no se trasladan automáticamente a otros países. Una declaración comunitaria «Free» no convierte un precio desconocido en cero.
+Se conserva el simulador de costes, guardado/restauración, CSV, favoritos, filtros, mapa, GPS y perfiles individuales. Las aportaciones personales se mantienen locales y no se promueven a precios oficiales. Las referencias españolas no se trasladan automáticamente a otros países. Una declaración comunitaria «Free» no convierte un precio desconocido en cero. La fila de coste cero del comparador se identifica como hipótesis, sin presentarla como gratuidad verificada. Comprobar la accesibilidad de una URL no renueva la fecha de sus precios: se registra una fecha independiente de comprobación de fuente.
 
 La búsqueda internacional deja de forzar España para códigos postales de cinco cifras. Usa consultas explícitas, caché, control de concurrencia y cancelación de respuestas antiguas. Los códigos postales numéricos ambiguos requieren país o localidad.
 
@@ -40,7 +40,7 @@ El único registro OCM atribuido a Afganistán estaba situado en Alemania y fue 
 
 ## Pruebas automáticas y navegador
 
-- **84 pruebas automáticas aprobadas**, sin omisiones: compatibilidad por toma, carga parcial, SOC fraccionario, tres destinos, más de 40 paradas, repetición de estaciones, tiempos de desvío, matrices incompletas, errores HTTP/timeout, precios condicionados/caducados, licencias, restauración y bajas de catálogo, presupuesto REVE entre procesos y rechazo de secretos en archivos públicos.
+- **85 pruebas automáticas aprobadas**, sin omisiones: compatibilidad por toma, carga parcial, SOC fraccionario, tres destinos, más de 40 paradas, repetición de estaciones, tiempos de desvío, matrices incompletas, errores HTTP/timeout, precios condicionados/caducados, licencias, restauración y bajas de catálogo, presupuesto REVE entre procesos y rechazo de secretos en archivos públicos.
 - **Ocho pruebas Chromium aprobadas** sobre Vite compilado: mapa/favoritos, perfiles independientes, simulador/CSV, búsqueda internacional, descarga de países y licencias, Más rápido con CCS 400 kW pese a techo guardado de 50 kW, tres destinos y fallo del proveedor.
 - La octava prueba utiliza el catálogo real: 2.121 registros de Rusia; 217 dentro de 15 km de las coordenadas de Moscú. Se comprueban fichas, fuente, licencia y precios desconocidos sin errores JavaScript.
 - `npm run typecheck`, `npm run build`, `npm run validate:build`, `git diff --check` y `actionlint` aprobados. La compilación valida todos los archivos por país y sus licencias, potencias y recuentos.
@@ -69,12 +69,12 @@ Se revalidaron después los ocho tramos elegidos con el proveedor final y el con
 
 ## Android
 
-Compilación real final con Java 21, Android SDK 35, Capacitor y Gradle: **`BUILD SUCCESSFUL in 1m 4s`**.
+Compilación real final con Java 21, Android SDK 35, Capacitor y Gradle: **`BUILD SUCCESSFUL in 36s`**.
 
-- APK de depuración de 22.146.523 bytes; identidad `es.cargagratis.app`, nombre correcto y permisos GPS coarse/fine e Internet.
+- APK de depuración de 22.146.529 bytes; identidad `es.cargagratis.app`, nombre correcto y permisos GPS coarse/fine e Internet.
 - Firma válida y ZIP sin errores CRC; 12.001 registros nacionales, 126.933 OCM, 88 archivos por país y 265.371 potencias por toma válidas.
 - Los **105 archivos** de la compilación web coinciden byte a byte con los incluidos en el APK. Preparación Android repetida sin duplicar permisos.
-- SHA-256 del APK local: `fef944b2de7c299f9b3e4f4474354255f99e6ba2a34a4050b13366d1b83f78a6`.
+- SHA-256 del APK local: `144f25f9906b6ebc206b421ef5005a84a2c006efa0d808b27958b1970d393f02`.
 
 La firma de depuración puede cambiar en otro entorno; el artefacto de Actions tendrá su propia firma y hash. No se ha ejecutado el APK en dispositivo físico ni emulador.
 

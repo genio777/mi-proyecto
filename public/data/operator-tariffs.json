@@ -6,15 +6,16 @@
   "operators": [
     {
       "id": "free",
-      "name": "Gratis verificado",
+      "name": "Hipótesis gratuita",
       "tiers": [
         {
-          "label": "Gratis",
+          "label": "Escenario 0 €/kWh",
           "price": 0
         }
       ],
-      "source": "verificado_por_punto",
-      "status": "verified"
+      "source": "hipotesis_de_simulacion",
+      "status": "simulation",
+      "note": "Hipótesis del comparador; no identifica ningún cargador ni acredita gratuidad verificada."
     },
     {
       "id": "repsol",

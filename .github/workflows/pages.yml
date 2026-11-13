@@ -54,6 +54,29 @@ jobs:
       - name: Integrar puntos gratuitos declarados en Open Charge Map
         if: steps.ocm_source.outcome == 'success'
         run: node scripts/import-europe-free.mjs
+      - name: Importar progresivamente Europa Asia y Rusia desde OCM
+        if: steps.ocm_source.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Ejecutar una vez al día, no en cada actualización de diez minutos.
+          if [ "$(date -u +%H)" != "03" ] || [ "$(date -u +%M)" -ge "10" ]; then
+            echo 'Importación internacional diaria: no corresponde a esta ejecución'
+            exit 0
+          fi
+          COUNTRIES="AD AE AL AM AT AZ BA BD BE BG BH BN BT BY CH CN CY CZ DE DK EE FI FR GB GE GR HK HR HU ID IE IL IN IQ IR IS IT JO JP KG KH KR KW KZ LA LB LI LK LT LU LV MD ME MK MM MN MO MT MY NL NO NP OM PH PK PL PT QA RO RS RU SA SE SG SI SK TH TJ TM TR TW UA UZ VN"
+          read -ra CODES <<< "$COUNTRIES"
+          COUNT=${#CODES[@]}
+          DAY=$(( $(date -u +%s) / 86400 ))
+          SELECTED=()
+          for OFFSET in 0 1 2 3; do
+            INDEX=$(( (DAY * 4 + OFFSET) % COUNT ))
+            SELECTED+=("${CODES[$INDEX]}")
+          done
+          printf 'Importación internacional de: %s\n' "${SELECTED[*]}"
+          git -C /tmp/ocm-export sparse-checkout add "${SELECTED[@]/#/data/}"
+          OCM_COUNTRIES="$(IFS=,; echo "${SELECTED[*]}")" node scripts/import-international.mjs
       - name: Avisar si no está disponible la fuente europea
         if: steps.ocm_source.outcome != 'success'
         run: echo '::warning::Fuente OCM no accesible; no se inventan puntos gratuitos.'

@@ -103,3 +103,57 @@ test('changing runtime endpoint keeps country filtering and refuses credential U
   assert.equal(requested.origin,'https://geocode.example');
   await assert.rejects(make(async()=>response(),{endpoint:'https://user:pass@geocode.example/api/'})('Paris'), /mal configurado/);
 });
+
+test('cancelling during runtime endpoint lookup releases the queue and never starts a late provider request', {timeout:1000}, async () => {
+  let announceEndpoint,releaseEndpoint,endpointCalls=0,fetches=0;
+  const started = new Promise(resolve=>announceEndpoint=resolve);
+  const endpointGate = new Promise(resolve=>releaseEndpoint=resolve);
+  const geocode = make(async()=>{fetches++;return response();}, {endpoint:async()=>{endpointCalls++;if(endpointCalls===1){announceEndpoint();return endpointGate;}return 'https://geocode.example/api/';}});
+  const controller = new AbortController();
+  const first = geocode('Paris', {signal:controller.signal});
+  await started;
+  controller.abort(new DOMException('Cancelado por el usuario','AbortError'));
+  await assert.rejects(first, {name:'AbortError'});
+  assert.equal(fetches,0,'an aborted endpoint lookup must not start Photon');
+  assert.deepEqual(await geocode('Berlin'),[48.85,2.35]);
+  assert.equal(fetches,1,'a new lookup must proceed while the old endpoint remains unresolved');
+  releaseEndpoint('https://late.example/api/');
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(fetches,1,'a late endpoint cannot revive the cancelled request');
+});
+
+test('cancelling during a pending JSON body rejects promptly and never caches the late location', {timeout:1000}, async () => {
+  let announceBody,releaseBody,fetches=0,writes=0;
+  const started = new Promise(resolve=>announceBody=resolve);
+  const bodyGate = new Promise(resolve=>releaseBody=resolve);
+  const geocode = make(async()=>{fetches++;return fetches===1?{ok:true,json:()=>{announceBody();return bodyGate;}}:response([feature('DE',[13.4,52.5])]);}, {storage:{getItem:()=>null,setItem:()=>{writes++;}}});
+  const controller = new AbortController();
+  const first = geocode('Berlin', {signal:controller.signal});
+  await started;
+  controller.abort();
+  await assert.rejects(first, {name:'AbortError'});
+  assert.equal(writes,0);
+  assert.deepEqual(await geocode('Berlin'),[52.5,13.4]);
+  assert.equal(fetches,2,'the cancelled body must not populate the cache');
+  releaseBody({features:[feature()]});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(writes,1,'only the subsequent successful lookup may be cached');
+  assert.deepEqual(await geocode('Berlin'),[52.5,13.4]);
+  assert.equal(fetches,2);
+});
+
+test('an uncooperative cancelled fetch cannot block the next serialized lookup', {timeout:1000}, async () => {
+  let announceFetch,releaseFetch,fetches=0,oldSignal;
+  const started = new Promise(resolve=>announceFetch=resolve);
+  const fetchGate = new Promise(resolve=>releaseFetch=resolve);
+  const geocode = make(async(_url,{signal})=>{fetches++;if(fetches===1){oldSignal=signal;announceFetch();return fetchGate;}return response();});
+  const controller = new AbortController();
+  const first = geocode('Paris', {signal:controller.signal});
+  await started;
+  controller.abort();
+  await assert.rejects(first, {name:'AbortError'});
+  assert.equal(oldSignal.aborted,true);
+  assert.deepEqual(await geocode('Berlin'),[48.85,2.35]);
+  assert.equal(fetches,2);
+  releaseFetch(response());
+});

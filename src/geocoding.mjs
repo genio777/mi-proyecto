@@ -73,6 +73,21 @@ function wait(ms, signal) {
   });
 }
 
+function abortIfNeeded(signal) {
+  if (signal?.aborted) throw signal.reason || new DOMException('Cancelado', 'AbortError');
+}
+function waitForSignal(promise, signal) {
+  abortIfNeeded(signal);
+  if (!signal) return promise;
+  return new Promise((resolve, reject) => {
+    const cleanup = () => signal.removeEventListener('abort', abort);
+    const abort = () => {cleanup(); reject(signal.reason || new DOMException('Cancelado', 'AbortError'));};
+    signal.addEventListener('abort', abort, {once:true});
+    Promise.resolve(promise).then(value => {cleanup(); if (signal.aborted) abort(); else resolve(value);}, error => {cleanup(); reject(error);});
+    if (signal.aborted) abort();
+  });
+}
+
 export function createGeocoder({fetchFn = (...args) => fetch(...args), storage = null, endpoint = DEFAULT_GEOCODING_ENDPOINT, minimumIntervalMs = 1100, now = () => Date.now(), sleep = wait} = {}) {
   let queue = Promise.resolve(), lastStarted = -Infinity;
   const memory = new Map();
@@ -92,7 +107,8 @@ export function createGeocoder({fetchFn = (...args) => fetch(...args), storage =
       await sleep(Math.max(0, minimumIntervalMs - (now() - lastStarted)), signal);
       if (signal?.aborted) throw signal.reason || new DOMException('Cancelado', 'AbortError');
       lastStarted = now();
-      const base = typeof endpoint === 'function' ? await endpoint() : endpoint;
+      const base = typeof endpoint === 'function' ? await waitForSignal(Promise.resolve().then(() => {abortIfNeeded(signal); return endpoint();}), signal) : endpoint;
+      abortIfNeeded(signal);
       const url = new URL(base);
       if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password) throw Error('Servicio de búsqueda mal configurado');
       url.searchParams.set('q', query);
@@ -102,11 +118,15 @@ export function createGeocoder({fetchFn = (...args) => fetch(...args), storage =
       const controller = new AbortController();
       const abort = () => controller.abort(signal.reason);
       signal?.addEventListener('abort', abort, {once:true});
+      if (signal?.aborted) abort();
       const timeout = setTimeout(() => controller.abort(new Error('La búsqueda ha agotado el tiempo de espera')), 15000);
       try {
-        const response = await fetchFn(url.toString(), {signal:controller.signal, headers:{Accept:'application/json'}});
+        const response = await waitForSignal(Promise.resolve().then(() => {abortIfNeeded(controller.signal); return fetchFn(url.toString(), {signal:controller.signal, headers:{Accept:'application/json'}});}), controller.signal);
+        abortIfNeeded(signal);
         if (!response.ok) throw Error(response.status === 429 ? 'El servicio de búsqueda ha limitado las consultas. Espera y vuelve a intentarlo.' : 'Servicio de búsqueda no disponible (HTTP '+response.status+')');
-        const data = await response.json();
+        const data = await waitForSignal(Promise.resolve().then(() => {abortIfNeeded(controller.signal); return response.json();}), controller.signal);
+        abortIfNeeded(signal);
+        abortIfNeeded(controller.signal);
         const features = Array.isArray(data?.features) ? data.features : [];
         const match = features.find(feature => {
           const coords = feature?.geometry?.coordinates;

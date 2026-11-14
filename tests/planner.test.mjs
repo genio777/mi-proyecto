@@ -8,7 +8,7 @@ const tesla=vehicleSpecification('Tesla Model Y Standard Range');
 const zoe=vehicleSpecification('Renault Zoe R90');
 function fixtureProvider({drivePenalty=()=>0,roadFactor=1,unreachable=()=>false}={}){
  const metric=(a,b)=>unreachable(a,b)?null:{km:Math.abs(a[1]-b[1])*111.1950802335329*roadFactor,minutes:Math.abs(a[1]-b[1])*111.1950802335329*.6+drivePenalty(a,b)};
- return {route:async(a,b,geometry)=>{const m=metric(a,b);return m?{...m,coordinates:geometry?[a,b]:undefined}:null;},metrics:async(a,targets)=>targets.map(b=>metric(a,b))};
+ return {route:async(a,b,geometry)=>{const m=metric(a,b);return m?{...m,coordinates:geometry?[a,b]:undefined}:null;},metrics:async(a,targets)=>targets.map(b=>metric(a,b)),matrix:async(sources,targets)=>sources.map(a=>targets.map(b=>metric(a,b)))};
 }
 const options=(overrides={})=>({origin:coord(0),destinations:[coord(300)],stations:[station('A',150)],vehicle:tesla,batteryKwh:60,consumptionKwh:20,soc:100,reserve:10,mode:'fast',provider:fixtureProvider(),perBucket:0,...overrides});
 test('fast ignores a saved upper bound and requires >=100 kW on a genuinely compatible socket',()=>{
@@ -60,7 +60,7 @@ test('station at the origin remains usable when low SOC cannot reach a distant s
 });
 test('long international-style trips have no arbitrary 8/24/40-stop cutoff',async()=>{
  const stations=Array.from({length:43},(_,i)=>station('S'+(i+1),i+1));
- const result=await planTrip(options({batteryKwh:1,consumptionKwh:80,reserve:0,destinations:[coord(15),coord(30),coord(44)],stations}));
+ const result=await planTrip(options({batteryKwh:1,consumptionKwh:80,reserve:0,destinations:[coord(15),coord(30),coord(44)],stations,maxRoadRequests:100}));
  assert.equal(result.stops.length,43);
  assert.equal(result.arrivals.length,3);
  assert.ok(result.arrivals.every(a=>a.soc>=0));

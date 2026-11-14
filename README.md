@@ -21,6 +21,7 @@ Las paradas del viaje distinguen precio confirmado, estimado o desconocido, fech
 - Tesla Model Y Standard Range europeo: CCS2 y Tipo 2, perfil hasta 170 kW DC y 11 kW AC. Renault Zoe R90: Tipo 2 hasta 22 kW AC, sin DC. Son límites del perfil, no potencias garantizadas ni especificaciones de otras variantes.
 - La búsqueda usa un corredor y alternativas seleccionadas por tramo, con pasos conservadores de energía. No garantiza el óptimo global. No incluye tráfico, esperas, clima ni restricciones de frontera.
 - OSRM público es un servicio de demostración, limitado aquí a una solicitud por segundo. Para producción/configurar otro servidor compatible: `VITE_ROUTING_BASE_URL` al compilar.
+- La búsqueda de recargas se limita según los kilómetros reales de carretera: 100 km → 4 s, 500 km → 20 s, hasta 45 s. Empieza al conocer la ruta base; el cálculo completo, incluidas direcciones, tiene un límite total de 45 s y botón de cancelación. Un plazo agotado no se presenta como viaje imposible. Detalles y mediciones: [PLANNER-PERFORMANCE.md](docs/PLANNER-PERFORMANCE.md).
 
 ## Fuentes y cobertura
 

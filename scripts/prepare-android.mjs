@@ -26,4 +26,16 @@ for (const permission of ['android.permission.ACCESS_COARSE_LOCATION', 'android.
   }
 }
 writeFileSync(manifestPath, manifest);
-console.log('Android sincronizado; permisos GPS declarados. Compila con ./android/gradlew -p android assembleDebug');
+
+// Keep the installed APK identifiable and its version code increasing with fixes.
+const version = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version;
+if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error('Versión Android no válida');
+const [major, minor, patch] = version.split('.').map(Number);
+const versionCode = major * 10000 + minor * 100 + patch;
+if (minor > 99 || patch > 99 || !Number.isSafeInteger(versionCode) || versionCode < 1 || versionCode > 2100000000) throw new Error('Código de versión Android fuera de rango');
+const gradlePath = path.join(root, 'android/app/build.gradle');
+let gradle = readFileSync(gradlePath, 'utf8');
+if (!/versionCode\s+\d+/.test(gradle) || !/versionName\s+"[^"]*"/.test(gradle)) throw new Error('No se encontró la versión en Gradle');
+gradle = gradle.replace(/versionCode\s+\d+/, 'versionCode ' + versionCode).replace(/versionName\s+"[^"]*"/, 'versionName "' + version + '"');
+writeFileSync(gradlePath, gradle);
+console.log('Android sincronizado:', version, '(código ' + versionCode + '); permisos GPS declarados. Compila con ./android/gradlew -p android assembleDebug');

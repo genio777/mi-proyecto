@@ -1,4 +1,5 @@
 import { test as base, expect } from '@playwright/test';
+import { routeResponse } from './helpers/osrm.mjs';
 
 // Synthetic fixtures exercise UI contracts. They are never distributed as real chargers.
 const chargers = [
@@ -158,23 +159,6 @@ test('international city search loads a published country shard with visible sou
   await expect(card).toContainText('Tarifa declarada por la fuente (sin verificar)');
   await expect(card.getByRole('link', { name: 'Licencia del proveedor', exact: true })).toHaveAttribute('href', station.dataProvider.licenseUrl);
 });
-
-function routeResponse(url) {
-  const parsed = new URL(url);
-  const coordinates = decodeURIComponent(parsed.pathname.split('/driving/')[1]).split(';').map(point => point.split(',').map(Number));
-  if (parsed.pathname.includes('/table/')) {
-    const origin = coordinates[0];
-    const distances = coordinates.slice(1).map(point => Math.hypot((point[0] - origin[0]) * 73, (point[1] - origin[1]) * 111) * 1000);
-    return { code: 'Ok', distances: [distances], durations: [distances.map(metres => metres / 1000 * 60)] };
-  }
-  const legs = coordinates.slice(1).map((point, i) => {
-    const previous = coordinates[i];
-    const km = Math.hypot((point[0] - previous[0]) * 73, (point[1] - previous[1]) * 111);
-    return { distance: km * 1000, duration: km * 60, steps: [] };
-  });
-  return { code: 'Ok', routes: [{ distance: legs.reduce((n, leg) => n + leg.distance, 0), duration: legs.reduce((n, leg) => n + leg.duration, 0),
-    geometry: { type: 'LineString', coordinates }, legs }], waypoints: coordinates.map(location => ({ location, distance: 0 })) };
-}
 
 test('fast mode admits 400 kW CCS despite a saved ceiling and rejects Zoe AC charging', async ({ page }) => {
   await page.route('https://router.project-osrm.org/**', route => json(route, routeResponse(route.request().url())));

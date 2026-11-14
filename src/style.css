@@ -66,4 +66,5 @@
 .legalNoticeLink{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;color:#075d31;font-size:16px;text-decoration:underline;text-underline-offset:3px}
 .legalNoticeBack{min-height:44px;background:#e2ede7;color:#064f29;font-size:16px}
 .legalNoticeLink:focus-visible,.legalNoticeBack:focus-visible,#aviso-legal:focus{outline:3px solid #1764d1;outline-offset:3px;border-radius:4px}
+.cancelRoute{margin-left:8px;min-height:44px;background:#f3e9e5;color:#712f1e;font-weight:700}.cancelRoute:focus-visible{outline:3px solid #1764d1;outline-offset:3px}.routeCalculationStatus{padding:12px;background:#eef5fb;border-radius:10px;font-size:15px;line-height:1.5}.routeCalculationStatus span{display:block;font-weight:700}.routeCalculationStatus small{display:block;margin-top:4px;color:#42576b}@media(max-width:400px){.cancelRoute{margin:8px 0 0;display:block;width:100%}}
 @media(max-width:700px){.legalNotice{margin:14px 12px;padding:14px}.legalNoticePage .legalNotice{margin:14px 0}}

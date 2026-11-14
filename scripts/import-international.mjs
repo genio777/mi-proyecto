@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseOcmPoint,validPersistedOcm,OCM_GEOGRAPHY_SOURCE} from './lib/ocm.mjs';
+import {catalogCoverageCells} from './lib/catalog-coverage.mjs';
 export const SUPPORTED_COUNTRIES='AD AE AF AL AM AT AX AZ BA BD BE BG BH BN BT BY CH CN CY CZ DE DK EE ES FI FO FR GB GE GG GI GR HK HR HU ID IE IL IM IN IQ IR IS IT JE JO JP KG KH KP KR KW KZ LA LB LI LK LT LU LV MC MD ME MK MM MN MO MT MV MY NL NO NP OM PH PK PL PS PT QA RO RS RU SA SE SG SI SJ SK SM SY TH TJ TL TM TR TW UA UZ VA VN XK YE'.split(' ');
 const read=(file,fallback)=>{try{return JSON.parse(fs.readFileSync(file,'utf8'))}catch{return fallback}};
 const international=c=>String(c?.id).startsWith('ocm-');
@@ -20,7 +21,7 @@ function entry(part) {
   for(const c of stations){west=Math.min(west,c.lng);east=Math.max(east,c.lng);south=Math.min(south,c.lat);north=Math.max(north,c.lat);}
   bbox=[west,south,east,north];
  }
- return {code:part.country,file:part.country+'.json',count:stations.length,bbox,updatedAt:part.updatedAt,providers,sourceCommit:part.sourceCommit||null};
+ return {code:part.country,file:part.country+'.json',count:stations.length,bbox,coverageCells:catalogCoverageCells(stations),updatedAt:part.updatedAt,providers,sourceCommit:part.sourceCommit||null};
 }
 export function importInternational({catalogPath='public/data/chargers-spain.json',previousPath='data/chargers-spain.json',root=process.env.OCM_DATA_DIR||'/tmp/ocm-export/data',outputDir=path.join(path.dirname(catalogPath),'international'),snapshotDir=process.env.OCM_SNAPSHOT_DIR||'data/international',countries=(process.env.OCM_COUNTRIES||'').split(',').map(s=>s.trim().toUpperCase()).filter(Boolean),now=new Date().toISOString(),sourceCommit=process.env.OCM_SOURCE_COMMIT||null}={}) {
  if(sourceCommit&&!/^[a-f0-9]{40}$/i.test(sourceCommit))throw Error('OCM_SOURCE_COMMIT must be a full Git commit SHA');
@@ -72,7 +73,7 @@ export function importInternational({catalogPath='public/data/chargers-spain.jso
  }
  const entries=[...parts.values()].map(entry).sort((a,b)=>a.code.localeCompare(b.code));
  const inheritedCommits=[...new Set(entries.map(e=>e.sourceCommit).filter(Boolean))];
- const manifest={schemaVersion:1,updatedAt:now,geographyValidation:OCM_GEOGRAPHY_SOURCE,sourceCommit:sourceCommit||(inheritedCommits.length===1?inheritedCommits[0]:null),countriesWithoutEligibleStations:entries.filter(e=>e.count===0).map(e=>e.code),sources:[{name:'Open Charge Map',url:report.url,notice:report.notice}],countries:entries,countriesMissing:SUPPORTED_COUNTRIES.filter(code=>!parts.has(code))};
+ const manifest={schemaVersion:1,coverageCellDegrees:1,updatedAt:now,geographyValidation:OCM_GEOGRAPHY_SOURCE,sourceCommit:sourceCommit||(inheritedCommits.length===1?inheritedCommits[0]:null),countriesWithoutEligibleStations:entries.filter(e=>e.count===0).map(e=>e.code),sources:[{name:'Open Charge Map',url:report.url,notice:report.notice}],countries:entries,countriesMissing:SUPPORTED_COUNTRIES.filter(code=>!parts.has(code))};
  report.sourceCommit=manifest.sourceCommit;
  report.countriesWithoutEligibleStations=manifest.countriesWithoutEligibleStations;
  report.countriesCovered=entries.filter(e=>e.count>0).map(e=>e.code);

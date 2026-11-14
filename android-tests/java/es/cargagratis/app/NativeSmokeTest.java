@@ -37,6 +37,8 @@ public class NativeSmokeTest {
         String version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         awaitCondition("El WebView debe iniciar la versión empaquetada " + version,
             "(document.querySelector('header small')?.textContent || '').includes(" + JSONObject.quote("v" + version) + ")");
+        awaitCondition("El catálogo real empaquetado debe estar cargado antes de interactuar",
+            "document.querySelector('.titleRow .muted')?.textContent.includes('puntos cargados de catálogo')");
         awaitCondition("El puente real de Capacitor debe ser Android",
             "window.Capacitor?.isNativePlatform() && window.Capacitor.getPlatform() === 'android'");
     }
@@ -120,7 +122,8 @@ public class NativeSmokeTest {
         long deadline = SystemClock.elapsedRealtime() + 45000;
         String last = "sin respuesta";
         do {
-            last = evaluate("(() => { try { return Boolean(" + expression + "); } catch (error) { return false; } })()");
+            last = evaluate("(() => { try { return Boolean(" + expression + "); } catch (error) { return false; } })()",
+                Math.min(15000, Math.max(1, deadline - SystemClock.elapsedRealtime())));
             if ("true".equals(last)) return;
             SystemClock.sleep(200);
         } while (SystemClock.elapsedRealtime() < deadline);
@@ -128,6 +131,10 @@ public class NativeSmokeTest {
     }
 
     private String evaluate(String expression) throws Exception {
+        return evaluate(expression, 15000);
+    }
+
+    private String evaluate(String expression, long timeoutMs) throws Exception {
         CountDownLatch answered = new CountDownLatch(1);
         AtomicReference<String> result = new AtomicReference<>();
         scenario.onActivity(activity -> {
@@ -136,7 +143,7 @@ public class NativeSmokeTest {
             assertNotNull("Falta el WebView real", webView);
             webView.evaluateJavascript(expression, value -> { result.set(value); answered.countDown(); });
         });
-        assertTrue("El WebView no respondió a JavaScript en cinco segundos", answered.await(5, TimeUnit.SECONDS));
+        assertTrue("El WebView no respondió a JavaScript dentro de " + timeoutMs + " ms", answered.await(timeoutMs, TimeUnit.MILLISECONDS));
         return result.get();
     }
 

@@ -12,6 +12,6 @@ node scripts/prepare-android.mjs
 bash android-tests/run-smoke.sh
 ```
 
-El workflow Android utiliza un emulador API 35 con aceleración KVM y conserva XML, informe HTML, captura y logcat. Estas pruebas no verifican el selector de importación del sistema, GPS físico, sensores del vehículo, cobertura real de estaciones ni disponibilidad de proveedores externos.
+El workflow Android utiliza un emulador API 35 con aceleración KVM y ejecuta explícitamente la clase `es.cargagratis.app.NativeSmokeTest`, sin incluir el ejemplo de plantilla Capacitor que conserva otro identificador de aplicación. Espera el catálogo empaquetado antes de interactuar y admite callbacks JavaScript de hasta 15 segundos durante el arranque en frío, dentro de cada espera acotada de 45 segundos. Conserva XML, informe HTML, captura y logcat. Estas pruebas no verifican el selector de importación del sistema, GPS físico, sensores del vehículo, cobertura real de estaciones ni disponibilidad de proveedores externos.
 
 La distribución sigue siendo de depuración. La firma persistente requiere un almacén privado en secretos de Actions; no se genera uno temporal como solución para actualizaciones. La conexión actual no permite gestionar esos secretos (HTTP 403). Una clave nueva no recupera las firmas de APK entregados anteriormente.

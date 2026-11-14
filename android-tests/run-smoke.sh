@@ -10,5 +10,5 @@ trap capture_diagnostics EXIT
 
 adb logcat -c
 adb shell input keyevent 82
-./android/gradlew -p android :app:connectedDebugAndroidTest --stacktrace
+./android/gradlew -p android :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=es.cargagratis.app.NativeSmokeTest --stacktrace
 python3 android-tests/assert-results.py

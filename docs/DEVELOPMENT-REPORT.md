@@ -1,5 +1,7 @@
 # Informe de desarrollo y verificación
 
+Este documento conserva el historial de las primeras fases. Las revisiones posteriores se describen en [PLANNER-PERFORMANCE.md](PLANNER-PERFORMANCE.md) y [RELIABILITY.md](RELIABILITY.md); sus resultados sustituyen los recuentos y pendientes históricos cuando corresponda.
+
 Verificado el 13 de noviembre de 2026. Cambios en la rama `codex/international-planner-verification`, basada en `main`. OPI conserva el commit `87dc5113a816939ef259203235f53de066871359`; no se ha escrito en esa rama.
 
 La fase inicial y sus pruebas se verificaron en `c139bea5b573c98cfcce40539832b6dbc143f24d`. La fase posterior de autonomía REVE se detalla al final de este informe.

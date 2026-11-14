@@ -8,6 +8,12 @@ PWA y aplicación Android para consultar cargadores, comparar costes orientativo
 
 La rama `OPI` es la versión estable de recuperación. Este desarrollo parte de `main` en una rama independiente y no escribe en OPI.
 
+## Datos personales y copias
+
+En **Seguridad → Copia de seguridad** puedes exportar tus favoritos, puntos personales, perfiles de vehículo y ajustes guardados como JSON. En la web se descarga un archivo; Android abre el selector nativo para guardarlo o compartirlo desde la caché privada. La copia contiene ubicaciones personales y debe conservarse en un lugar de confianza.
+
+La importación comprueba formato, tipos y tamaño máximo de 2 MB, muestra un resumen y requiere pulsar «Restaurar esta copia». Reemplaza los ajustes incluidos y conserva los demás. Los puntos personales importados siguen sin verificar y quedan fuera del planificador. La copia excluye catálogos, búsquedas de direcciones, credenciales y lecturas del vehículo. Detalles de esta revisión: [RELIABILITY.md](docs/RELIABILITY.md).
+
 ## Aviso de uso y responsabilidad
 
 El inicio muestra el aviso aprobado por el titular antes del mapa. El enlace permanente «Aviso legal» abre el mismo texto dentro de la aplicación, también sin conexión una vez cargada y en el APK. Explica el carácter gratuito e informativo, los posibles errores y la responsabilidad del autor en la medida permitida por la legislación aplicable. No exige aceptar una renuncia ni sustituye la comprobación de datos con el operador.
@@ -68,6 +74,8 @@ cd android && ./gradlew assembleDebug
 `prebuild` y `predev` restauran el HTML fuente: el `index.html` de la raíz de `main` es un artefacto publicado. El script Android crea/sincroniza Capacitor y declara permisos GPS de forma idempotente. El APK de depuración se genera en `android/app/build/outputs/apk/debug/app-debug.apk`.
 
 Las pruebas usan datos sintéticos solo en fixtures. Existe además una prueba de navegador con el catálogo publicado real. Los workflows de PR verifican web y compilan Android sin recibir secretos. Pages se actualiza cada diez minutos cuando Actions puede ejecutarlo; el catálogo OCM se refresca en un flujo diario independiente con lotes rotativos de seis países. Estas frecuencias no garantizan datos en tiempo real.
+
+El workflow Android ejecuta además pruebas de instrumentación sobre el APK en un emulador Android 35: arranque, aviso legal, destinos, perfiles y copia con los plugins nativos. Sus informes se conservan como artefacto `android-runtime-report`; una ejecución fallida o sin pruebas impide publicar el APK de ese flujo. No sustituye las pruebas de GPS, Bluetooth e instalación en un teléfono físico.
 
 Los flujos que actualizan `main` comparten exclusión mutua, recuperan su cabecera actual y rechazan sobrescribir un cambio posterior. Una publicación fallida conserva la última versión disponible.
 

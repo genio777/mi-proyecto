@@ -36,7 +36,7 @@
       ],
       "source": "https://www.repsol.es/particulares/vehiculos/movilidad-electrica/recarga-fuera-de-casa/",
       "status": "official",
-      "lastCheck": "2026-11-13T12:19:56.163Z",
+      "lastCheck": "2026-11-14T11:35:38.700Z",
       "sourceReachable": true
     },
     {
@@ -66,7 +66,7 @@
       ],
       "source": "https://iberdrola-bppulse.es/cargar-coche-electrico/tarifas/",
       "status": "official",
-      "lastCheck": "2026-11-13T12:19:56.163Z",
+      "lastCheck": "2026-11-14T11:35:38.700Z",
       "sourceReachable": true
     },
     {
@@ -93,7 +93,7 @@
       "source": "https://www.zunder.com/usuario-ve/",
       "status": "official",
       "note": "Precios España IVA incluido. Easy y Pro requieren suscripción; cuota no incluida en la simulación. Existen ubicaciones y franjas especiales; comprobar app.",
-      "lastCheck": "2026-11-13T12:19:56.163Z",
+      "lastCheck": "2026-11-14T11:35:38.700Z",
       "sourceReachable": true
     },
     {
@@ -176,7 +176,7 @@
       "source": "https://www.endesaxway.com/content/dam/endesa-x-way/pdfs/TarifarioEE_2026_04.01.pdf",
       "status": "official",
       "note": "Precios publicados vigentes desde 01/04/2026, IVA incluido; suscripciones con cuota mensual no incluida en simulación. Precio final de estación prevalece.",
-      "lastCheck": "2026-11-13T12:19:56.163Z",
+      "lastCheck": "2026-11-14T11:35:38.700Z",
       "sourceReachable": true
     },
     {
@@ -186,7 +186,7 @@
       "source": "https://www.tesla.com/es_es/support/charging/supercharging",
       "status": "station_price_required",
       "note": "Tesla no publica tarifa nacional fija: depende de Supercharger, hora y condición Tesla/miembro/no miembro. Ejemplo oficial: Tordesillas 0,46 €/kWh para vehículos no Tesla (no extrapolable). Tarifa típica de congestión en España: 0,50 €/min si aplica. Consultar app Tesla antes de cargar.",
-      "lastCheck": "2026-11-13T12:19:56.163Z",
+      "lastCheck": "2026-11-14T11:35:38.700Z",
       "sourceReachable": false,
       "lastError": "HTTP 403",
       "stationExamples": [
@@ -235,7 +235,7 @@
       "source": "https://www.ionity.eu/es/suscripciones",
       "status": "official",
       "note": "Precios publicados para España; cuotas de suscripción excluidas. Pueden variar por estación.",
-      "lastCheck": "2026-11-13T12:19:56.163Z",
+      "lastCheck": "2026-11-14T11:35:38.700Z",
       "sourceReachable": true
     },
     {
@@ -245,7 +245,7 @@
       "source": "https://www.powerdot.eu/mobility-apps",
       "status": "ocpi_available",
       "note": "Powerdot ofrece integración OCPI para precio y disponibilidad en tiempo real.",
-      "lastCheck": "2026-11-13T12:19:56.163Z",
+      "lastCheck": "2026-11-14T11:35:38.700Z",
       "sourceReachable": true
     },
     {
@@ -328,5 +328,6 @@
       "status": "official",
       "note": "Precios de energía con IVA incluido según web oficial. Verificar precio del punto en la app."
     }
-  ]
+  ],
+  "lastSourceCheck": "2026-11-14T11:35:38.700Z"
 }

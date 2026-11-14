@@ -9,11 +9,12 @@ export const haversine = (a,b) => {
  return 12742*Math.asin(Math.sqrt(Math.min(1,Math.max(0,x))));
 };
 const normal=v=>String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+const wrapLongitude=value=>((value+180)%360+360)%360-180;
 export function vehicleSpecification(name, {maxAcKw, maxChargeKw} = {}) {
  const zoe=name==='Renault Zoe R90',tesla=name==='Tesla Model Y Standard Range';
  return {name,connectors:zoe?['Tipo2']:tesla?['CCS','Tipo2']:[],maxAcKw:Math.max(0,Math.min(zoe?22:tesla?11:0,maxAcKw==null?(zoe?22:tesla?11:0):Number(maxAcKw)||0)),maxDcKw:zoe?0:Math.max(0,Math.min(tesla?170:0,maxChargeKw==null?(tesla?170:0):Number(maxChargeKw)||0))};
 }
-export function compatibleSocket(station, vehicle, connectorFilters=[]) {
+function compatibleSockets(station, vehicle, connectorFilters=[]) {
  const allowed=new Set(vehicle.connectors.map(normal));
  const selected=new Set(connectorFilters.map(normal));
  let sockets;
@@ -29,15 +30,21 @@ export function compatibleSocket(station, vehicle, connectorFilters=[]) {
   if((ac&&normal(s.powerType)==='dc')||(!ac&&normal(s.powerType)==='ac'))return null;
   return {type:s.type,socketPowerKw:s.powerKw,powerKw:Math.min(s.powerKw,ac?vehicle.maxAcKw:vehicle.maxDcKw),ac};
  }).filter(s=>s&&s.powerKw>0);
- return matches.sort((a,b)=>b.powerKw-a.powerKw)[0]||null;
+ return matches.sort((a,b)=>b.powerKw-a.powerKw);
 }
-export function eligibleForMode(station,vehicle,{mode='cheap',maximumPower=0,connectorFilters=[]}={}) {
- if(station.publicAccess===false)return false;
- const socket=compatibleSocket(station,vehicle,connectorFilters);
- if(!socket)return false;
- if(mode==='fast')return socket.socketPowerKw>=100&&socket.powerKw>=100;
- if(maximumPower>0&&socket.powerKw>maximumPower)return false;
- return mode!=='free'||station.price===0;
+export function compatibleSocket(station,vehicle,connectorFilters=[]) {
+ return compatibleSockets(station,vehicle,connectorFilters)[0]||null;
+}
+export function routeSocket(station,vehicle,{mode='cheap',maximumPower=0,connectorFilters=[]}={}) {
+ if(station.publicAccess===false||(mode==='free'&&station.price!==0))return null;
+ // Filter the nominal rating of each socket before choosing one. A vehicle's
+ // lower charging limit does not turn a 350-kW socket into a 170-kW charger.
+ return compatibleSockets(station,vehicle,connectorFilters).find(socket=>mode==='fast'
+  ?socket.socketPowerKw>=100&&socket.powerKw>=100
+  :!(maximumPower>0)||socket.socketPowerKw<=maximumPower)||null;
+}
+export function eligibleForMode(station,vehicle,options={}) {
+ return routeSocket(station,vehicle,options)!==null;
 }
 export function chargingMinutes(socket,fromKwh,toKwh,batteryKwh) {
  if(!socket||!(socket.powerKw>0)||!(batteryKwh>0)||toKwh<fromKwh-EPS)return Infinity;
@@ -50,7 +57,7 @@ export function chargingMinutes(socket,fromKwh,toKwh,batteryKwh) {
 function routeSamples(coords) {
  const samples=[];let km=0;
  for(let i=0;i<coords.length;i++){
-  if(i){const distance=haversine(coords[i-1],coords[i]);const steps=Math.max(1,Math.ceil(distance/8));for(let j=1;j<steps;j++)samples.push({point:[coords[i-1][0]+(coords[i][0]-coords[i-1][0])*j/steps,coords[i-1][1]+(coords[i][1]-coords[i-1][1])*j/steps],km:km+distance*j/steps});km+=distance;}
+  if(i){const distance=haversine(coords[i-1],coords[i]);const steps=Math.max(1,Math.ceil(distance/8));for(let j=1;j<steps;j++)samples.push({point:[coords[i-1][0]+(coords[i][0]-coords[i-1][0])*j/steps,wrapLongitude(coords[i-1][1]+wrapLongitude(coords[i][1]-coords[i-1][1])*j/steps)],km:km+distance*j/steps});km+=distance;}
   // Keep bends but coalesce the dense, nearly identical points returned by OSRM.
   if(!samples.length||haversine(samples[samples.length-1].point,coords[i])>2||i===coords.length-1)samples.push({point:coords[i],km});
  }
@@ -58,15 +65,17 @@ function routeSamples(coords) {
 }
 function createCorridorSelection(route,{corridorKm=35,perBucket=6,bucketKm=40}={}) {
  const coords=route.coordinates||[];
- const samples=routeSamples(coords),grid=new Map(),cell=.5;
- for(const sample of samples){const key=Math.floor(sample.point[0]/cell)+':'+Math.floor(sample.point[1]/cell);if(!grid.has(key))grid.set(key,[]);grid.get(key).push(sample);}
+ const samples=routeSamples(coords),grid=new Map(),cell=.5,columns=360/cell;
+ const longitudeCell=value=>Math.floor((wrapLongitude(value)+180)/cell);
+ const wrapColumn=value=>(value%columns+columns)%columns;
+ for(const sample of samples){const key=Math.floor(sample.point[0]/cell)+':'+longitudeCell(sample.point[1]);if(!grid.has(key))grid.set(key,[]);grid.get(key).push(sample);}
  const found=[];
  const add=station=>{
-  if(!Number.isFinite(station.lat)||!Number.isFinite(station.lng))return;
-  const point=[station.lat,station.lng],latCell=Math.floor(station.lat/cell),lngCell=Math.floor(station.lng/cell);
+  if(!Number.isFinite(station.lat)||!Number.isFinite(station.lng)||Math.abs(station.lat)>90||Math.abs(station.lng)>180)return;
+  const point=[station.lat,station.lng],latCell=Math.floor(station.lat/cell),lngCell=longitudeCell(station.lng);
   const dx=Math.min(720,Math.ceil((corridorKm+10)/(111*cell*Math.max(.03,Math.cos(station.lat*Math.PI/180))))),dy=Math.ceil((corridorKm+10)/(111*cell));
   let nearest=Infinity,along=0;
-  for(let x=-dx;x<=dx;x++)for(let y=-dy;y<=dy;y++)for(const sample of grid.get((latCell+y)+':'+(lngCell+x))||[]){const d=haversine(point,sample.point);if(d<nearest){nearest=d;along=sample.km;}}
+  for(let x=-dx;x<=dx;x++)for(let y=-dy;y<=dy;y++)for(const sample of grid.get((latCell+y)+':'+wrapColumn(lngCell+x))||[]){const d=haversine(point,sample.point);if(d<nearest){nearest=d;along=sample.km;}}
   if(nearest<=corridorKm+4)found.push({station,nearest,along});
  };
  const finish=()=>{
@@ -148,7 +157,8 @@ export async function planTrip({origin,destinations,stations,vehicle,batteryKwh,
   const selectedStations=[];
   for(let i=0;i<stations.length;i++){
    const station=stations[i];
-   if(eligibleForMode(station,vehicle,{mode,maximumPower,connectorFilters}))selectedStations.push({...station,_socket:compatibleSocket(station,vehicle,connectorFilters),_rate:quote(station,1)?.total??null});
+   const socket=routeSocket(station,vehicle,{mode,maximumPower,connectorFilters});
+   if(socket){const selected={...station,_socket:socket};selectedStations.push({...selected,_rate:quote(selected,1)?.total??null});}
    if(i%1000===0)await control.yield();
   }
   for(let i=0;i<stages.length;i++){

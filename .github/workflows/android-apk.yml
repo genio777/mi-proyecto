@@ -10,6 +10,7 @@ permissions:
 jobs:
   apk:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,6 +39,30 @@ jobs:
           grep -q 'android.permission.ACCESS_COARSE_LOCATION' android/app/src/main/AndroidManifest.xml
       - name: Compilar APK de depuración
         run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - name: Habilitar aceleración del emulador
+        run: |
+          test -e /dev/kvm || { echo '::error::No hay KVM para ejecutar las pruebas Android'; exit 1; }
+          sudo chmod a+rw /dev/kvm
+      - name: Ejecutar aplicación real en Android 35
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_2
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -memory 2048 -cores 2
+          script: bash android-tests/run-smoke.sh
+      - name: Conservar pruebas y diagnóstico Android
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-runtime-report
+          if-no-files-found: warn
+          path: |
+            android-test-results/
+            android/app/build/outputs/androidTest-results/
+            android/app/build/reports/androidTests/
       - uses: actions/upload-artifact@v4
         with:
           name: CargaGratis-Android-debug

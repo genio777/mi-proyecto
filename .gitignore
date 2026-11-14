@@ -3,6 +3,7 @@ dist/
 android/
 test-results/
 playwright-report/
+android-test-results/
 .env
 .env.*
 !.env.example

@@ -157,6 +157,34 @@ export function createInternationalCatalog({fetchFn=(...args)=>fetch(...args),ba
     const scope=budgetScope(signal,milliseconds);
     try{const data=await consume(manifestRecord(),scope.signal);scope.check();return data;}finally{scope.close();}
   }
+  async function loadEntries(manifest,selected,scope,warnings=[]){
+    const results=[],loaded=[];let cursor=0;
+    await Promise.all(Array.from({length:Math.min(limit,selected.length)},async()=>{
+      while(cursor<selected.length){
+        scope.check();const entry=selected[cursor++];
+        try{const stations=await consume(countryRecord(entry),scope.signal);scope.check();for(const station of stations)results.push(station);loaded.push(entry.code);}
+        catch(error){scope.check();warnings.push('No se pudo cargar el catálogo '+entry.code+' ('+error.message+'); no se ha verificado su cobertura.');}
+      }
+    }));
+    scope.check();
+    if(!manifest.countries.length)warnings.push('No hay registros internacionales publicados; la cobertura fuera del catálogo nacional no está verificada.');
+    const stations=[...new Map(results.map(c=>[c.id,c])).values()];scope.check();
+    return {stations,countries:loaded.sort(),warnings};
+  }
+  /** @param {Array<string>} codes @param {{signal?:AbortSignal,budgetMs?:number}} options */
+  async function loadCountries(codes,{signal,budgetMs:milliseconds=budgetMs}={}){
+    abortIfNeeded(signal);
+    if(!Array.isArray(codes)||codes.length>200||codes.some(code=>typeof code!=='string'||!/^[A-Z]{2}$/.test(code)))throw Error('Códigos de país no válidos para recuperar favoritos.');
+    const requested=[...new Set(codes)];if(!requested.length)return {stations:[],countries:[],warnings:[]};
+    const scope=budgetScope(signal,milliseconds);
+    try{
+      let manifest;
+      try{manifest=await consume(manifestRecord(),scope.signal);}catch(error){scope.check();return {stations:[],countries:[],warnings:['No se pudo cargar el índice internacional: '+error.message+'. No se han recuperado las fichas de favoritos.']};}
+      scope.check();const selected=[],warnings=[];
+      for(const code of requested){const entry=manifest.countries.find(country=>country.code===code);if(entry?.count>0)selected.push(entry);else warnings.push('No hay un catálogo con estaciones publicadas para '+code+'. Se conserva el favorito sin inventar su ficha.');}
+      return await loadEntries(manifest,selected,scope,warnings);
+    }finally{scope.close();}
+  }
   /** @param {Array<[number,number]>} points @param {{radiusKm?:number,signal?:AbortSignal,budgetMs?:number}} options */
   async function loadForPoints(points,{radiusKm=50,signal,budgetMs:milliseconds=budgetMs}={}) {
     abortIfNeeded(signal);
@@ -166,22 +194,9 @@ export function createInternationalCatalog({fetchFn=(...args)=>fetch(...args),ba
       let manifest;
       try{manifest=await consume(manifestRecord(),scope.signal);}catch(error){scope.check();return {stations:[],countries:[],warnings:['No se pudo cargar el índice internacional: '+error.message+'. La cobertura de esta ruta no está verificada.']};}
       scope.check();
-      const selected=selectForBounds(manifest,boxes,scope.check),results=[],warnings=[],loaded=[];
-      let cursor=0;
-      await Promise.all(Array.from({length:Math.min(limit,selected.length)},async()=>{
-        while(cursor<selected.length){
-          scope.check();
-          const entry=selected[cursor++];
-          try{const stations=await consume(countryRecord(entry),scope.signal);scope.check();for(const station of stations)results.push(station);loaded.push(entry.code);}
-          catch(error){scope.check();warnings.push('No se pudo cargar el catálogo '+entry.code+' ('+error.message+'); no se ha verificado su cobertura.');}
-        }
-      }));
-      scope.check();
-      if(!manifest.countries.length)warnings.push('No hay registros internacionales publicados; la cobertura fuera del catálogo nacional no está verificada.');
-      const stations=[...new Map(results.map(c=>[c.id,c])).values()];scope.check();
-      return {stations,countries:loaded.sort(),warnings};
+      return await loadEntries(manifest,selectForBounds(manifest,boxes,scope.check),scope);
     }finally{scope.close();}
   }
-  return {loadManifest,loadForPoints};
+  return {loadManifest,loadForPoints,loadCountries};
 }
 export const internationalCatalog=createInternationalCatalog();

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -38,4 +38,10 @@ let gradle = readFileSync(gradlePath, 'utf8');
 if (!/versionCode\s+\d+/.test(gradle) || !/versionName\s+"[^"]*"/.test(gradle)) throw new Error('No se encontró la versión en Gradle');
 gradle = gradle.replace(/versionCode\s+\d+/, 'versionCode ' + versionCode).replace(/versionName\s+"[^"]*"/, 'versionName "' + version + '"');
 writeFileSync(gradlePath, gradle);
-console.log('Android sincronizado:', version, '(código ' + versionCode + '); permisos GPS declarados. Compila con ./android/gradlew -p android assembleDebug');
+if (!gradle.includes('testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"')) throw new Error('Falta el runner de instrumentación Android');
+const androidTestSource = path.join(root, 'android-tests/java');
+const androidTestDestination = path.join(root, 'android/app/src/androidTest/java');
+if (!existsSync(androidTestSource)) throw new Error('Faltan las pruebas de ejecución Android');
+mkdirSync(androidTestDestination, { recursive: true });
+cpSync(androidTestSource, androidTestDestination, { recursive: true });
+console.log('Android sincronizado:', version, '(código ' + versionCode + '); permisos GPS y pruebas de instrumentación preparados. Compila con ./android/gradlew -p android assembleDebug');

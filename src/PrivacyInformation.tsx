@@ -9,7 +9,7 @@ export default function PrivacyInformation(){
    <article><h3>Direcciones y rutas</h3><p>Buscar una dirección envía el texto al servicio Photon. Calcular un viaje envía las coordenadas de origen, destinos y paradas al servicio de rutas OSRM configurado.</p></article>
    <article><h3>Mapa y ubicación</h3><p>El GPS se solicita al pulsar «Mi ubicación». Los mosaicos del mapa se descargan de OpenStreetMap, que recibe las peticiones del área visualizada.</p></article>
    <article><h3>Información local</h3><p>Favoritos y puntos personales permanecen en este dispositivo. La caché local de búsqueda puede contener consultas y coordenadas; sus resultados se reutilizan durante un máximo de 30 días.</p></article>
-   <article><h3>Catálogos de recarga</h3><p>Los catálogos y sus atribuciones se publican desde GitHub. El acceso autenticado a REVE se realiza en GitHub Actions; la aplicación no solicita la clave.</p></article>
+   <article><h3>Catálogos de recarga</h3><p>Los catálogos y sus atribuciones se descargan desde la publicación de GitHub. Android conserva copias locales de datos válidos y dispone del catálogo incluido en el APK. Puedes consultar su estado y pedir una actualización. El acceso autenticado a REVE se realiza en GitHub Actions; la aplicación no solicita la clave.</p></article>
   </div>
  </>;
 }

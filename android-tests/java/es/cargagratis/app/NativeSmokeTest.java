@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +29,10 @@ import org.junit.runner.RunWith;
 /** Runs the packaged application in a real Android WebView, without HTTP fixtures. */
 @RunWith(AndroidJUnit4.class)
 public class NativeSmokeTest {
+    private static final String CATALOG_CACHE = "cg-catalog-v1";
+    private static final String NATIONAL_PATH = "data/chargers-spain.json";
+    private static final String CACHE_KEY = "/__cg_catalog_cache_v1__/" + NATIONAL_PATH;
+    private static final String NATIVE_FIXTURE_NAME = "Fixture nativa de caché persistente";
     private ActivityScenario<MainActivity> scenario;
 
     @Before
@@ -109,6 +114,111 @@ public class NativeSmokeTest {
         awaitCondition("La aplicación debe seguir operativa al cerrar el diálogo de compartir",
             "[...document.querySelectorAll('h2')].some(h => h.textContent === 'Copia de seguridad')");
         evaluate("(() => { localStorage.removeItem('cg_geo_photon_v1_android_smoke'); localStorage.removeItem('cg_favorites'); localStorage.setItem('cg_soc', '90'); return true; })()");
+    }
+
+    @Test(timeout = 150000)
+    public void reopensWithPersistentCatalogCache() throws Exception {
+        clickButton("nav", "seguridad");
+        awaitCatalogSynchronization();
+        String backupName = "cg-native-catalog-backup-" + SystemClock.elapsedRealtime();
+        long savedAt = System.currentTimeMillis();
+        JSONObject fixture = cachedNationalFixture(savedAt);
+        String cacheName = JSONObject.quote(CATALOG_CACHE), backup = JSONObject.quote(backupName);
+        String key = "new URL(" + JSONObject.quote(CACHE_KEY) + ", location.origin).href";
+        try {
+            runAsyncJavascript("Guardar fixture exclusivamente de instrumentación en CacheStorage",
+                "const key = " + key + ", cache = await caches.open(" + cacheName + "), backup = await caches.open(" + backup + ");" +
+                "const previous = await cache.match(key); if (previous) await backup.put(key, previous.clone());" +
+                "await backup.put(new URL('/__native_catalog_backup_ready__', location.origin).href, new Response('ready'));" +
+                "await cache.put(key, new Response(" + JSONObject.quote(fixture.toString()) + ", {headers:{'Content-Type':'application/json'}}));");
+            scenario.close();
+            scenario = null;
+            openBundledApplication();
+            awaitCondition("La aplicación reabierta debe mostrar las estaciones de la caché persistente real",
+                "document.body.textContent.includes(" + JSONObject.quote(NATIVE_FIXTURE_NAME + " A") + ") && document.body.textContent.includes(" + JSONObject.quote(NATIVE_FIXTURE_NAME + " B") + ")");
+            clickButton("nav", "seguridad");
+            awaitCatalogSynchronization();
+            awaitCondition("El catálogo nacional debe identificarse como guardado, sin atribuirlo a otra fuente",
+                "document.querySelector('[data-catalog-resource=\"national\"]')?.getAttribute('data-catalog-source') === 'cached'");
+            runAsyncJavascript("La reapertura no debe renovar la fecha de descarga ni la de los datos",
+                "const response = await (await caches.open(" + cacheName + ")).match(" + key + ");" +
+                "if (!response) throw Error('La caché nacional no persistió'); const record = await response.json();" +
+                "if (record.savedAt !== " + savedAt + " || record.data.updated !== '2020-01-02T03:04:05.000Z') throw Error('Se alteraron las fechas de la copia guardada');" +
+                "if (record.data.chargers.length !== 2) throw Error('No se recuperó el fixture de instrumentación');");
+        } finally {
+            if (scenario == null) openBundledApplication();
+            runAsyncJavascript("Restaurar la caché anterior y borrar el fixture de instrumentación",
+                "const key = " + key + ", cache = await caches.open(" + cacheName + "), backup = await caches.open(" + backup + ");" +
+                "const ready = await backup.match(new URL('/__native_catalog_backup_ready__', location.origin).href);" +
+                "if (ready) { const previous = await backup.match(key); if (previous) await cache.put(key, previous); else await cache.delete(key); }" +
+                "await caches.delete(" + backup + ");");
+        }
+    }
+
+    @Test(timeout = 120000)
+    public void refreshesPublishedCatalogsInRealWebView() throws Exception {
+        clickButton("nav", "seguridad");
+        awaitCatalogSynchronization();
+        String cacheName = JSONObject.quote(CATALOG_CACHE);
+        String key = "new URL(" + JSONObject.quote(CACHE_KEY) + ", location.origin).href";
+        runAsyncJavascript("Leer el instante de la copia previa a la actualización pública",
+            "const response = await (await caches.open(" + cacheName + ")).match(" + key + ");" +
+            "const record = response ? await response.json() : null; window.__nativeCatalogPreviousSavedAt = record?.savedAt || 0;");
+        assertEquals("true", evaluate("(() => { const region = document.querySelector('[aria-label=\"Estado de los catálogos\"]'); if (!region) return false; window.__nativeCatalogSawBusy = false; window.__nativeCatalogObserver = new MutationObserver(() => { if (region.getAttribute('aria-busy') === 'true') window.__nativeCatalogSawBusy = true; }); window.__nativeCatalogObserver.observe(region, {attributes:true,attributeFilter:['aria-busy']}); return true; })()"));
+        try {
+            clickButton("[aria-label=\"Estado de los catálogos\"]", "Actualizar catálogos");
+            awaitCondition("La actualización manual debe iniciar la consulta real",
+                "window.__nativeCatalogSawBusy === true");
+            awaitCatalogSynchronization();
+            assertEquals("La descarga pública nacional debe superar CORS/TLS y validar el JSON real", "true",
+                evaluate("document.querySelector('[data-catalog-resource=\"national\"]')?.getAttribute('data-catalog-source') === 'published'"));
+            runAsyncJavascript("La publicación real debe renovar la caché con un inventario válido",
+                "const response = await (await caches.open(" + cacheName + ")).match(" + key + ");" +
+                "if (!response) throw Error('No se guardó el catálogo publicado'); const record = await response.json();" +
+                "if (!(record.savedAt > window.__nativeCatalogPreviousSavedAt)) throw Error('No se renovó la descarga al forzar la actualización');" +
+                "if (record.version !== 1 || record.path !== 'data/chargers-spain.json' || !Array.isArray(record.data?.chargers) || !record.data.chargers.length) throw Error('La respuesta publicada no contiene inventario válido');" +
+                "if (record.data.chargers.some(station => station.id.startsWith('native-cache-') || !Number.isFinite(station.lat) || !Number.isFinite(station.lng) || !(station.price === null || Number.isFinite(station.price)))) throw Error('La publicación contiene datos inesperados');");
+        } finally {
+            evaluate("(() => { window.__nativeCatalogObserver?.disconnect(); delete window.__nativeCatalogObserver; delete window.__nativeCatalogSawBusy; delete window.__nativeCatalogPreviousSavedAt; return true; })()");
+        }
+    }
+
+    private void awaitCatalogSynchronization() throws Exception {
+        awaitCondition("La sincronización de catálogos debe terminar dentro de su plazo",
+            "(() => { const region = document.querySelector('[aria-label=\"Estado de los catálogos\"]'); const button = [...(region?.querySelectorAll('button') || [])].find(b => b.textContent.trim() === 'Actualizar catálogos'); return !!region && region.getAttribute('aria-busy') === 'false' && !!button && !button.disabled; })()");
+    }
+
+    private JSONObject cachedNationalFixture(long savedAt) throws Exception {
+        JSONArray stations = new JSONArray();
+        for (int i = 0; i < 2; i++) {
+            JSONArray sockets = new JSONArray()
+                .put(new JSONObject().put("type", "CCS").put("powerKw", 150))
+                .put(new JSONObject().put("type", "Tipo2").put("powerKw", 22));
+            stations.put(new JSONObject()
+                .put("id", "native-cache-" + i).put("name", NATIVE_FIXTURE_NAME + (i == 0 ? " A" : " B"))
+                .put("city", "Madrid").put("lat", 40.4168 + i * .001).put("lng", -3.7038)
+                .put("power", 150).put("connector", "CCS,Tipo2").put("connectors", sockets)
+                .put("price", JSONObject.NULL).put("country", "ES")
+                .put("source", "Fixture sintética exclusiva de instrumentación")
+                .put("sourceUrl", "https://example.org/native-cache-fixture")
+                .put("verified", "Sin verificar: fixture de prueba").put("availability", "Desconocida"));
+        }
+        JSONObject data = new JSONObject().put("updated", "2020-01-02T03:04:05.000Z").put("chargers", stations);
+        return new JSONObject().put("version", 1).put("path", NATIONAL_PATH).put("savedAt", savedAt).put("data", data);
+    }
+
+    private void runAsyncJavascript(String description, String body) throws Exception {
+        String script = "(() => { window.__nativeCatalogSmokeState = 'pending'; (async () => { " + body +
+            " })().then(() => { window.__nativeCatalogSmokeState = 'done'; }, error => { window.__nativeCatalogSmokeState = 'error: ' + error.message; }); return true; })()";
+        assertEquals("true", evaluate(script));
+        long deadline = SystemClock.elapsedRealtime() + 45000;
+        do {
+            String state = evaluate("window.__nativeCatalogSmokeState", Math.min(15000, Math.max(1, deadline - SystemClock.elapsedRealtime())));
+            if (JSONObject.quote("done").equals(state)) return;
+            if (state != null && state.startsWith("\"error:")) fail(description + ": " + state);
+            SystemClock.sleep(200);
+        } while (SystemClock.elapsedRealtime() < deadline);
+        fail(description + ": CacheStorage no terminó dentro del plazo");
     }
 
     private void clickButton(String scope, String name) throws Exception {

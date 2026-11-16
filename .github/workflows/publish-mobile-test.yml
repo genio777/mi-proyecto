@@ -50,6 +50,17 @@ jobs:
           export SOURCE_SHA
           # Solo se distribuye código que ya está integrado en main.
           gh api "repos/$GH_REPO/compare/$SOURCE_SHA...main" --jq .status > ancestry.txt
+          if [[ "$(cat ancestry.txt)" != ahead && "$(cat ancestry.txt)" != identical ]]; then
+            # Un PR integrado con squash conserva otro SHA en main.
+            gh api "repos/$GH_REPO/commits/$SOURCE_SHA/pulls" > source-pulls.json
+            MERGE_SHA=$(jq -r --arg sha "$SOURCE_SHA" --arg repo "$GH_REPO" '
+              [.[] | select(.head.sha == $sha and .base.ref == "main" and
+                .base.repo.full_name == $repo and .merged_at != null) |
+                .merge_commit_sha][0] // ""
+            ' source-pulls.json)
+            [[ "$MERGE_SHA" =~ ^[a-f0-9]{40}$ ]]
+            gh api "repos/$GH_REPO/compare/$MERGE_SHA...main" --jq .status > ancestry.txt
+          fi
           [[ "$(cat ancestry.txt)" == ahead || "$(cat ancestry.txt)" == identical ]]
           gh api "repos/$GH_REPO/contents/package.json?ref=$SOURCE_SHA" --jq .content | base64 --decode > package.json
           VERSION=$(jq -r .version package.json)

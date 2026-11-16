@@ -1,114 +1,114 @@
 {
-  "generatedAt": "2026-11-16T06:47:53.734Z",
+  "generatedAt": "2026-11-16T16:31:13.308Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 17066,
+  "stationsWithUnknownPrice": 17458,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 17066,
+  "catalogStations": 17458,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 3937,
+      "total": 4043,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3937,
+      "unknownPrices": 4043,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "total": 3777,
+      "total": 3862,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3777,
+      "unknownPrices": 3862,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 2593,
+      "total": 2632,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 2593,
+      "unknownPrices": 2632,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "CHARGING TOGETHER SL",
-      "total": 756,
+      "total": 768,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 756,
+      "unknownPrices": 768,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "total": 697,
+      "total": 715,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 697,
+      "unknownPrices": 715,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "EDP CLIENTES SAU",
-      "total": 503,
+      "total": 517,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 503,
+      "unknownPrices": 517,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "ERANOVUM E-MOBILITY, S.L.",
-      "total": 344,
+      "total": 354,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 344,
+      "unknownPrices": 354,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "total": 330,
+      "total": 347,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 330,
+      "unknownPrices": 347,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "ACCIONA Recarga",
-      "total": 265,
+      "total": 272,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 265,
+      "unknownPrices": 272,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "(ZUNDER) Grupo Easychargar SA",
-      "total": 257,
+      "total": 271,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 257,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "PLENOIL, S.L.",
-      "total": 254,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 254,
+      "unknownPrices": 271,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Galp Energía España, S.A.U.",
-      "total": 253,
+      "total": 261,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 253,
+      "unknownPrices": 261,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "PLENOIL, S.L.",
+      "total": 255,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 255,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "ELECTROMAPS SL",
-      "total": 222,
+      "total": 233,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 222,
+      "unknownPrices": 233,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -121,10 +121,10 @@
     },
     {
       "operator": "Punto Recargas SL",
-      "total": 196,
+      "total": 197,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 196,
+      "unknownPrices": 197,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -136,11 +136,19 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "BARCELONA DE SERVEIS MUNICIPALS, SA",
-      "total": 141,
+      "operator": "QWELLO España SL",
+      "total": 144,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 141,
+      "unknownPrices": 144,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "BARCELONA DE SERVEIS MUNICIPALS, SA",
+      "total": 142,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 142,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -152,27 +160,19 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "QWELLO España SL",
-      "total": 139,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 139,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "MAKSU ESPAÑA SL",
-      "total": 125,
+      "total": 130,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 125,
+      "unknownPrices": 130,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "REMO SUSTAINABLE MOBILITY S.L",
-      "total": 120,
+      "total": 124,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 120,
+      "unknownPrices": 124,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -185,18 +185,26 @@
     },
     {
       "operator": "Tesla Spain SLU",
-      "total": 112,
+      "total": 114,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 112,
+      "unknownPrices": 114,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Totalenergies Marketing España, S.A.U.",
-      "total": 81,
+      "total": 85,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 81,
+      "unknownPrices": 85,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Consejo Insular de la Energía de Gran Canaria",
+      "total": 71,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 71,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -208,11 +216,11 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Consejo Insular de la Energía de Gran Canaria",
-      "total": 70,
+      "operator": "Atlante Iberia S.L.",
+      "total": 69,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 70,
+      "unknownPrices": 69,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -225,26 +233,18 @@
     },
     {
       "operator": "Prio Recharge Sl.",
-      "total": 65,
+      "total": 67,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 65,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Atlante Iberia S.L.",
-      "total": 65,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 65,
+      "unknownPrices": 67,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "IONITY GmbH Sucursal en España",
-      "total": 60,
+      "total": 63,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 60,
+      "unknownPrices": 63,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -272,6 +272,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "MOEVE COMMERCIAL, SAU",
+      "total": 48,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 48,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "Emovili Fast, S.L.",
       "total": 47,
       "verifiedPrices": 0,
@@ -281,34 +289,26 @@
     },
     {
       "operator": "Allego Spain S.L.U",
-      "total": 44,
+      "total": 45,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 44,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "MOEVE COMMERCIAL, SAU",
-      "total": 43,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 43,
+      "unknownPrices": 45,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "ZERO CARBON EMOBILITY, S.L.",
-      "total": 40,
+      "total": 45,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 40,
+      "unknownPrices": 45,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "OESTE SOLUCIONES ENERGETICAS, S.L.",
-      "total": 39,
+      "total": 40,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 39,
+      "unknownPrices": 40,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -345,10 +345,10 @@
     },
     {
       "operator": "The F Charging Espana S.L.U.",
-      "total": 23,
+      "total": 24,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 23,
+      "unknownPrices": 24,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -377,10 +377,10 @@
     },
     {
       "operator": "Electrica Sollerense SA",
-      "total": 16,
+      "total": 17,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 16,
+      "unknownPrices": 17,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -400,6 +400,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "CHARG-ELECTRA SPAIN SL",
+      "total": 14,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 14,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "AYUNTAMIENTO DE FELANITX",
       "total": 13,
       "verifiedPrices": 0,
@@ -409,14 +417,6 @@
     },
     {
       "operator": "EDISON NEXT SPAIN SLU",
-      "total": 13,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 13,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "CHARG-ELECTRA SPAIN SL",
       "total": 13,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -456,6 +456,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "Charging Together Norte SL",
+      "total": 9,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 9,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "PORSAMADRID, S.L.",
       "total": 8,
       "verifiedPrices": 0,
@@ -469,14 +477,6 @@
       "verifiedPrices": 0,
       "verifiedFree": 0,
       "unknownPrices": 8,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Charging Together Norte SL",
-      "total": 7,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 7,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -496,15 +496,15 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Inversiones Pascual",
-      "total": 5,
+      "operator": "ZOILO RIOS, S.A.",
+      "total": 6,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5,
+      "unknownPrices": 6,
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "ZOILO RIOS, S.A.",
+      "operator": "Inversiones Pascual",
       "total": 5,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1281,79 +1281,79 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 3937,
+      "stationsToVerify": 4043,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "stationsToVerify": 3777,
+      "stationsToVerify": 3862,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 2593,
+      "stationsToVerify": 2632,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "CHARGING TOGETHER SL",
-      "stationsToVerify": 756,
+      "stationsToVerify": 768,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "stationsToVerify": 697,
+      "stationsToVerify": 715,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "EDP CLIENTES SAU",
-      "stationsToVerify": 503,
+      "stationsToVerify": 517,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "ERANOVUM E-MOBILITY, S.L.",
-      "stationsToVerify": 344,
+      "stationsToVerify": 354,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "stationsToVerify": 330,
+      "stationsToVerify": 347,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "ACCIONA Recarga",
-      "stationsToVerify": 265,
+      "stationsToVerify": 272,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "(ZUNDER) Grupo Easychargar SA",
-      "stationsToVerify": 257,
-      "catalogCoveragePercent": 0,
-      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
-    },
-    {
-      "operator": "PLENOIL, S.L.",
-      "stationsToVerify": 254,
+      "stationsToVerify": 271,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "Galp Energía España, S.A.U.",
-      "stationsToVerify": 253,
+      "stationsToVerify": 261,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
+      "operator": "PLENOIL, S.L.",
+      "stationsToVerify": 255,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "ELECTROMAPS SL",
-      "stationsToVerify": 222,
+      "stationsToVerify": 233,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1365,7 +1365,7 @@
     },
     {
       "operator": "Punto Recargas SL",
-      "stationsToVerify": 196,
+      "stationsToVerify": 197,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1376,8 +1376,14 @@
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
+      "operator": "QWELLO España SL",
+      "stationsToVerify": 144,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
       "operator": "BARCELONA DE SERVEIS MUNICIPALS, SA",
-      "stationsToVerify": 141,
+      "stationsToVerify": 142,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1388,14 +1394,8 @@
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
-      "operator": "QWELLO España SL",
-      "stationsToVerify": 139,
-      "catalogCoveragePercent": 0,
-      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
-    },
-    {
       "operator": "MAKSU ESPAÑA SL",
-      "stationsToVerify": 125,
+      "stationsToVerify": 130,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     }
@@ -3405,8 +3405,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 17066,
-    "remainingOutsideQueue": 16966,
+    "totalUnknown": 17458,
+    "remainingOutsideQueue": 17358,
     "operatorsInQueue": 1
   }
 }

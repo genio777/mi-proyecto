@@ -1,0 +1,102 @@
+name: Publicar APK verificado para pruebas
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Ejecución Android aprobada cuyo APK se publicará sin recompilar
+        required: true
+        type: string
+      expected_sha256:
+        description: SHA-256 del APK ya comprobado
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: mobile-test-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+      EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+    steps:
+      - name: Verificar procedencia y conservar exactamente el APK aprobado
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$EXPECTED_SHA256" =~ ^[a-f0-9]{64}$ ]]
+          gh api "repos/$GH_REPO/actions/runs/$SOURCE_RUN_ID" > source-run.json
+          jq -e --arg repo "$GH_REPO" '
+            .conclusion == "success" and
+            .path == ".github/workflows/android-apk.yml" and
+            .head_repository.full_name == $repo
+          ' source-run.json > /dev/null
+          SOURCE_SHA=$(jq -r .head_sha source-run.json)
+          [[ "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ ]]
+          export SOURCE_SHA
+          # Solo se distribuye código que ya está integrado en main.
+          gh api "repos/$GH_REPO/compare/$SOURCE_SHA...main" --jq .status > ancestry.txt
+          [[ "$(cat ancestry.txt)" == ahead || "$(cat ancestry.txt)" == identical ]]
+          gh api "repos/$GH_REPO/contents/package.json?ref=$SOURCE_SHA" --jq .content | base64 --decode > package.json
+          VERSION=$(jq -r .version package.json)
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          export VERSION
+          gh run download "$SOURCE_RUN_ID" --repo "$GH_REPO" --name CargaGratis-Android-debug --dir original
+          printf '%s  %s\n' "$EXPECTED_SHA256" original/app-debug.apk | sha256sum --check --strict
+          mkdir delivery
+          APK_NAME="CargaGratis-Jpaz-$VERSION-pruebas.apk"
+          cp original/app-debug.apk "delivery/$APK_NAME"
+          printf '%s  %s\n' "$EXPECTED_SHA256" "$APK_NAME" > delivery/SHA256SUMS.txt
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          version = os.environ['VERSION']
+          repo = os.environ['GH_REPO']
+          run = os.environ['SOURCE_RUN_ID']
+          sha = os.environ['SOURCE_SHA']
+          digest = os.environ['EXPECTED_SHA256']
+          Path('release-notes.md').write_text(f'''Versión de prueba para Android: **{version}**. Descarga el archivo **CargaGratis-Jpaz-{version}-pruebas.apk** adjunto y ábrelo desde tu móvil Android.
+
+          Incluye actualización de catálogos desde Seguridad → Actualizar catálogos, copia/restauración de ajustes personales y el planificador con hasta tres destinos. La versión estable OPI permanece intacta.
+
+          Antes de instalar sobre una versión anterior, exporta tu copia JSON desde Seguridad si esa versión ofrece la opción. Si Android indica un conflicto de firma, conserva la instalación anterior y usa la web; no borres datos sin una copia. Se conserva la firma del artefacto original, sin recompilar. Esta descarga utiliza la firma de depuración existente, sin una nueva clave permanente.
+
+          Web para probar sin instalar: https://genio777.github.io/mi-proyecto/
+
+          Procedencia: [ejecución Android aprobada {run}](https://github.com/{repo}/actions/runs/{run}), código `{sha}`. El flujo de publicación comprueba que la ejecución terminó correctamente, que el código está integrado en main y que el SHA-256 coincide con el APK previamente verificado.
+
+          SHA-256: `{digest}`.
+          ''', encoding='utf-8')
+          PY
+          TAG="v$VERSION-pruebas-movil"
+          # Una publicación existente solo se reutiliza si su APK es idéntico.
+          if gh release view "$TAG" --repo "$GH_REPO" > /dev/null 2>&1; then
+            mkdir existing
+            gh release download "$TAG" --repo "$GH_REPO" --pattern "$APK_NAME" --dir existing
+            printf '%s  %s\n' "$EXPECTED_SHA256" "existing/$APK_NAME" | sha256sum --check --strict
+          else
+            gh release create "$TAG" "delivery/$APK_NAME" delivery/SHA256SUMS.txt \
+              --repo "$GH_REPO" --target "$SOURCE_SHA" --prerelease \
+              --title "Carga Gratis Jpaz $VERSION · pruebas en móvil" \
+              --notes-file release-notes.md
+          fi
+          # Leer y comprobar los bytes publicados, además de la subida.
+          mkdir downloaded
+          gh release download "$TAG" --repo "$GH_REPO" --pattern "$APK_NAME" --dir downloaded
+          printf '%s  %s\n' "$EXPECTED_SHA256" "downloaded/$APK_NAME" | sha256sum --check --strict
+          printf '[Descargar APK %s](https://github.com/%s/releases/download/%s/%s)\n' \
+            "$VERSION" "$GH_REPO" "$TAG" "$APK_NAME" >> "$GITHUB_STEP_SUMMARY"

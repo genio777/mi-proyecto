@@ -4,6 +4,10 @@
 
 La comprobación exige arranque de la versión empaquetada, aviso legal antes del mapa, tres destinos, conectores diferenciados y controles de copia con plugins nativos registrados. La exportación pulsa el botón real, lee el JSON escrito por Filesystem en caché privada, confirma que conserva favoritos válidos y excluye caché geográfica y un SOC inválido. Abre y cierra el selector nativo de compartir sin enviar el archivo a nadie. Una ausencia del DOM, del puente o del archivo provoca fallo. El script de resultados también rechaza cero pruebas, pruebas omitidas o resultados parciales.
 
+Las seis pruebas incluyen persistencia real de los catálogos: una inyección exclusiva desde Java guarda dos estaciones sintéticas en `CacheStorage`, cierra la actividad y abre otro WebView. La aplicación debe mostrar esa copia como guardada y conservar sus fechas. La entrada anterior se preserva en una caché auxiliar y se restaura en un bloque `finally`; los fixtures no se incorporan a la aplicación distribuida. Esta prueba no desactiva la radio ni simula estar sin conexión.
+
+Otra prueba pulsa «Actualizar catálogos» y descarga los JSON públicos de GitHub Pages a través del WebView Android real, sin interceptar la red ni usar REVE autenticado. Exige que la fuente nacional sea «Publicado», que se renueve el instante de guardado y que el inventario recibido sea válido. Un fallo de CORS, TLS, red o validación hace fallar la comprobación; no se sustituye por un éxito de la caché.
+
 En un dispositivo de prueba o emulador conectado:
 
 ```bash

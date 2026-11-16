@@ -8,6 +8,12 @@ PWA y aplicación Android para consultar cargadores, comparar costes orientativo
 
 La rama `OPI` es la versión estable de recuperación. Este desarrollo parte de `main` en una rama independiente y no escribe en OPI.
 
+## Actualización de datos en Android
+
+Desde la versión 0.1.4, el APK puede descargar catálogos públicos sin reinstalar la aplicación. Arranca con la última copia válida disponible o con los datos incluidos; después comprueba la publicación de GitHub. Revisa los datos mientras está visible y al volver a primer plano, reutilizando copias recientes durante una hora. En **Seguridad → Actualización de catálogos** se muestran la fuente, la fecha de los datos y el botón «Actualizar catálogos» para España y referencias de tarifas.
+
+Los países internacionales se actualizan al consultar sus zonas o favoritos. Durante un cálculo de viaje se utilizan las copias disponibles para conservar el presupuesto de búsqueda; un país no descargado y sin una copia compatible puede quedar sin cobertura comprobada. Una actualización recibida durante el cálculo se aplica al terminar; si cambian los datos, se pide recalcular. La fecha de descarga no confirma precios ni disponibilidad. Detalles y límites: [CATALOG-UPDATES.md](docs/CATALOG-UPDATES.md).
+
 ## Datos personales y copias
 
 En **Seguridad → Copia de seguridad** puedes exportar tus favoritos, puntos personales, perfiles de vehículo y ajustes guardados como JSON. En la web se descarga un archivo; Android abre el selector nativo para guardarlo o compartirlo desde la caché privada. La copia contiene ubicaciones personales y debe conservarse en un lugar de confianza.

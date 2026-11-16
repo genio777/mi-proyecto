@@ -45,3 +45,18 @@ test('an international station saved on the map recovers its licensed country re
  await expect(restored).toBeVisible();await expect(restored.getByRole('link',{name:'CC BY 4.0',exact:true})).toHaveAttribute('href','https://creativecommons.org/licenses/by/4.0/');
  await expect(restored.getByText('Desconocido',{exact:true})).toBeVisible();expect(countryRequests).toEqual(['RU','RU']);
 });
+
+test('revisiting international favourites renews already displayed records after their cache expires',async({page})=>{
+ await page.clock.install();
+ await page.addInitScript(()=>localStorage.setItem('cg_favorites',JSON.stringify(['ocm-global-RU-123'])));
+ let requests=0;
+ await page.route('**/data/international/RU.json*',route=>json(route,{country:'RU',chargers:[{...russian,name:++requests===1?russian.name:'Fixture Moscú renovada'}]}));
+ await page.goto('/');await tab(page,'favoritos');
+ await expect(page.getByRole('heading',{name:russian.name,exact:true})).toBeVisible();
+ await tab(page,'seguridad');
+ await page.clock.fastForward(60*60*1000+1000);
+ await tab(page,'favoritos');
+ await expect(page.getByRole('heading',{name:'Fixture Moscú renovada',exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:russian.name,exact:true})).toHaveCount(0);
+ expect(requests).toBe(2);
+});

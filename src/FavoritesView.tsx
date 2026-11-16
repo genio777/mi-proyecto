@@ -7,7 +7,10 @@ export default function FavoritesView({ids,allChargers,onRemove,onNavigate,onLoa
  const known=new Map(allChargers.map(station=>[station.id,station])),onLoadedRef=useRef(onLoaded);
  onLoadedRef.current=onLoaded;
  const missingCountries=[...new Set(ids.filter(id=>!known.has(id)).map(id=>/^ocm-global-([A-Z]{2})-/.exec(id)?.[1]).filter(Boolean))].sort();
- const requestKey=JSON.stringify(missingCountries);
+ // Re-entering favourites also checks the loader's TTL for records already
+ // displayed; a known ID must not keep a withdrawn station forever.
+ const requestedCountries=[...new Set(ids.map(id=>/^ocm-global-([A-Z]{2})-/.exec(id)?.[1]).filter(Boolean))].sort();
+ const requestKey=JSON.stringify(requestedCountries);
  const [loading,setLoading]=useState(false),[warnings,setWarnings]=useState<string[]>([]),[retry,setRetry]=useState(0);
  useEffect(()=>{
   const codes=JSON.parse(requestKey);setWarnings([]);

@@ -84,7 +84,11 @@ function budgetScope(signal,milliseconds) {
   const check=()=>{if(!controller.signal.aborted&&Date.now()>=expiresAt)expire();abortIfNeeded(controller.signal);};
   return {signal:controller.signal,check,close:()=>{clearTimeout(timer);signal?.removeEventListener('abort',forward);}};
 }
-export function createInternationalCatalog({fetchFn=(...args)=>fetch(...args),baseUrl='./data/international/',timeoutMs=15000,budgetMs=15000,concurrency=3}={}) {
+/**
+ * @param {{fetchFn?:Function,baseUrl?:string,timeoutMs?:number,budgetMs?:number,concurrency?:number,readJson?:((file:string,options:{signal:AbortSignal,validate:(data:any)=>any})=>any)|null,cacheTtlMs?:number,now?:()=>number}} options
+ */
+export function createInternationalCatalog({fetchFn=(...args)=>fetch(...args),baseUrl='./data/international/',timeoutMs=15000,budgetMs=15000,concurrency=3,readJson=null,cacheTtlMs=Infinity,now=()=>Date.now()}={}) {
+  if((readJson!==null&&typeof readJson!=='function')||typeof now!=='function'||typeof cacheTtlMs!=='number'||cacheTtlMs<0||Number.isNaN(cacheTtlMs))throw Error('Configuración de actualización internacional no válida');
   let manifestTask,active=0;
   const shards=new Map(),pending=[];
   const limit=Math.max(1,Math.floor(concurrency)||1);
@@ -108,22 +112,30 @@ export function createInternationalCatalog({fetchFn=(...args)=>fetch(...args),ba
       if(signal.aborted)job.abort();
     });
   }
-  async function getJson(file,signal){
+  async function getJson(file,signal,validate){
     const release=await acquireSlot(signal);
     try{
       abortIfNeeded(signal);
+      if(readJson){
+        // The source checks the complete snapshot before committing it to its
+        // persistent cache. Always return raw JSON from that guard: country
+        // records are transformed to their station array only inside this loader.
+        const guard=data=>{validate(data);return data;};
+        const data=await waitForSignal(Promise.resolve().then(()=>{abortIfNeeded(signal);return readJson(file,{signal,validate:guard});}),signal);
+        abortIfNeeded(signal);return validate(data);
+      }
       const response=await waitForSignal(Promise.resolve(fetchFn(baseUrl+file,{signal})),signal);
       if(!response.ok)throw Error('HTTP '+response.status);
       const data=await waitForSignal(Promise.resolve(response.json()),signal);
-      abortIfNeeded(signal);return data;
+      abortIfNeeded(signal);return validate(data);
     }finally{release();}
   }
   function sharedTask(file,validate,evict){
     const controller=new AbortController();
-    const task={controller,settled:false,consumers:0,promise:null,evict:()=>evict(task)};
+    const task={controller,settled:false,resolvedAt:null,consumers:0,promise:null,evict:()=>evict(task)};
     const timer=setTimeout(()=>controller.abort(new DOMException('Tiempo de espera agotado al descargar '+file,'TimeoutError')),timeoutMs);
-    task.promise=getJson(file,controller.signal).then(validate).finally(()=>clearTimeout(timer));
-    task.promise.then(()=>{task.settled=true;},()=>{task.settled=true;task.evict();});
+    task.promise=getJson(file,controller.signal,validate).finally(()=>clearTimeout(timer));
+    task.promise.then(()=>{task.settled=true;task.resolvedAt=now();},()=>{task.settled=true;task.evict();});
     return task;
   }
   function consume(task,signal){
@@ -137,20 +149,38 @@ export function createInternationalCatalog({fetchFn=(...args)=>fetch(...args),ba
       }
     });
   }
+  function expired(task){
+    if(!task?.settled||cacheTtlMs===Infinity)return false;
+    const age=now()-task.resolvedAt;
+    return age<0||age>=cacheTtlMs;
+  }
   function manifestRecord(){
+    if(expired(manifestTask))manifestTask=null;
     if(!manifestTask)manifestTask=sharedTask('index.json',validateManifest,task=>{if(manifestTask===task)manifestTask=null;});
     return manifestTask;
   }
   function countryRecord(entry){
+    const signature=JSON.stringify([entry.file,entry.count,entry.updatedAt??null,entry.sourceCommit??null]);
+    const previous=shards.get(entry.code);
+    if(previous&&(expired(previous)||previous.signature!==signature))shards.delete(entry.code);
     if(!shards.has(entry.code)){
       const task=sharedTask(entry.file,data=>{
         if(data?.country!==entry.code||!Array.isArray(data.chargers)||data.chargers.length!==entry.count)throw Error('País o tamaño de archivo no coincide con el índice');
         if(data.chargers.some(c=>!c?.id||c.country!==entry.code||!validPoint([c.lat,c.lng])||!c.sourceUrl||!c.dataProvider?.licenseUrl))throw Error('Registros internacionales inválidos o sin atribución');
         return data.chargers;
       },task=>{if(shards.get(entry.code)===task)shards.delete(entry.code);});
+      task.signature=signature;
       shards.set(entry.code,task);
     }
     return shards.get(entry.code);
+  }
+  function invalidate(){
+    // Current callers keep their leased task and snapshot. Only subsequent
+    // lookups lose completed in-memory results; no active download is aborted.
+    const removed={manifest:false,countries:0};
+    if(manifestTask?.settled){manifestTask=null;removed.manifest=true;}
+    for(const [code,task]of shards)if(task.settled){shards.delete(code);removed.countries++;}
+    return removed;
   }
   /** @param {{signal?:AbortSignal,budgetMs?:number}} options */
   async function loadManifest({signal,budgetMs:milliseconds=budgetMs}={}){
@@ -197,6 +227,11 @@ export function createInternationalCatalog({fetchFn=(...args)=>fetch(...args),ba
       return await loadEntries(manifest,selectForBounds(manifest,boxes,scope.check),scope);
     }finally{scope.close();}
   }
-  return {loadManifest,loadForPoints,loadCountries};
+  return {loadManifest,loadForPoints,loadCountries,invalidate};
 }
-export const internationalCatalog=createInternationalCatalog();
+export let internationalCatalog=createInternationalCatalog();
+/** @param {Parameters<typeof createInternationalCatalog>[0]} [options] */
+export function configureInternationalCatalog(options={}){
+  internationalCatalog=createInternationalCatalog(options);
+  return internationalCatalog;
+}

@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-23T11:22:00.638Z",
+  "generatedAt": "2026-11-23T22:52:20.229Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26344,
+  "stationsWithUnknownPrice": 26347,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26344,
+  "catalogStations": 26347,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 5847,
+      "total": 5848,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5847,
+      "unknownPrices": 5848,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -25,10 +25,10 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3807,
+      "total": 3808,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3807,
+      "unknownPrices": 3808,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -209,10 +209,10 @@
     },
     {
       "operator": "Atlante Iberia S.L.",
-      "total": 130,
+      "total": 131,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 130,
+      "unknownPrices": 131,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1385,7 +1385,7 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 5847,
+      "stationsToVerify": 5848,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1397,7 +1397,7 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3807,
+      "stationsToVerify": 3808,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26344,
-    "remainingOutsideQueue": 26244,
+    "totalUnknown": 26347,
+    "remainingOutsideQueue": 26247,
     "operatorsInQueue": 1
   }
 }

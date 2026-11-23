@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-22T22:03:43.122Z",
+  "generatedAt": "2026-11-23T02:42:26.375Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26111,
+  "stationsWithUnknownPrice": 26339,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26111,
+  "catalogStations": 26339,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -128,6 +128,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "EMAYA, S.A.",
+      "total": 234,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 234,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "Totalenergies Marketing España, S.A.U.",
       "total": 233,
       "verifiedPrices": 0,
@@ -157,14 +165,6 @@
       "verifiedPrices": 0,
       "verifiedFree": 0,
       "unknownPrices": 198,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "EMAYA, S.A.",
-      "total": 187,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 187,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -200,6 +200,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "BONPREU, S.A.U.",
+      "total": 136,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 136,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "Atlante Iberia S.L.",
       "total": 130,
       "verifiedPrices": 0,
@@ -213,14 +221,6 @@
       "verifiedPrices": 0,
       "verifiedFree": 0,
       "unknownPrices": 126,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "BONPREU, S.A.U.",
-      "total": 111,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 111,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -240,6 +240,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "Emovili Fast, S.L.",
+      "total": 94,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 94,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "IONITY GmbH Sucursal en España",
       "total": 90,
       "verifiedPrices": 0,
@@ -256,14 +264,6 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Emovili Fast, S.L.",
-      "total": 82,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 82,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "APK ELECTRIC, S.L.",
       "total": 71,
       "verifiedPrices": 0,
@@ -272,7 +272,23 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "ENERGEA CONSULTING Y ASESORES SL",
+      "total": 66,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 66,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "P-APP & WEB SERVICIOS DIGITALES S.L.U.",
+      "total": 59,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 59,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "P‑APP & WEB SERVICIOS DIGITALES S.L.U.",
       "total": 59,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -285,14 +301,6 @@
       "verifiedPrices": 0,
       "verifiedFree": 0,
       "unknownPrices": 57,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "ENERGEA CONSULTING Y ASESORES SL",
-      "total": 56,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 56,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -320,6 +328,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "AJUNTAMENT DE CALVIÀ",
+      "total": 50,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 50,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "Energía Distribuida del Norte S.A.",
       "total": 48,
       "verifiedPrices": 0,
@@ -336,11 +352,19 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AJUNTAMENT DE CALVIÀ",
-      "total": 41,
+      "operator": "Diputación Foral de Gipuzkoa",
+      "total": 44,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 41,
+      "unknownPrices": 44,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "GESTION INTELIGENTE DE CARGAS S.L.",
+      "total": 42,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 42,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -352,27 +376,11 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "GESTION INTELIGENTE DE CARGAS S.L.",
-      "total": 35,
+      "operator": "ELECSUM FOTOVOLTAICA, S.L.U.",
+      "total": 30,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 35,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Diputación Foral de Gipuzkoa",
-      "total": 34,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 34,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "P‑APP & WEB SERVICIOS DIGITALES S.L.U.",
-      "total": 33,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 33,
+      "unknownPrices": 30,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -384,7 +392,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "ELECSUM FOTOVOLTAICA, S.L.U.",
+      "operator": "AYUNTAMIENTO DE FELANITX",
       "total": 26,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -416,19 +424,19 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AYUNTAMIENTO DE FELANITX",
-      "total": 21,
+      "operator": "AJUNTAMENT DE SANT LLUIS",
+      "total": 24,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 21,
+      "unknownPrices": 24,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "AJUNTAMENT DES CASTELL",
-      "total": 19,
+      "total": 23,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 19,
+      "unknownPrices": 23,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -440,6 +448,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "FERROVIAL CONSTRUCCIÓN S.A.",
+      "total": 18,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 18,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "ION SMART ENERGY 2000 SL",
       "total": 17,
       "verifiedPrices": 0,
@@ -448,15 +464,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AJUNTAMENT DE SANT LLUIS",
-      "total": 17,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 17,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "FERROVIAL CONSTRUCCIÓN S.A.",
+      "operator": "PORSAMADRID, S.L.",
       "total": 16,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -480,7 +488,15 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "PORSAMADRID, S.L.",
+      "operator": "AJUNTAMENT D'INCA",
+      "total": 12,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 12,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "AJUNTAMENT DE SANTA MARIA DEL CAMI",
       "total": 12,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -496,7 +512,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AJUNTAMENT DE SANTA MARIA DEL CAMI",
+      "operator": "Inversiones Pascual",
       "total": 10,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -512,7 +528,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AJUNTAMENT D'INCA",
+      "operator": "COSTCO WHOLESALE SPAIN SLU",
       "total": 9,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -528,7 +544,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Inversiones Pascual",
+      "operator": "Gaia Green Tech S.L.",
       "total": 8,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -536,19 +552,11 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Gaia Green Tech S.L.",
-      "total": 6,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 6,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "AJUNTAMENT DE BUNYOLA",
-      "total": 6,
+      "total": 8,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 6,
+      "unknownPrices": 8,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -568,6 +576,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "AYUNTAMIENTO DE GUADALIX DE LA SIERRA",
+      "total": 6,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 6,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "ESTACION SERVICIO JAIME I, S.A.",
       "total": 6,
       "verifiedPrices": 0,
@@ -576,7 +592,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "COSTCO WHOLESALE SPAIN SLU",
+      "operator": "Club Nàutic l'Escala",
       "total": 6,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -584,23 +600,31 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AYUNTAMIENTO DE GUADALIX DE LA SIERRA",
-      "total": 5,
+      "operator": "Baix Ebre Innova SL",
+      "total": 6,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5,
+      "unknownPrices": 6,
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Club Nàutic l'Escala",
-      "total": 5,
+      "operator": "COVES ENERGY SOLUTIONS SL",
+      "total": 6,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5,
+      "unknownPrices": 6,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Motor Box Mallorca SL",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Tuwyncar Sport S.L.",
       "total": 4,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -640,7 +664,55 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "Marbella Premium SL",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Torrecillas Serna, S.A.",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Porsatecnic S.L.",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "AUTOMOVILES ARTAL, S.L.",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Darsen Motor S.L.",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "ALGUPIBE, S.L.",
+      "total": 4,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 4,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Autos Pisa SL",
       "total": 4,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -672,7 +744,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "COMPAÑIA GENERAL NAFTE, S.L.",
+      "operator": "CONCELLO DE VEDRA",
       "total": 4,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -680,7 +752,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Baix Ebre Innova SL",
+      "operator": "COMPAÑIA GENERAL NAFTE, S.L.",
       "total": 4,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -736,7 +808,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Marbella Premium SL",
+      "operator": "Emerix Systems S.L.",
       "total": 3,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -744,7 +816,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Porsatecnic S.L.",
+      "operator": "CHELMONTE, SL",
       "total": 3,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -752,63 +824,39 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AUTOMOVILES ARTAL, S.L.",
+      "operator": "Consell Insular de Menorca",
       "total": 3,
       "verifiedPrices": 0,
       "verifiedFree": 0,
       "unknownPrices": 3,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Autos Pisa SL",
-      "total": 3,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 3,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "CONCELLO DE VEDRA",
-      "total": 3,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 3,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "COVES ENERGY SOLUTIONS SL",
-      "total": 3,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 3,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Tuwyncar Sport S.L.",
-      "total": 2,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 2,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Torrecillas Serna, S.A.",
-      "total": 2,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 2,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Darsen Motor S.L.",
-      "total": 2,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 2,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "ESTACION DE SERVICIO VILLAROSA S.A.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "EPRESA ENERGIA SA",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "FERVI, SL.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "FUNDACIO BALEAR D'INNOVACIÓ I TECNOLOGIA",
       "total": 2,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -840,6 +888,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "SOCIEDAD COOPERATIVA DE PRODUCTORES TAXISTAS DE LAS PALMAS",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "HOTEL CIUDAD DE ALCAÑIZ SA",
       "total": 2,
       "verifiedPrices": 0,
@@ -857,6 +913,14 @@
     },
     {
       "operator": "SERVEIS FERROVIARIS DE MALLORCA",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Barter Mobility S.L.",
       "total": 2,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -896,7 +960,31 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "COSENTINO INDUSTRIAL, S.A.U.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "JARDINES LA TEJERA, S.A.U.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "ARETE MACENAS HOTELES, S.L.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "INVESMORAZO S.L",
       "total": 2,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -912,6 +1000,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "FUNDACION PAIDEIA GALIZA",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "ESTACION DE SERVICIO LOW COST 2015, S.L.",
       "total": 2,
       "verifiedPrices": 0,
@@ -920,7 +1016,23 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "TRANSPORTES PENADES E HIJOS SL",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "J. REDONDO, S.L.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "PARKING MOGAN SA",
       "total": 2,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -944,6 +1056,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "AUTOCARES DIPESA SL",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "ESTACION DE SERVICIO AYALA S.L.",
       "total": 2,
       "verifiedPrices": 0,
@@ -953,6 +1073,14 @@
     },
     {
       "operator": "LOGISTICA DE CARBURANTES PETROLIFEROS GROUP, S.L.",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "HOTEL PUENTE DE LA TOJA S.L.",
       "total": 2,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1016,6 +1144,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "HOTELES SOL DEL SUR, SA",
+      "total": 2,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 2,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "DORSOL, SAU",
       "total": 2,
       "verifiedPrices": 0,
@@ -1064,39 +1200,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "EPRESA ENERGIA SA",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "FERVI, SL.",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "FUNDACIO BALEAR D'INNOVACIÓ I TECNOLOGIA",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "Ajuntament de Bellvís",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "SOCIEDAD COOPERATIVA DE PRODUCTORES TAXISTAS DE LAS PALMAS",
       "total": 1,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1112,71 +1216,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "Emerix Systems S.L.",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "AYUNTAMIENTO DE ALPICAT",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Barter Mobility S.L.",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "COSENTINO INDUSTRIAL, S.A.U.",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "ARETE MACENAS HOTELES, S.L.",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "INVESMORAZO S.L",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "FUNDACION PAIDEIA GALIZA",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "TRANSPORTES PENADES E HIJOS SL",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "PARKING MOGAN SA",
       "total": 1,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1192,14 +1232,6 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "AUTOCARES DIPESA SL",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "WENEA HIGHWAYS OESTE, SLU",
       "total": 1,
       "verifiedPrices": 0,
@@ -1208,23 +1240,7 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "HOTEL PUENTE DE LA TOJA S.L.",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "PETRO UVE S.L",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "HOTELES SOL DEL SUR, SA",
       "total": 1,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1320,23 +1336,39 @@
       "unverifiedCatalogPrices": 0
     },
     {
-      "operator": "CHELMONTE, SL",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Consell Insular de Menorca",
-      "total": 1,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 1,
-      "unverifiedCatalogPrices": 0
-    },
-    {
       "operator": "Explotaciones IOndustriales Sur de Tenerife SL",
+      "total": 1,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 1,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "AYUNTAMIENTO DE FONZ",
+      "total": 1,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 1,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "Ayuntamiento de Urkabustaiz",
+      "total": 1,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 1,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "CHARGEVITE ENERGY SLU",
+      "total": 1,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 1,
+      "unverifiedCatalogPrices": 0
+    },
+    {
+      "operator": "EXPLOTACIONES INDUSTRIALES LOS RODEOS,S.L.",
       "total": 1,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1348,7 +1380,7 @@
   "coverage": {
     "individuallyVerifiedPercent": 0,
     "unknownPricePercent": 100,
-    "operatorsReviewed": 167
+    "operatorsReviewed": 171
   },
   "priorityOperators": [
     {
@@ -1442,6 +1474,12 @@
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
+      "operator": "EMAYA, S.A.",
+      "stationsToVerify": 234,
+      "catalogCoveragePercent": 0,
+      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
+    },
+    {
       "operator": "Totalenergies Marketing España, S.A.U.",
       "stationsToVerify": 233,
       "catalogCoveragePercent": 0,
@@ -1462,12 +1500,6 @@
     {
       "operator": "MAKSU ESPAÑA SL",
       "stationsToVerify": 198,
-      "catalogCoveragePercent": 0,
-      "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
-    },
-    {
-      "operator": "EMAYA, S.A.",
-      "stationsToVerify": 187,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     }
@@ -3477,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26111,
-    "remainingOutsideQueue": 26011,
+    "totalUnknown": 26339,
+    "remainingOutsideQueue": 26239,
     "operatorsInQueue": 1
   }
 }

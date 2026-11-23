@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-23T02:42:26.375Z",
+  "generatedAt": "2026-11-23T11:22:00.638Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26339,
+  "stationsWithUnknownPrice": 26344,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26339,
+  "catalogStations": 26344,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -33,10 +33,10 @@
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "total": 1080,
+      "total": 1081,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 1080,
+      "unknownPrices": 1081,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -560,6 +560,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "AENA S.M.E., S.A.",
+      "total": 8,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 8,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "ZOILO RIOS, S.A.",
       "total": 6,
       "verifiedPrices": 0,
@@ -785,14 +793,6 @@
     },
     {
       "operator": "SISTEMAS DE RIEGO SOLAR S.L.",
-      "total": 4,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 4,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "AENA S.M.E., S.A.",
       "total": 4,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1403,7 +1403,7 @@
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "stationsToVerify": 1080,
+      "stationsToVerify": 1081,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26339,
-    "remainingOutsideQueue": 26239,
+    "totalUnknown": 26344,
+    "remainingOutsideQueue": 26244,
     "operatorsInQueue": 1
   }
 }

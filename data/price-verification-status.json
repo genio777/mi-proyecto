@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-23T22:52:20.229Z",
+  "generatedAt": "2026-11-24T06:51:19.273Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26347,
+  "stationsWithUnknownPrice": 26351,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26347,
+  "catalogStations": 26351,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 5848,
+      "total": 5849,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5848,
+      "unknownPrices": 5849,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -25,10 +25,10 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3808,
+      "total": 3809,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3808,
+      "unknownPrices": 3809,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -225,10 +225,10 @@
     },
     {
       "operator": "Consejo Insular de la Energía de Gran Canaria",
-      "total": 103,
+      "total": 104,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 103,
+      "unknownPrices": 104,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -369,10 +369,10 @@
     },
     {
       "operator": "The F Charging Espana S.L.U.",
-      "total": 38,
+      "total": 39,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 38,
+      "unknownPrices": 39,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1385,7 +1385,7 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 5848,
+      "stationsToVerify": 5849,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1397,7 +1397,7 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3808,
+      "stationsToVerify": 3809,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26347,
-    "remainingOutsideQueue": 26247,
+    "totalUnknown": 26351,
+    "remainingOutsideQueue": 26251,
     "operatorsInQueue": 1
   }
 }

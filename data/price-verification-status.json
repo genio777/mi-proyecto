@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-24T06:51:19.273Z",
+  "generatedAt": "2026-11-24T18:44:11.512Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26351,
+  "stationsWithUnknownPrice": 26354,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26351,
+  "catalogStations": 26354,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -17,10 +17,10 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "total": 5529,
+      "total": 5530,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5529,
+      "unknownPrices": 5530,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -33,10 +33,10 @@
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "total": 1081,
+      "total": 1082,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 1081,
+      "unknownPrices": 1082,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -153,10 +153,10 @@
     },
     {
       "operator": "REMO SUSTAINABLE MOBILITY S.L",
-      "total": 201,
+      "total": 202,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 201,
+      "unknownPrices": 202,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1391,7 +1391,7 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "stationsToVerify": 5529,
+      "stationsToVerify": 5530,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1403,7 +1403,7 @@
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "stationsToVerify": 1081,
+      "stationsToVerify": 1082,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1493,7 +1493,7 @@
     },
     {
       "operator": "REMO SUSTAINABLE MOBILITY S.L",
-      "stationsToVerify": 201,
+      "stationsToVerify": 202,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26351,
-    "remainingOutsideQueue": 26251,
+    "totalUnknown": 26354,
+    "remainingOutsideQueue": 26254,
     "operatorsInQueue": 1
   }
 }

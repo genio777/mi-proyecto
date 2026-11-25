@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-25T02:50:54.362Z",
+  "generatedAt": "2026-11-25T11:51:51.045Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26357,
+  "stationsWithUnknownPrice": 26359,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26357,
+  "catalogStations": 26359,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -17,10 +17,10 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "total": 5530,
+      "total": 5531,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5530,
+      "unknownPrices": 5531,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -49,10 +49,10 @@
     },
     {
       "operator": "EDP CLIENTES SAU",
-      "total": 749,
+      "total": 750,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 749,
+      "unknownPrices": 750,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1391,7 +1391,7 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "stationsToVerify": 5530,
+      "stationsToVerify": 5531,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1415,7 +1415,7 @@
     },
     {
       "operator": "EDP CLIENTES SAU",
-      "stationsToVerify": 749,
+      "stationsToVerify": 750,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3152,7 +3152,7 @@
       "city": "Alaquàs",
       "province": "46",
       "address": "BENZINA CARBURANTES ALAQUAS - Travessera del",
-      "connector": "CHAdeMO, CCS, Tipo2",
+      "connector": "Tipo2, CHAdeMO, CCS",
       "powerKw": 75,
       "latitude": 39.447897,
       "longitude": -0.469147,
@@ -3352,7 +3352,7 @@
       "city": "Albacete",
       "province": "02",
       "address": "Av. Escritor Rodrigo Rubio, 11, 02006",
-      "connector": "CCS, Tipo2",
+      "connector": "Tipo2, CCS",
       "powerKw": 60,
       "latitude": 39.008057,
       "longitude": -1.883976,
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26357,
-    "remainingOutsideQueue": 26257,
+    "totalUnknown": 26359,
+    "remainingOutsideQueue": 26259,
     "operatorsInQueue": 1
   }
 }

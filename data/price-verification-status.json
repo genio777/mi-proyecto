@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-24T18:44:11.512Z",
+  "generatedAt": "2026-11-25T02:50:54.362Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26354,
+  "stationsWithUnknownPrice": 26357,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26354,
+  "catalogStations": 26357,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -25,18 +25,18 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3809,
+      "total": 3810,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3809,
+      "unknownPrices": 3810,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "total": 1082,
+      "total": 1083,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 1082,
+      "unknownPrices": 1083,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -441,10 +441,10 @@
     },
     {
       "operator": "Charging Together Norte SL",
-      "total": 19,
+      "total": 20,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 19,
+      "unknownPrices": 20,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1397,13 +1397,13 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3809,
+      "stationsToVerify": 3810,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "stationsToVerify": 1082,
+      "stationsToVerify": 1083,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26354,
-    "remainingOutsideQueue": 26254,
+    "totalUnknown": 26357,
+    "remainingOutsideQueue": 26257,
     "operatorsInQueue": 1
   }
 }

@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-25T11:51:51.045Z",
+  "generatedAt": "2026-11-25T21:21:14.517Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26359,
+  "stationsWithUnknownPrice": 26361,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26359,
+  "catalogStations": 26361,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 5849,
+      "total": 5850,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5849,
+      "unknownPrices": 5850,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -33,10 +33,10 @@
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "total": 1083,
+      "total": 1084,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 1083,
+      "unknownPrices": 1084,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1385,7 +1385,7 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 5849,
+      "stationsToVerify": 5850,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1403,7 +1403,7 @@
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "stationsToVerify": 1083,
+      "stationsToVerify": 1084,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26359,
-    "remainingOutsideQueue": 26259,
+    "totalUnknown": 26361,
+    "remainingOutsideQueue": 26261,
     "operatorsInQueue": 1
   }
 }

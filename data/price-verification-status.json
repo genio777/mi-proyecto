@@ -1,42 +1,42 @@
 {
-  "generatedAt": "2026-11-26T03:43:23.500Z",
+  "generatedAt": "2026-11-26T13:15:28.563Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26365,
+  "stationsWithUnknownPrice": 26373,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26365,
+  "catalogStations": 26373,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 5851,
+      "total": 5852,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5851,
+      "unknownPrices": 5852,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "total": 5531,
+      "total": 5532,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5531,
+      "unknownPrices": 5532,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3811,
+      "total": 3813,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3811,
+      "unknownPrices": 3813,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "total": 1086,
+      "total": 1087,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 1086,
+      "unknownPrices": 1087,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -57,10 +57,10 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "total": 587,
+      "total": 588,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 587,
+      "unknownPrices": 588,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -441,10 +441,10 @@
     },
     {
       "operator": "Charging Together Norte SL",
-      "total": 20,
+      "total": 22,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 20,
+      "unknownPrices": 22,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1385,25 +1385,25 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 5851,
+      "stationsToVerify": 5852,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "stationsToVerify": 5531,
+      "stationsToVerify": 5532,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3811,
+      "stationsToVerify": 3813,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "stationsToVerify": 1086,
+      "stationsToVerify": 1087,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1421,7 +1421,7 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "stationsToVerify": 587,
+      "stationsToVerify": 588,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -2106,26 +2106,6 @@
       ]
     },
     {
-      "id": "reve:4127daab-f6dd-4574-b303-997d5680dcab",
-      "operator": "ENDESA X WAY, S.L.",
-      "name": "62020013930042",
-      "city": "Adeje",
-      "province": "38",
-      "address": "Avenida Virgen de Guadalupe, 21, 38679,",
-      "connector": "Tipo2",
-      "powerKw": 10.53,
-      "latitude": 28.100162,
-      "longitude": -16.75213,
-      "priceStatus": "UNKNOWN_NOT_FREE",
-      "checksRequired": [
-        "current_station_tariff",
-        "connector_identity",
-        "taxes_and_session_fees",
-        "public_access",
-        "verification_date_and_source"
-      ]
-    },
-    {
       "id": "reve:442bce0e-8efd-474b-add0-324884c7a1e7",
       "operator": "ENDESA X WAY, S.L.",
       "name": "62051045630015",
@@ -2772,7 +2752,7 @@
       "city": "Alacant",
       "province": "03",
       "address": "Avinguda Novelda, 216, 03011 Alacant,",
-      "connector": "CCS, Tipo2, CHAdeMO",
+      "connector": "Tipo2, CHAdeMO, CCS",
       "powerKw": 50,
       "latitude": 38.376415,
       "longitude": -0.498848,
@@ -3504,13 +3484,33 @@
         "public_access",
         "verification_date_and_source"
       ]
+    },
+    {
+      "id": "2024005248",
+      "operator": "ENDESA X WAY, S.L.",
+      "name": "21XP22T3KK4AM00277",
+      "city": "Albarracín",
+      "province": "Teruel",
+      "address": "44126 Albarracín, Teruel, Spain",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 40.40931,
+      "longitude": -1.436621,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
     }
   ],
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26365,
-    "remainingOutsideQueue": 26265,
+    "totalUnknown": 26373,
+    "remainingOutsideQueue": 26273,
     "operatorsInQueue": 1
   }
 }

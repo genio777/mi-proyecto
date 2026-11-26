@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-26T13:15:28.563Z",
+  "generatedAt": "2026-11-26T22:26:52.910Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26373,
+  "stationsWithUnknownPrice": 26374,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26373,
+  "catalogStations": 26374,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 5852,
+      "total": 5853,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5852,
+      "unknownPrices": 5853,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1385,7 +1385,7 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 5852,
+      "stationsToVerify": 5853,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26373,
-    "remainingOutsideQueue": 26273,
+    "totalUnknown": 26374,
+    "remainingOutsideQueue": 26274,
     "operatorsInQueue": 1
   }
 }

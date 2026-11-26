@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-25T21:21:14.517Z",
+  "generatedAt": "2026-11-26T03:43:23.500Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26361,
+  "stationsWithUnknownPrice": 26365,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26361,
+  "catalogStations": 26365,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 5850,
+      "total": 5851,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5850,
+      "unknownPrices": 5851,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -25,18 +25,18 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3810,
+      "total": 3811,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3810,
+      "unknownPrices": 3811,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "total": 1084,
+      "total": 1086,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 1084,
+      "unknownPrices": 1086,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1385,7 +1385,7 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 5850,
+      "stationsToVerify": 5851,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1397,13 +1397,13 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3810,
+      "stationsToVerify": 3811,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "Etecnic Movilidad Electrica, SRL",
-      "stationsToVerify": 1084,
+      "stationsToVerify": 1086,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -2492,7 +2492,7 @@
       "city": "Agaete",
       "province": "35",
       "address": "Barcelo Roca Negra - Av. Alfredo Kraus, 42,",
-      "connector": "CHAdeMO, Tipo2, CCS",
+      "connector": "Tipo2, CHAdeMO, CCS",
       "powerKw": 50,
       "latitude": 28.106398,
       "longitude": -15.707808,
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26361,
-    "remainingOutsideQueue": 26261,
+    "totalUnknown": 26365,
+    "remainingOutsideQueue": 26265,
     "operatorsInQueue": 1
   }
 }

@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-27T14:13:52.852Z",
+  "generatedAt": "2026-11-27T22:46:56.211Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26391,
+  "stationsWithUnknownPrice": 26402,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26391,
+  "catalogStations": 26402,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "total": 5853,
+      "total": 5856,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5853,
+      "unknownPrices": 5856,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -25,10 +25,10 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3815,
+      "total": 3818,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3815,
+      "unknownPrices": 3818,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -57,10 +57,10 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "total": 588,
+      "total": 589,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 588,
+      "unknownPrices": 589,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -73,10 +73,10 @@
     },
     {
       "operator": "(ZUNDER) Grupo Easychargar SA",
-      "total": 567,
+      "total": 568,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 567,
+      "unknownPrices": 568,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -153,10 +153,10 @@
     },
     {
       "operator": "REMO SUSTAINABLE MOBILITY S.L",
-      "total": 202,
+      "total": 203,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 202,
+      "unknownPrices": 203,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -185,10 +185,10 @@
     },
     {
       "operator": "BARCELONA DE SERVEIS MUNICIPALS, SA",
-      "total": 169,
+      "total": 170,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 169,
+      "unknownPrices": 170,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -209,10 +209,10 @@
     },
     {
       "operator": "Atlante Iberia S.L.",
-      "total": 131,
+      "total": 132,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 131,
+      "unknownPrices": 132,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1385,7 +1385,7 @@
   "priorityOperators": [
     {
       "operator": "ENDESA X WAY, S.L.",
-      "stationsToVerify": 5853,
+      "stationsToVerify": 5856,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1397,7 +1397,7 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3815,
+      "stationsToVerify": 3818,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1421,7 +1421,7 @@
     },
     {
       "operator": "Wenea Services Spain, S.L.",
-      "stationsToVerify": 588,
+      "stationsToVerify": 589,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1433,7 +1433,7 @@
     },
     {
       "operator": "(ZUNDER) Grupo Easychargar SA",
-      "stationsToVerify": 567,
+      "stationsToVerify": 568,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -1493,7 +1493,7 @@
     },
     {
       "operator": "REMO SUSTAINABLE MOBILITY S.L",
-      "stationsToVerify": 202,
+      "stationsToVerify": 203,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -2766,26 +2766,6 @@
       ]
     },
     {
-      "id": "reve:5e02dc5e-6a85-4c2c-8564-1ee6d323e6dc",
-      "operator": "ENDESA X WAY, S.L.",
-      "name": "C6E06BCC21XGSZMUUC",
-      "city": "Alacant",
-      "province": "03",
-      "address": "Carr. d'Ocaña, 11, 03007 Alicante (Alacant),",
-      "connector": "CCS",
-      "powerKw": 50,
-      "latitude": 38.344862,
-      "longitude": -0.518869,
-      "priceStatus": "UNKNOWN_NOT_FREE",
-      "checksRequired": [
-        "current_station_tariff",
-        "connector_identity",
-        "taxes_and_session_fees",
-        "public_access",
-        "verification_date_and_source"
-      ]
-    },
-    {
       "id": "reve:dc500171-1401-4e8d-a71b-a331000a18be",
       "operator": "ENDESA X WAY, S.L.",
       "name": "61946049590013",
@@ -3504,13 +3484,33 @@
         "public_access",
         "verification_date_and_source"
       ]
+    },
+    {
+      "id": "reve:23f61021-cafa-474c-9d56-e7c93c5a8cf5",
+      "operator": "ENDESA X WAY, S.L.",
+      "name": "21XP22T3KK4AM00277",
+      "city": "Albarracín",
+      "province": "44",
+      "address": "44126 Albarracín, Teruel, Spain",
+      "connector": "Tipo2",
+      "powerKw": 22,
+      "latitude": 40.409311,
+      "longitude": -1.436621,
+      "priceStatus": "UNKNOWN_NOT_FREE",
+      "checksRequired": [
+        "current_station_tariff",
+        "connector_identity",
+        "taxes_and_session_fees",
+        "public_access",
+        "verification_date_and_source"
+      ]
     }
   ],
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26391,
-    "remainingOutsideQueue": 26291,
+    "totalUnknown": 26402,
+    "remainingOutsideQueue": 26302,
     "operatorsInQueue": 1
   }
 }

@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-27T04:28:15.174Z",
+  "generatedAt": "2026-11-27T14:13:52.852Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26376,
+  "stationsWithUnknownPrice": 26391,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26376,
+  "catalogStations": 26391,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -17,10 +17,10 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "total": 5532,
+      "total": 5533,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5532,
+      "unknownPrices": 5533,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -257,18 +257,18 @@
     },
     {
       "operator": "ZERO CARBON EMOBILITY, S.L.",
-      "total": 86,
+      "total": 87,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 86,
+      "unknownPrices": 87,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "APK ELECTRIC, S.L.",
-      "total": 71,
+      "total": 82,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 71,
+      "unknownPrices": 82,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -441,10 +441,10 @@
     },
     {
       "operator": "Charging Together Norte SL",
-      "total": 22,
+      "total": 23,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 22,
+      "unknownPrices": 23,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -624,6 +624,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "Chargepoint",
+      "total": 5,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 5,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "Motor Box Mallorca SL",
       "total": 4,
       "verifiedPrices": 0,
@@ -793,14 +801,6 @@
     },
     {
       "operator": "SISTEMAS DE RIEGO SOLAR S.L.",
-      "total": 4,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 4,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Chargepoint",
       "total": 4,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1391,7 +1391,7 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "stationsToVerify": 5532,
+      "stationsToVerify": 5533,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26376,
-    "remainingOutsideQueue": 26276,
+    "totalUnknown": 26391,
+    "remainingOutsideQueue": 26291,
     "operatorsInQueue": 1
   }
 }

@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-26T22:26:52.910Z",
+  "generatedAt": "2026-11-27T04:28:15.174Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26374,
+  "stationsWithUnknownPrice": 26376,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26374,
+  "catalogStations": 26376,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -25,10 +25,10 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3813,
+      "total": 3815,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3813,
+      "unknownPrices": 3815,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -1397,7 +1397,7 @@
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3813,
+      "stationsToVerify": 3815,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26374,
-    "remainingOutsideQueue": 26274,
+    "totalUnknown": 26376,
+    "remainingOutsideQueue": 26276,
     "operatorsInQueue": 1
   }
 }

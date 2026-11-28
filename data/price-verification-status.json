@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-27T22:46:56.211Z",
+  "generatedAt": "2026-11-28T04:20:31.580Z",
   "source": "data/verified-station-prices.json",
   "appliedVerifiedStationPrices": 0,
   "verifiedFreeStations": 0,
-  "stationsWithUnknownPrice": 26402,
+  "stationsWithUnknownPrice": 26406,
   "stationsWithCatalogPriceButNoIndividualVerification": 0,
-  "catalogStations": 26402,
+  "catalogStations": 26406,
   "operatorReview": [
     {
       "operator": "ENDESA X WAY, S.L.",
@@ -17,18 +17,18 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "total": 5533,
+      "total": 5534,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 5533,
+      "unknownPrices": 5534,
       "unverifiedCatalogPrices": 0
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "total": 3818,
+      "total": 3820,
       "verifiedPrices": 0,
       "verifiedFree": 0,
-      "unknownPrices": 3818,
+      "unknownPrices": 3820,
       "unverifiedCatalogPrices": 0
     },
     {
@@ -416,6 +416,14 @@
       "unverifiedCatalogPrices": 0
     },
     {
+      "operator": "Charging Together Norte SL",
+      "total": 24,
+      "verifiedPrices": 0,
+      "verifiedFree": 0,
+      "unknownPrices": 24,
+      "unverifiedCatalogPrices": 0
+    },
+    {
       "operator": "Empresa Municipal de Transportes de Madrid, S. A.",
       "total": 24,
       "verifiedPrices": 0,
@@ -433,14 +441,6 @@
     },
     {
       "operator": "AJUNTAMENT DES CASTELL",
-      "total": 23,
-      "verifiedPrices": 0,
-      "verifiedFree": 0,
-      "unknownPrices": 23,
-      "unverifiedCatalogPrices": 0
-    },
-    {
-      "operator": "Charging Together Norte SL",
       "total": 23,
       "verifiedPrices": 0,
       "verifiedFree": 0,
@@ -1391,13 +1391,13 @@
     },
     {
       "operator": "IBERDROLA CLIENTES S.A.U",
-      "stationsToVerify": 5533,
+      "stationsToVerify": 5534,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
     {
       "operator": "REPSOL SOLUCIONES ENERGÉTICAS SA",
-      "stationsToVerify": 3818,
+      "stationsToVerify": 3820,
       "catalogCoveragePercent": 0,
       "action": "Confirmar tarifa vigente, conector exacto, impuestos y posibles costes adicionales antes de publicar."
     },
@@ -3509,8 +3509,8 @@
   "stationReviewQueueLimit": 100,
   "stationReviewQueueStats": {
     "selected": 100,
-    "totalUnknown": 26402,
-    "remainingOutsideQueue": 26302,
+    "totalUnknown": 26406,
+    "remainingOutsideQueue": 26306,
     "operatorsInQueue": 1
   }
 }
